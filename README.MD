@@ -31,8 +31,6 @@ The memory it is structured as :
 
 ## SOURCE CODE
 
-The code is contains 3 files :
-
 - __boot.asm__ : the boot loader
 
 - __program.asm__ : the interpreter
@@ -45,7 +43,7 @@ The code is contains 3 files :
 
 This repository contains all the tools needed to build and run the system.
 
-- __BUILD.BAT__ will invoke the Nasm assembler to produce in the __BUILD__ folder the following files : _boot.bin_, _program.bin_ and _floppy.img_
+- __BUILD.BAT__ will invoke the Nasm assembler to produce in the _BUILD_ folder the following files : _boot.bin_, _program.bin_ and _floppy.img_
 
 - __RUN.BAT__ will invoke the Bochs emulator to run the system from _floppy.img_
 
