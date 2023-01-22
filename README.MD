@@ -1,4 +1,4 @@
-# TINY 8086
+# TINY 8086 (WORK IN PROGRESS)
 
 TINY 8086 is an interpreter written in assembly 8086 for the Tiny Basic language
 
@@ -41,7 +41,7 @@ The code is contains 3 files :
 
 - __system.asm__ : to create a floppy image of the system
 
-## TOOLS
+## BUILD AND RUN
 
 This repository contains all the tools needed to build and run the system.
 
@@ -49,9 +49,12 @@ This repository contains all the tools needed to build and run the system.
 
 - __RUN.BAT__ will invoke the Bochs emulator to run the system from _floppy.img_
 
-## DOCUMENTS
-
-In the __DOC__ folders you can find the documentation for the Tiny Basic and for the Assembly 8086 language.
+## FOLDERS
+- __SRC__ : source code
+- __BUILD__ : output directory
+- __DOC__ : Tiny Basic and Assembly 8086 documentation
+- __NASM__ : Nasm assembler
+- __BOCHS__ : Bochs emulator
 
 ## REFERENCES
 
