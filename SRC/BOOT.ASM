@@ -47,7 +47,7 @@ BOOT:
 
         mov     ah,06h                  ;clear screen service
         mov     al,00h                  ;lines to scroll (if 0 all)
-        mov     bh,BG_COLOR | FG_COLOR    ;background/foreground colors
+        mov     bh,BG_COLOR+FG_COLOR    ;background/foreground colors
         mov     ch,00h                  ;Row number of upper left corner
         mov     cl,00h                  ;Column number of upper left corner
         mov     dh,ROWS-1               ;Row number of lower right corner

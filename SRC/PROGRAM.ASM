@@ -21,44 +21,66 @@ COLS            EQU 80
 ;==============================================================================
 INTP_STR 		db "TINY BASIC 8086",00h	;welcome string
 
-SYNTAX_ERROR	db "Syntax error",00h					
-LINE_ERROR		db "Invalid line number",00h
-
 LBUF 			times COLS db 00h			;the reading buffer
 
 PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
 PGP				db	00h						;PGP (pointer to pgp line)
 
+CURSOR			dw	0000h					;line cursor
+
+;list of language keywords
+LIST_STR		db "LIST",00h
+RUN_STR			db "RUN",00h
+CLEAR_STR		db "CLEAR",00h
+
+;list of available errors
+SYNTAX_ERROR	db "Syntax error",00h					
+LINE_ERROR		db "Invalid line number",00h
+
 ;==============================================================================
 ; MAIN PROGRAM
 ;==============================================================================
+
 START:
 
-;------------------------------------------------------------------------------
-
-
-;------------------------------------------------------------------------------
-
 		call	INIT					;INITIALIZE
-
 		call	NLINE					;WRITE CRLF
+
+;COLLECTION ROUTINE
 
 CO:     call	GETLINE					;WRITE PROMPT AND GET LINE
 
-		call	NLINE
+		call	NLINE					;WRITE CRLF
 
 		call	TSTL                	;TEST FOR LINE NUMBER
 
-		cmp		al,00h
-		je		XEC
+		cmp		al,00h					;compare with 0
+		jl		CO						;if less we have an error
+		je		XEC						;if equals execute directly
 
 		call	INSERT        			;INSERT IT (MAY BE DELETE)
 
-		call	LST
-		
-        jmp     CO
+		jmp     CO
 
-XEC:    ;call	XINIT                 ;INITIALIZE
+XEC:    call	XINIT                 	;INITIALIZE
+
+;STATEMENT EXECUTOR
+
+; S14:    TST     S15,'LIST'    			;LIST COMMAND
+;         DONE
+;         LST
+;         NXT
+		
+S14:    
+		mov		dx,LIST_STR
+		call	TST
+		xor		dx,dx
+		mov		dl,al
+		call	PRINT_NUMBER
+		
+		jmp		CO
+
+S17:    call	ERR	          			;SYNTAX ERROR
 
 END:	cli                             ;disable interrupts
         hlt                             ;halt system
@@ -81,6 +103,9 @@ INIT:
 		rep		stosb                   ;repeat
 
 		mov		[PGP],byte 00h			;clear the PGP
+
+		mov		[CURSOR],word PGM		;clear the CURSOR
+
 		ret
 
 ;==============================================================================
@@ -198,11 +223,11 @@ TSTL:
 		sub 	cl,30h					;convert CL ascii to a number 0..9
 
 		mul 	ch						;multiply the content of AL for 10
+		jc		.err					;if carry error
+
 		add		al,cl					;add the the CL value
-
-		cmp		ax,0FFh					;is line number greater than 255 ?
-		jg		.err					;if yes error
-
+		jc		.err					;if carry error
+		
 		inc 	si						;next char
 		jmp		.get_number 			;repeat
 
@@ -217,7 +242,10 @@ TSTL:
 		ret
 
 	.err:
-		mov		ax,-1					;line number is invalid
+		mov		dx,LINE_ERROR			;select error string
+		call	PRINT_STR				;print error string
+		call	NLINE					;print new line
+		mov		al,-1					;we return -1 in AL for errors
 		ret
 
 ;==============================================================================
@@ -243,9 +271,10 @@ INSERT:
 ;==============================================================================
 ;LST 	List the contents of the program area.
 ;==============================================================================
-LST_LINE_COUNTER		db 00h			;line counter
+LST_COUNTER		db 00h					;line counter
 ;------------------------------------------------------------------------------
 LST:
+		mov		[LST_COUNTER],byte 00h	;reset counter variable
 		mov		di,PGM					;init DI as base pointer to PGM
 
 	.cycle:
@@ -256,7 +285,7 @@ LST:
 		je		.next					;skip it
 
 		xor		dx,dx					;clear dx
-		mov		dl,[LST_LINE_COUNTER]	;get the line counter
+		mov		dl,[LST_COUNTER]		;get the line counter
 		call	PRINT_NUMBER			;print the line number
 
 		mov		dx,di					;copy the start of the line
@@ -265,12 +294,107 @@ LST:
 
 	.next:
 		add		di,COLS					;move to the next line
-		inc		byte [LST_LINE_COUNTER]	;increase line counter
+		inc		byte [LST_COUNTER]		;increase line counter
 		jmp		.cycle					;repeat
 
 	.done:
 		ret
+
+;==============================================================================	
+; XINIT Perform initialization for each stated execution. Empties AEXP stack.
+;==============================================================================	
+XINIT:
+		mov     al,00h            		;the value to initialize the buffer
+        mov		di,LBUF       			;clear LBUF
+        mov     cx,COLS		          	;size of bufffer
+		rep		stosb                   ;repeat
+
+		mov		[CURSOR],word PGM
+		ret
+
+;==============================================================================	
+; ERR	Report syntax error am return to line collect routine.
+;==============================================================================	
+ERR:
+		mov		dx,SYNTAX_ERROR			;select syntax error string
+		call	PRINT_STR				;print the string
+		call	NLINE					;print new line
+		jmp		CO						;jmp to collection routine
+										;NOTE : no return
+
+;==============================================================================	
+; TST lbl,'string'  	
+; - delete leading blanks
+; - If string matches the BASIC line, 
+; advance cursor over the matched string and execute the next IL instruction 
+; - If a match fails, execute the IL instruction at the labled lbl.
+; Expect in DX the string to compare
+; Return in AL : 0 == no match, 1 == match
+;==============================================================================	
+TST:
+		xor		al,al					;clear AL
+
+	.skip_blanks:
+		cmp		[CURSOR],byte 00h		;is EOL ?
+		je		.nomatch				;possible error
+
+		cmp		[CURSOR],byte 20h			;is a blank ?
+		jg		.compare					;no, check the string
 		
+		inc		word [CURSOR]				;increase cursor
+		jmp		.skip_blanks			;check next char
+
+	.compare:
+
+		xor		cx,cx					;clear CX (counter of strlen)
+		mov		bx,dx					;copy in BX ths start of the string
+
+	.strlen:							;calculate the len of the string
+		cmp		[bx],byte 00h
+		je		.strcmp
+		inc		cx
+		jmp		.strlen
+
+	.strcmp:
+		mov     si,[CURSOR]      			;SI equal to CURSOR current pos
+        mov     di,dx     				;DX is the start of the str to compare
+        repe    cmpsb           		;equals ?
+        jne     .nomatch        		;nope
+
+	.match: 								;if here strings are equals
+		add		[CURSOR],cx				;update the cursor
+
+		mov		al,1					;set AL for mathc found
+		ret
+
+	.nomatch:
+		ret								;AL already cleared
+
+;==============================================================================
+; DONE 	Report a syntax error if after deletion leading blanks the 
+; cursor is not positioned to road a carriage return.
+;==============================================================================
+DONE:
+	.skip_blanks:
+		cmp		[CURSOR],byte 00h		;is EOL ?
+		je		.done				
+
+		cmp		[CURSOR],byte 20h			;is a blank ?
+		jg		.err					;no, check the string
+		
+		inc		word [CURSOR]				;increase cursor
+		jmp		.skip_blanks			;check next char
+
+	.err:
+
+		mov		dx,SYNTAX_ERROR
+		call	PRINT_STR
+		call	NLINE
+		ret
+
+	.done:
+		ret
+
 ;==============================================================================
 ; Program end
 ;==============================================================================
