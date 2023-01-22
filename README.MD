@@ -31,8 +31,6 @@ The memory it is structured as :
 
 ## SOURCE CODE
 
-The code is contains 3 files :
-
 - __boot.asm__ : the boot loader
 
 - __program.asm__ : the interpreter
