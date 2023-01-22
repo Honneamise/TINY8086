@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>MOVS             Move String (Byte or Word)          Flags: not altered</b>
+ 
+<B>MOVS destination-string,source-string</b>
+ 
+          <B>Logic:</b>    (ES:DI)  (DS:SI)
+                    if DF = 0
+                        SI  SI + n         ; n = 1 for byte, 2 for word scan
+                        DI  DI + n
+                    else
+                        SI  SI - n
+                        DI  DI - n
+ 
+    This instruction copies the byte or word pointed to by DS:SI, into the
+    location pointed to by ES:DI. After the move, SI and DI are
+    incremented (if the direction flag is cleared) or decremented (if the
+    direction flag is set), to point to the next element of the string.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   <B>                        byte(word)</b>
+   dest,source               18(26)       2        1     MOVS WORD_BUFF,INPUT
+   (repeat) dest,source   9+17(25)/rep  2/rep      1     REP MOVSW
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          This instruction is always translated by the
+                      assembler into either MOVSB, Move String Byte; or
+                      MOVSW, Move String Word, depending upon whether
+                      source-string refers to a string of bytes or words.
+                      In either case, you must explicitly load the SI and
+                      DI registers with the offset of the source and
+                      destination strings.
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    Assuming BUFFER1 as been defined somewhere as:
+ 
+          BUFFFER1        DB      100 DUP (?)
+ 
+    the following example moves 100 bytes from BUFFER1 to BUFFER2:
+ 
+          CLD                     ;Move in the forward direction
+          LEA     SI, BUFFER1     ;Source address to SI
+          LEA     DI, BUFFER2     ;Destination address to DI
+          MOV     CX,100          ;CX is used by the REP prefix
+  REP     MOVS    BUFFER2, BUFFER1 ;    ...and MOVS it.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.78.html"> MOV </A></LI>
+<LI><A HREF="asm_000.80.html"> MOVSB </A></LI>
+<LI><A HREF="asm_000.81.html"> MOVSW </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.70.html"> LODS </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.114.html"> STOS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

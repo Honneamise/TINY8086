@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 57h (87)        Get or Set a File's Date and Time</b>
+ 
+    Gets or sets a file's date and time.
+ 
+    To get a file's date and time:
+ 
+       <B>On entry:</b>      AH         57h
+                      AL         00h
+                      BX         File handle
+ 
+       <B>Returns:</b>       AX         Error code   if CF is set
+                      CX         Time
+                      DX         Date
+ 
+    To set a file's date and time:
+ 
+       <B>On entry:</b>      AH         57h
+                      AL         01h
+                      BX         File handle
+                      CX         Time
+                      DX         Date
+ 
+       <B>Returns:</b>       AX         Error code   if CF is set
+ 
+       <B>Error codes:</b>   1          Invalid function number in AL
+                      6          Invalid handle
+ 
+  --------------------------------------------------------------------------
+ 
+    Function 57h gets or sets the date and time for a file that has been
+    opened with a file handle (such as with function 3Dh).
+ 
+    The date and time are defined as follows:
+ 
+           CX = Time = Hour * 2048 + Minute * 32 + Second / 2
+           DX = Date = (Year - 1980) * 512 + Month * 32 + Day
+ 
+    <B>             CX Bits           Description</b>
+                 11 - 15           Hours (0..23)
+                  5 - 10           Minutes (0..59)
+                  0 - 4            Seconds/2 (0..30)
+ 
+    <B>             DX Bits           Description</b>
+                  9 - 15           Year since 1980 (0..119)
+                  5 - 8            Month (1..12)
+                  0 - 4            Day (1..31)
+ 
+       <B>Notes:</b>         Contrary to what some DOS documentation says, the
+                      date and time are returned in the conventional
+                      format, with the high-order part in CH and DH and
+                      the low-order part in CL and DL.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.62.html"> 3Dh </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

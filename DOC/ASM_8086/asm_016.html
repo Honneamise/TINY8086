@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>File Control Block (FCB) Structure</b>
+ 
+<B>     Offset  Length  Field           Initialized to       Initialized by</b>
+ 
+       00h     1     Drive code      Drive specified           User
+       01h     8     Filename        Filename                  User
+       09h     3     Extension       Filename extension        User
+       0Ch     2     Current Block   00h                       DOS
+       0Eh     2     Record Size     80h                       DOS; see below
+       10h     4     File Size       Value in directory        DOS
+       14h     2     Date            Value in directory        DOS
+       16h     2     Time            Value in directory        DOS
+       18h     8     Reserved
+       20h     1     Current Record  See notes below           User
+       21h     4     Random Record   See notes below           User
+                     Number
+ 
+    An extended File Control Block is used to access files with special
+    attributes. An extended File Control Block has three additional
+    fields, starting at offset -07h (minus 7), as follows:
+ 
+      <B>Offset  Length  Field             Initialized to     Initialized by</b>
+ 
+       -07h     1     Extended FCB ID   FFh                     User
+       -06h     5     Reserved          Must be zeros           User
+       -01h     1     Attribute Byte    File attribute          User
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The record-size field is set by DOS to 80h (128)
+                      bytes. If you want to use a different value, change
+                      the field after the file has been opened and before
+                      you perform any disk operation. If the record size
+                      is less than 64 bytes, all four bytes of this field
+                      are used; otherwise only the lower three bytes are
+                      used.
+ 
+                      The current record field is used for sequential
+                      read/write operations, and must be set before
+                      performing any sequential read/writes. Set the
+                      current record field to the record number that you
+                      wish to access within the current block. The current
+                      record field can take on any value between 0 and
+                      127.
+ 
+                      The random record number field must be set before
+                      any random read/write operations can be performed.
+                      Set this field to the record number relative to the
+                      beginning of the file that you wish to access.
+ 
+                      File Control Blocks are a holdover from DOS 1. It is
+                      preferable to manipulate files using the newer DOS
+                      services that deal with files via handles. (All file
+                      functions above 2Eh use handles rather than FCBs.)
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_013.html"> File attributes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

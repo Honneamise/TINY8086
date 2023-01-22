@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 44h (68)        I/O Control for Devices (IOCTL)             Overview</b>
+ 
+    Passes information to a device (or file) or gets information from a
+    device (or file).
+ 
+       <B>On entry:</b>      AH         44h
+                      AL         Subfunction
+                      BX         File handle
+                 or   BL         Drive number (0=default, 1=A, etc.)
+                      CX         Number of bytes to read or write
+                      DS:DX      Data or buffer
+ 
+       <B>Returns:</b>       See entries for each subfunction.
+ 
+       <B>Network:</b>       Subfunctions 00h and 08h are not supported.
+  --------------------------------------------------------------------------
+ 
+    Function 44h (IOCTL) offers a number of subfunctions (16 in DOS 3.3,
+    10 in DOS 3.0, 8 in DOS 2), all having to do with the exchange of
+    information between an application and a device (or file). Only
+    subfunctions 00h, 06h, and 07h are defined for files. In all cases,
+    the subfunction to be performed is determined by the value in AL, as
+    follows:
+ 
+       <B>  AL           Subfunction</b>
+         00h          Get device information  (returned in DX)
+         01h          Set device information  (from DX; DH must be 0)
+         02h          Read bytes from the device control chanel into memory at
+                      DS:DX  (character device)
+         03h          Write bytes from memory at DS:DX to the device control
+                      channel  (character device)
+         04h          Read bytes from from the device control chanel into
+                      memory at DS:DX  (block device)
+         05h          Write bytes from memory at DS:DX to the device control
+                      channel  (block device)
+         06h          Get input status
+         07h          Get output status
+         08h          Is block device removable?  (DOS 3.0 and later)
+         09h          Is logical device local or remote  (DOS 3.1 and later)
+         0Ah          Is handle local or remote? (DOS 3.1 and later)
+         0Bh          Change sharing retry count (DOS 3.0 and later)
+         0Dh          Generic IOCTL request for block devices (DOS 3.2)
+         0Eh          Get Logical drive  (DOS 3.2 and later)
+         0Fh          Set logical drive letter (DOS 3.2 and later)
+ 
+    See the separate entries for specific information about each
+    subfunction.
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         Only functions 00h, 06h, and 07h are defined for
+                      files.
+ 
+                      Subfunctions 00h and 08h are not supported on
+                      network devices.  Subfunction 0Bh requires file
+                      sharing, which is loaded with the SHARE command.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

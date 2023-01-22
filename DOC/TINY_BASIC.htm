@@ -1,0 +1,994 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta name="GENERATOR" content="Mozilla/4.73C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC) [Netscape]">
+   <title>Design Notes</title>
+</head>
+<body>
+
+<h3>
+DESIGN NOTES FOR TINY BASIC</h3>
+
+<p><br>by Dennis Allison, happy Lady, &amp; friends
+<br>(reprinted from People's Computer Company Vol. 4, No. 2)
+<br>&nbsp;
+</p><h4>
+SOME MOTIVATIONS</h4>
+A lot of people have just gotten into having their own computer. Often
+they don't know too much about software and particularly systems software,
+but would like to be able to program in something other than machine language.
+The TINY BASIC project is aimed at you if you are one of these people.
+Our goals are very limited -- to provide a minimal BASIC-like language
+for writing simple programs. Later we may make it more complicated, but
+now the name of the game is keep it simple. That translates to a limited
+language (no floating point, no sines and cosines, no arrays, etc.) and
+even this is a pretty difficult undertaking.
+<p>Originally we had planned to limit ourselves to the 8080, but with a
+variety of new machines appearing at very low prices, we have decided to
+try to make a portable TINY BASIC system even at the cost of some efficiency.
+Most of the language processor will be written in a pseudo language which
+is good for writing interpreters like TINY BASIC. This pseudo language
+(which interprets TINY BASIC) will then itself be implemented interpretively.
+To implement TINY BASIC on a new machine, one simply writes a simple interpreter
+for this pseudo language and not a whole interpreter for TINY BASIC.
+</p><p>We'd like this to be a participatory design project. This sequence of
+design notes follows the project which we are doing here at PCC. There
+may well be errors in content and concept. If you're making a BASIC along
+with us, we'd appreciate your help and your corrections.
+</p><p>Incidentally, were we building a production interpreter or compiler,
+we would probably structure the whole system quite differently. We chose
+this scheme because it is easy for people to change without access to specialized
+tools like parser generator programs
+<br>&nbsp;
+</p><h4>
+THE TINY BASIC LANGUAGE</h4>
+There isn't much to it. TINY BASIC looks like BASIC but all variables are
+integers. There are no functions yet (we plan to add <tt>RND</tt>, <tt>TAB</tt>,
+and some others later) - Statement numbers must be between 1 and 256 so
+we can store them in a single byte. <tt>LIST</tt> only works on the whole
+program. There is no <tt>FOR-NEXT</tt> statement. We've tried to simplify
+the language to the point where it will I fit into a very small memory
+so impecunious, tyros can use the system.
+<p>The boxes shown define the language. The guide gives a quick reference
+to what we will include. The formal grammar defines exactly what is a legal
+TINY BASIC statement. The grammar is important because our interpreter
+design will be based upon it
+<br>&nbsp;
+</p><h4>
+IT'S ALL DONE WITH MIRRORS---OR HOW TINY BASIC WORKS</h4>
+All the variables in TINY BASIC: the control information as to which statement
+is presently being executed and how the next statement is to be found,
+the return addresses of active <tt>GOSUBS</tt> -- all this information
+constitutes the state of the TINY BASIC interpreter.
+<p>There are several procedures which act upon this state. One procedure
+knows how to execute any TINY BASIC statement. Given the starting point
+in memory of a TINY BASIC statement, it will execute it changing the state
+of the machine as required. For example,
+</p><blockquote><tt>100 LET S = A+6</tt></blockquote>
+would change the value of <tt>S</tt> to the sum of the contents of the
+variable <tt>A</tt> and the integer 6, and sets the next line counter to
+whatever line follows 100, if the line exists.
+<p>A second procedure really controls the interpretation process by telling
+the line interpreter what to do. When TINY BASIC is loaded, this control
+routine performs some initialization, and then attempts to read a line
+of information from the console. The characters typed in are saved in a
+buffer, LBUF. It first checks to see if there is a leading line number.
+If there is, it incorporates the line into the program by first deleting
+the line with the same line number (if it is present) then inserting the
+new line if it is of nonzero length. If there is no line number present,
+it attempts to execute the line directly. With this strategy, all possible
+Commands, even <tt>LIST</tt> and <tt>CLEAR</tt> and <tt>RUN</tt> are possible
+inside programs. Suicidal programs are also certainly possible.
+</p><p>
+</p><hr width="100%">
+<h3>
+<a name="Grammar"></a>TINY BASIC GRAMMAR</h3>
+The things in <b>bold face</b> stand for themselves. The names in lower
+case represent classes of things. '<tt>::=</tt>' is read 'is defined as'.
+The asterisk denotes zero or more occurances of the object to its immediate
+left. Parenthesis group objects. <font face="Symbol">e</font> is the empty
+set. | denotes the alternative (the exclusive-or).
+<blockquote><tt>line::= number statement&nbsp;<img src="TINY_BASIC_files/CR.gif" width="11" height="11" border="0">&nbsp;
+| statement&nbsp;</tt><img src="TINY_BASIC_files/CR.gif" width="11" height="11" border="0">
+<table>
+<tbody><tr>
+<td><tt>statement::=&nbsp;</tt></td>
+
+<td><tt><b>PRINT</b> expr-list</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><tt><b>IF</b> expression relop expression <b>THEN</b> statement</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><tt><b>GOTO</b> expression</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><tt><b>INPUT</b> var-list</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><tt><b>LET</b> var <b>=</b> expression</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><tt><b>GOSUB</b> expression</tt></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><b><tt>RETURN</tt></b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><b><tt>CLEAR</tt></b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><b><tt>LIST</tt></b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><b><tt>RUN</tt></b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td><b><tt>END</tt></b></td>
+</tr>
+</tbody></table>
+<tt>expr-list::= (string | expression) (<b>,</b> (string | expression)
+)*</tt>
+<br><tt>var-list::= var (<b>,</b> var)*</tt>
+<br><tt>expression::= (<b>+</b> | <b>-</b> | </tt><font face="Symbol">e</font><tt>)
+term ((<b>+</b> | <b>-</b>) term)*</tt>
+<br><tt>term::= factor ((<b>*</b> | <b>/</b>) factor)*</tt>
+<br><tt>factor::= var | number | (expression)</tt>
+<br><tt>var::= <b>A</b> | <b>B</b> | <b>C</b> ..., | <b>Y</b> | <b>Z</b></tt>
+<br><tt>number::= digit digit*</tt>
+<br><tt>digit::= <b>0</b> | <b>1</b> | <b>2</b>&nbsp; | ...&nbsp; | <b>8</b>
+| <b>9</b></tt>
+<br><tt>relop::= <b>&lt;</b> (<b>&gt;</b> | <b>=</b> | </tt><font face="Symbol">e</font><tt>)
+| <b>&gt;</b> (<b>&lt;</b> | <b>=</b> | </tt><font face="Symbol">e</font><tt>)
+| <b>=</b></tt>
+<p>A BREAK from the console will interrupt execution of the program.</p></blockquote>
+
+<hr width="100%">
+<h4>
+<a name="Onion"></a>IMPLEMENTATION STRATEGIES AND ONIONS</h4>
+When you write a program in TINY BASIC there is an abethect machine Which
+is necessary to execute it. If you had a compiler it would make in the
+machine language of your computer a program which emulates that abstract
+machine for your program. An interpreter implements the abstract machine
+for the entire language and rather than translating the program once to
+machine code it translates it dynamically as needed. Interpreters are programs
+and as such have their's as abstract machines. One can find a better instruction
+set than that of any general purpose computer for writing a particular
+interpreter. Then one can write an interpreter to interpret the instructions
+of the interpreter which is interpreting the TINY BASIC program. And if
+your machine is micro-programmed (like PACE), the machine which is interpreting
+the interpreter interpreting the interpreter interpreting BASIC is in fact
+interpreted.
+<p>This multilayered, onion-like approach gains two things: the interpreter
+for the interpreter is smaller and simpler to write then an interpreter
+for all of TINY BASIC, so the resultant system is fairly portable. Secondly,
+since the main part of the TINY BASIC is programmed in a highly memory
+efficient, tailored instruction set, the interpreted TINY BASIC will be
+smaller than direct coding would allow. The cost is in execution speed,
+but there is not such a thing as a free lunch.
+</p><center>
+<p><img src="TINY_BASIC_files/Onion.gif" width="222" height="295" border="0"></p></center>
+
+<p>
+</p><hr width="100%">
+<center>
+<h2>
+<a name="Reference"></a>QUICK REFERENCE GUIDE FOR TINY BASIC</h2></center>
+
+<blockquote>
+<blockquote><u>LINE FORMAT AND EDITING</u>
+<p>* Lines without numbers executed immediately
+<br>* Lines with numbers appended to program
+<br>* Line numbers must be 1 to 255
+<br>* Line number alone (empty line) deletes line
+<br>* Blanks are not significant, but key words must contain no unneeded
+blanks
+<br>* '<font face="Symbol">¨</font>' deletes last character
+<br>* X<sup>c</sup> deletes the entire line
+</p><p><u>EXECUTION CONTROL</u>
+</p><p><tt>CLEAR</tt> delete all lines and data
+<br><tt>RUN</tt> run program
+<br><tt>LIST</tt> list program
+</p><p><u>EXPRESSIONS</u>
+<br>&nbsp;
+</p><center><table cols="1" width="250" cellspacing="0" cellpadding="0">
+<tbody><tr valign="TOP" align="CENTER">
+<td>Operators
+<center><table cols="2" width="100%" cellspacing="0" cellpadding="0">
+<tbody><tr valign="TOP" align="CENTER">
+<td>Arithmetic
+<table cols="2" width="50%" cellspacing="0" cellpadding="0">
+<tbody><tr>
+<td><b><tt>+</tt></b></td>
+
+<td><b><tt>-</tt></b></td>
+</tr>
+
+<tr>
+<td><b><tt>*</tt></b></td>
+
+<td><b><tt>/</tt></b></td>
+</tr>
+</tbody></table>
+</td>
+
+<td>Relational
+<table cols="2" width="90%" cellspacing="0" cellpadding="0">
+<tbody><tr>
+<td align="CENTER"><b><tt>&gt;</tt></b></td>
+
+<td><b><tt>&gt;=</tt></b></td>
+</tr>
+
+<tr>
+<td align="CENTER"><b><tt>&lt;</tt></b></td>
+
+<td><b><tt>&lt;=</tt></b></td>
+</tr>
+
+<tr>
+<td align="CENTER"><b><tt>=</tt></b></td>
+
+<td><b><tt>&lt;&gt;, &gt;&lt;</tt></b></td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+</tbody></table></center>
+</td>
+</tr>
+
+<tr valign="TOP" align="CENTER">
+<td>Variables
+<br>A...Z (26 only)</td>
+</tr>
+
+<tr valign="TOP" align="CENTER">
+<td>All arithmetic is modulo 2<sup><font size="-2">15</font></sup>
+<br>(<tt>+/-</tt> 32767)</td>
+</tr>
+</tbody></table></center>
+
+<p><u>INPUT / OUTPUT</u>
+</p><p><tt>PRINT X,Y,Z</tt>
+<br><tt>PRINT 'A STRING'</tt>
+<br><tt>PRINT 'THE ANSWER IS'</tt>
+<br><tt>INPUT X</tt>
+<br><tt>INPUT X,Y,Z</tt>
+</p><p><u>ASSIGNMENT STATEMENTS</u>
+</p><p><tt>LET X=3</tt>
+<br><tt>LET X= -3+5*Y</tt>
+</p><p><u>CONTROL STATEMENTS</u>
+</p><p><tt>GOTO X+10</tt>
+<br><tt>GOTO 35</tt>
+<br><tt>GOSUB X+35</tt>
+<br><tt>GOSUB 50</tt>
+<br><tt>RETURN</tt>
+</p><p><tt>IF X &gt; Y THEN GOTO 30</tt></p></blockquote>
+</blockquote>
+
+<hr width="100%">
+<h4>
+<a name="LineStor"></a>LINE STORAGE</h4>
+The TINY BASIC program is stored, except for line numbers, just as it is
+entered from the console. In some BASIC interpreters, the program is translated
+into an intermediate form which speeds execution and saves space. In the
+TINY BASIC environment, the code necessary to provide the transformation
+would easily exceed the space saved.
+<p>When a line is read in from the console device, it is saved in a 72-byte
+array called LBUF (Line BUFfer). At the same time, a pointer, CP, is maintained
+to indicate the next available space in LBUF. Indexing is, of course, from
+zero.
+</p><p>Delete the leading blanks. If the string matches the BASIC line, advance
+the cursor over the matched string and execute the next IL instruction.
+If the match fails, continue at the IL instruction labeled lbl.
+</p><p>The TINY BASIC program is stored as an array called PGM in order of
+increasing line numbers. A pointer, PGP, indicates the first free place,
+in the array. PGP=0 indicates an empty program; PGP must be less than the
+dimenstion of the array PGM. The PGM array must be reorganized when new
+lines are added, lines replaced, or lines we deleted.
+</p><p>Insertion and deletion are carried on simultaneously. When a new line
+is to be entered, the PGM array searches for a line with a line number
+greater than or equal to that of the new line. Notice that lines begin
+at PGM (0) and at PGM (j+1) for every j such that PGM (j)=[carriage return].
+If the line numbers are equal, then the length of the existing line is
+computed. A space equal to the length of the new line is created by moving
+all lines with line numbers greater than that of the line being inserted
+up or down as appropriate. The empty line is handled as a special case
+in that no insertion is made.
+<br>&nbsp;
+</p><h4>
+TINY BASIC AS STORED IN MEMORY</h4>
+byte in memory treated as an integer
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+byte
+ treated as a character
+<br><img src="TINY_BASIC_files/MemBytes.gif" width="273" height="120" border="0">
+<br>a carriage return 
+symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+free
+ space
+<br>&nbsp;
+<h4>
+ERRORS AND ERROR RECOVERY</h4>
+There are two places that errors can occur. If they occur in the TINY BASIC
+system, they must be captured and action taken to preserve the system.
+If the error occurs in the TINY BASIC program entered by the user, the
+system should report the error and allow the user to fix his problem. An
+error in TINY BASIC can result from a badly formed statement, an illegal
+action (attempt to divide by zero, for example), or the exhaustion of some
+resource such as memory space. In any case, the desired response is some
+kind of error message. We plan to provide a message of the form:
+<blockquote><tt>!mmm AT nnn</tt></blockquote>
+where mmm is the error number and nnn is the line number at which it occurs.
+For direct statements, the form will be:
+<blockquote><tt>!mmm</tt></blockquote>
+since there is no line number.
+<p>Some error indications we know we will need are:
+<br>&nbsp;
+<table>
+<tbody><tr>
+<td>1 Syntax error</td>
+
+<td>5 RETURN without GOSUB</td>
+</tr>
+
+<tr>
+<td>2 Missing line</td>
+
+<td>6 Expression too complex</td>
+</tr>
+
+<tr>
+<td>3 Line number too large</td>
+
+<td>7 Too many lines</td>
+</tr>
+
+<tr>
+<td>4 Too many GOSUBs</td>
+
+<td>8 Division by zero</td>
+</tr>
+</tbody></table>
+
+</p><h4>
+<a name="Exec"></a>THE BASIC LINE EXECUTOR</h4>
+The execution routine is written in the interpretive language, IL. It consists
+of a sequence of instructions which may call subroutines written in IL,
+or invoke special instructions which are really subroutines written in
+machine language.
+<p>Two different things are going on at the same time. The routines must
+determine if the TINY BASIC line is a legal one and determine its form
+according to the grammar; secondly, it must call appropriate action routines
+to execute the line. Consider the TINY BASIC statement:
+</p><blockquote><tt>GOTO 100</tt></blockquote>
+At the start of the line, the interpreter looks for BASIC key words (LET,
+GO, IF, RETURN, etc.) In this case, it finds GO, and then finds TO. By
+this time it knows that it has found a GOTO statement. It then calls the
+routine EXPR to obtain the destination line number of the GOTO. The expression
+routine calls a whole bunch of other routines, eventually leaving the number
+100 (the value of the expression) in a special place, the top of the arithmetic
+expression stack. Since everything is legal, the XFER operator is invoked
+to arrange for the execution of line 100 (if it exists) as the next line
+to be executed.
+<p>Each TINY BASIC statement is handled similarly. Some procedural section
+of an IL program corresponds to tests for the statement structure and acts
+to execute the statement.
+<br>&nbsp;
+</p><h4>
+<a name="Encoding"></a>ENCODING</h4>
+There are a number of different considerations in the TINY BASIC design
+which fall in this general category. The problem is to make efficient use
+of the bits available to store information without losing out by requiring
+a too complex decoding scheme.
+<p>In a number of places we have to indicate the end of a string of characters
+(or else we have to provide for its length somewhere). Commonly, one uses
+a special character (NUL = OOH for example) to indicate the end. This costs
+one byte per string but is easy to check. A better way depends upon the
+fact that ASCII code does not use the high order bit; normally it is used
+for parity on transmission. We can use it to indicate the end (that is,
+last character) of a string. When we process the characters we must AND
+the character with 07FH to scrub off the flag bit.
+</p><p>The interpreter opcodes can be encoded into a single byte. Operations
+fall into two distinct classes -- those which call machine language subroutines,
+and those which either call or transfer within the IL language itself.
+The diagram indicates one encoding scheme. The CALL operations have been
+subsumed into the IL instruction set. Addressing is shown to be relative
+to PC for IL operations. Given the current IL program size, this seems
+adequate. If it is not, the address could be used to index an array with
+the ML class instructions.
+<br>&nbsp;
+</p><h4>
+ONE POTENTIAL IL ENCODING</h4>
+<img src="TINY_BASIC_files/EncodeIL.gif" width="363" height="336" border="0">
+<br>&nbsp;
+<br>&nbsp;
+<h4>
+<a name="OpCodes"></a>TINY BASIC INTERPRETIVE OPERATIONS</h4>
+
+<blockquote>&nbsp;
+<table>
+<tbody><tr valign="TOP">
+<td><font size="-1">TST lbl,'string'&nbsp;</font></td>
+
+<td><font size="-1">delete leading blanks</font>
+<br><font size="-1">If string matches the BASIC line, advance cursor over
+the</font>
+<br><font size="-1">matched string and execute the next IL instruction If
+a match fails,&nbsp;</font>
+<br><font size="-1">execute the IL instruction at the labled lbl.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">CALL lbl</font></td>
+
+<td><font size="-1">Execute the IL subroutine starting at lbl. Sawe the IL&nbsp;</font>
+<br><font size="-1">address following the CALL on the control stack.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">RTN</font></td>
+
+<td><font size="-1">Return to the IL location specified by the top of the
+control stack.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">DONE</font></td>
+
+<td><font size="-1">Report a syntax error if after deletion leading blanks
+the&nbsp;</font>
+<br><font size="-1">cursor is not positioned to road a carriage return.</font></td>
+</tr>
+
+<tr>
+<td valign="TOP"><font size="-1">JMP lbl</font></td>
+
+<td><font size="-1">Continue execution of IL at the line specified.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">PRS</font></td>
+
+<td><font size="-1">Print characters from the BASIC text up to but not including
+the&nbsp;</font>
+<br><font size="-1">closing quote mark. If a cr is found in the program text,
+report an&nbsp;</font>
+<br><font size="-1">error. Move the cursor to the point following the closing
+quote.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">PRN</font></td>
+
+<td><font size="-1">Print number obtained by popping the top of the expression
+stack.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">SPC</font></td>
+
+<td><font size="-1">Insert spaces, to move the print head to next zone.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">NLINE</font></td>
+
+<td><font size="-1">Output CRLF to Printer.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">NXT</font></td>
+
+<td><font size="-1">If the present mode is direct (line number zero), then
+return to line&nbsp;</font>
+<br><font size="-1">collection. Otherwise, select the next line and begin
+interpretation.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">XFER</font></td>
+
+<td><font size="-1">Test valiue at the top of the AE stack to be within range.
+If not,&nbsp;</font>
+<br><font size="-1">report an error. If so, attempt to position cursor at
+that line.&nbsp;</font>
+<br><font size="-1">If it exists, begin interpretation there; if not report
+an error.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">SAV</font></td>
+
+<td><font size="-1">Push present line number on SBRSTK. Report overflow as
+error.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">RSTR</font></td>
+
+<td><font size="-1">Replace current line number with value on SBRSTK.&nbsp;</font>
+<br><font size="-1">If stack is empty, report error.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">CMPR</font></td>
+
+<td><font size="-1">Compare AESTK(SP), the top of the stack, with AESTK(SP-2)&nbsp;</font>
+<br><font size="-1">as per the relations indicated by AESTK(SP-1). Delete
+all from stack.&nbsp;</font>
+<br><font size="-1">If the condition specified did not match, then perform
+NXT action.</font></td>
+</tr>
+
+<tr>
+<td><font color="#00CC00"><font size="-1">LIT num</font></font></td>
+
+<td><font size="-1"><font color="#00CC00">Push the number num onto the AESTK</font><tt>
+<font color="#BF0000">(Originally omitted)</font></tt></font></td>
+</tr>
+
+<tr>
+<td><font size="-1">INNUM</font></td>
+
+<td><font size="-1">Read a number from the terminal and push its value onto
+the AESTK.&nbsp;</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">FIN</font></td>
+
+<td><font size="-1">Return to the line collect routine.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">ERR</font></td>
+
+<td><font size="-1">Report syntax error am return to line collect routine.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">ADD</font></td>
+
+<td><font size="-1">Replace top two elements of AESTK by their sum.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">SUB</font></td>
+
+<td><font size="-1">Replace top two elements of AESTK by their difference.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">NEG</font></td>
+
+<td><font size="-1">Replace top of AESTK with its neqative.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">MUL</font></td>
+
+<td><font size="-1">Replace top two elements of AESTK by their product.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">DIV</font></td>
+
+<td><font size="-1">Replace top two elements of AESTK by their quotient.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">STORE</font></td>
+
+<td><font size="-1">Place the value at the top of the AESTK into the variable&nbsp;</font>
+<br><font size="-1">designated by the index specified by the value immediately&nbsp;</font>
+<br><font size="-1">below it. Delete both from the stack.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">TSTV lbl</font></td>
+
+<td><font size="-1">Test for variable (i.e letter) if present. Place its
+index value&nbsp;</font>
+<br><font size="-1">onto the AESTK and continue execution at next suggested&nbsp;</font>
+<br><font size="-1">location. Otherwise continue at lbl.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">TSTN lbl&nbsp;</font></td>
+
+<td><font size="-1">Test for number. Of present, place its value onto the
+AESTK and&nbsp;</font>
+<br><font size="-1">continue execution at next suggested location. Otherwise
+continue at lbl.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">IND</font></td>
+
+<td><font size="-1">Replace top of stack by variable value it indexes.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">LST</font></td>
+
+<td><font size="-1">List the contents of the program area.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">INIT</font></td>
+
+<td><font size="-1">Perform global initilization</font>
+<br><font size="-1">Clears program area, empties GOSUB stack, etc.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">GETLINE</font></td>
+
+<td><font size="-1">Input a line to LBUF.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">TSTL lbl</font></td>
+
+<td><font size="-1">After editing leading blanks, look for a line number.
+Report error&nbsp;</font>
+<br><font size="-1">if invalid; transfer to lbl if not present.</font></td>
+</tr>
+
+<tr>
+<td><font size="-1">INSRT</font></td>
+
+<td><font size="-1">Insert line after deleting any line with same line number.</font></td>
+</tr>
+
+<tr valign="TOP">
+<td><font size="-1">XINIT</font></td>
+
+<td><font size="-1">Perform initialization for each stated execution. Empties
+AEXP stack.</font></td>
+</tr>
+</tbody></table>
+</blockquote>
+
+<h4>
+<a name="Listing"></a>A STATEMENT EXECUTOR WRITTEN IN IL</h4>
+This program in IL will execute a TINY BASIC statement. The operators <tt>TST</tt>,
+<tt>TSTV</tt>,
+<tt>TSTN</tt>,
+and <tt>PRS</tt> all use a cursor to find characters of the TINY BASIC
+line. Other operations (<tt>NXT</tt>, <tt>XPER</tt>) move the cursor so
+it points to a TINY BASIC line. <font color="#BF0000">[I corrected a few
+obvious errors, in red -- TP; </font><font color="#00CC00">Jeffrey Henning
+found a couple more, in green</font><font color="#BF0000">]</font>
+<blockquote><tt><font size="-1"><font color="#BF0000">;</font>THE IL CONTROL
+SECTION</font></tt>
+<p><tt><font size="-1">START:&nbsp; INIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;INITIALIZE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NLINE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;WRITE
+ CRLF</font></tt>
+<br><tt><font size="-1">CO:&nbsp;&nbsp;&nbsp;&nbsp; GETLINE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;WRITE PROMPT AND GET LINE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TSTL&nbsp;&nbsp;&nbsp;
+XEC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;TEST FOR
+LINE NUMBER</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INSERT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;INSERT
+ IT (MAY BE DELETE)</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+CO</font></tt>
+<br><tt><font size="-1"><font color="#BF0000">XEC</font>:&nbsp;&nbsp;&nbsp;
+XINIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;INITIALIZE</font></tt>
+</p><p><tt><font size="-1"><font color="#BF0000">;</font>STATEMENT EXECUTOR</font></tt>
+</p><p><tt><font size="-1">STMT:&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp; S1,'LET'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;IS STATEMENT A LET</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TSTV&nbsp;&nbsp;&nbsp;
+S1<font color="#BF0000">7</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;YES, PLACE VAR ADDRESS ON AESTK</font></tt>
+<br><tt><font color="#BF0000"><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+TST&nbsp;&nbsp;&nbsp;&nbsp; S17,'='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;(This line originally omitted)</font></font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;PLACE EXPR
+VALUE ON AESTK</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;REPORT
+ ERROR IF NOT NEXT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STORE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;STORE
+ RESULT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;AND
+ SEQUENCE TO NEXT</font></tt>
+<br><tt><font size="-1">S1:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S3,'GO'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;GOTO OT GOSUB?</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S2,'TO'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;YES...TO, OR...SUB</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;GET LABEL</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;ERROR
+ IF CR NOT NEXT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+XPER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SET
+ UP AND JUMP</font></tt>
+<br><tt><font size="-1">S2:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S1<font color="#BF0000">7</font>,'SUB'&nbsp;&nbsp;&nbsp;&nbsp; ;ERROR IF
+NO MATCH</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;GET DESTINATION</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;ERROR
+ IF CR NOT NEXT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SAV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SAVE
+ RETURN LINE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+XPER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;AND
+ JUMP</font></tt>
+<br><tt><font size="-1">S3:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S8,'PRINT'&nbsp;&nbsp;&nbsp; ;PRINT</font></tt>
+<br><tt><font size="-1">S4:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S7,'"'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;TEST FOR QUOTE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+PRS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;PRINT
+ STRING</font></tt>
+<br><tt><font size="-1">S5:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S6,','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;IS THERE MORE?</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SPC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SPACE
+ TO NEXT ZONE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+S4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;YES
+JUMP BACK</font></tt>
+<br><tt><font size="-1">S6:&nbsp;&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;ERROR
+ IF CR NOT NEXT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NLINE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NXT</font></tt>
+<br><tt><font size="-1">S7:&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+PRN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;PRINT
+ IT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+S5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;IS
+THERE MORE?</font></tt>
+<br><tt><font size="-1">S8:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S9,'IF'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;IF STATEMENT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;GET EXPRESSION</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+RELOP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;DETERMINE OPR AND
+PUT ON STK</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;GET EXPRESSION</font></tt>
+<br><tt><font color="#BF0000"><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+TST&nbsp;&nbsp;&nbsp;&nbsp; S17,'THEN'&nbsp;&nbsp;&nbsp; ;(This line originally
+omitted)</font></font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CMPR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;PERFORM
+ COMPARISON -- PERFORMS NXT IF FALSE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+STMT</font></tt>
+<br><tt><font size="-1">S9:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S12,'INPUT'&nbsp;&nbsp; ;INPUT STATEMENT</font></tt>
+<br><tt><font size="-1">S10:&nbsp;&nbsp;&nbsp; <font color="#00CC00">TSTV&nbsp;&nbsp;&nbsp;
+S17</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;GET VAR ADDRESS <font color="#BF0000">(Originally CALL VAR = nonexist)</font></font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INNUM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;MOVE
+ NUMBER FROM TTY TO AESTK</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STORE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;STORE
+ IT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S11,','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;IS THERE MORE?</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+S10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;YES</font></tt>
+<br><tt><font size="-1">S11:&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;MUST
+ BE CR</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SEQUENCE
+ TO NEXT</font></tt>
+<br><tt><font size="-1">S12:&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S13,'RETURN'&nbsp; ;RETURN STATEMENT</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DONE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;MUST
+ BE CR</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RSTR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;RESTORE
+ LINE NUMBER OF CALL</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NXT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SEQUENCE
+ TO NEXT STATEMENT</font></tt>
+<br><tt><font size="-1">S13:&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S14,'END'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FIN</font></tt>
+<br><tt><font size="-1">S14:&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S15,'LIST'&nbsp;&nbsp;&nbsp; ;LIST COMMAND</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DONE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LST</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NXT</font></tt>
+<br><tt><font size="-1">S15:&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S16,'RUN'&nbsp;&nbsp;&nbsp;&nbsp; ;RUN COMMAND</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DONE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NXT</font></tt>
+<br><tt><font size="-1">S16:&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S17,'CLEAR'&nbsp;&nbsp; ;CLEAR COMMAND</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DONE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+START</font></tt>
+</p><p><tt><font size="-1">S17:&nbsp;&nbsp;&nbsp; 
+ERR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;SYNTAX
+ ERROR</font></tt>
+</p><p><tt><font size="-1">EXPR:&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp; E0,'-'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+TERM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;TEST FOR UNARY
+-.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+NEG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;GET
+ VALUE</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+E1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;NEGATE
+IT</font></tt>
+<br><tt><font size="-1">E0:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+E1<font color="#BF0000">A</font>,'+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;LOOK FOR MORE</font></tt>
+<br><tt><font size="-1"><font color="#BF0000">E1A:</font>&nbsp;&nbsp;&nbsp;
+CALL&nbsp;&nbsp;&nbsp; TERM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;TEST FOR UNARY +</font></tt>
+<br><tt><font size="-1">E1:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+E2,'+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;LEADING TERM</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+TERM</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ADD</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+E1</font></tt>
+<br><tt><font size="-1">E2:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+E3,'-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;ANY MORE?</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+TERM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;DIFFERENCE
+TERM</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUB</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+E<font color="#BF0000">1</font></font></tt>
+<br><tt><font size="-1">E3:T2:&nbsp; RTN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;ANY MORE?</font></tt>
+<br><tt><font size="-1">TERM:&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp; FACT</font></tt>
+<br><tt><font size="-1">TO:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+T1,"*"</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+FACT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;PRODUCT FACTOR.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M<font color="#00CC00">UL</font></font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+T0</font></tt>
+<br><tt><font size="-1">T1:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+T2,'/'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+FACT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;QUOTIENT FACTOR.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DIV</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JMP&nbsp;&nbsp;&nbsp;&nbsp;
+T0</font></tt>
+</p><p><tt><font size="-1">FACT:&nbsp;&nbsp; TSTV&nbsp;&nbsp;&nbsp; F0</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+IND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;YES,
+ GET THE VALUE.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">F0:&nbsp;&nbsp;&nbsp;&nbsp; TSTN&nbsp;&nbsp;&nbsp;
+F1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;NUMBER,
+GET ITS VALUE.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">F1:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+F2,'('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;PARENTHESIZED EXPR.</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CALL&nbsp;&nbsp;&nbsp;
+EXPR</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+F2,')'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">F2:&nbsp;&nbsp;&nbsp;&nbsp; 
+ERR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;ERROR.</font></tt>
+</p><p><tt><font size="-1">RELOP:&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp; RO,'='</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;=</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">R0:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+R4,'&lt;'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+R1,'='</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&lt;=</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">R1:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+R3,'&gt;'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&lt;&gt;</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">R3:&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&lt;</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">R4:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+S17,'&gt;'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+R5,'='</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;&gt;=</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt>
+<br><tt><font size="-1">R5:&nbsp;&nbsp;&nbsp;&nbsp; TST&nbsp;&nbsp;&nbsp;&nbsp;
+R6,'&lt;'</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+3</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#BF0000">RTN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+;(This line originally omitted)</font></font></tt>
+<br><tt><font size="-1">R6:&nbsp;&nbsp;&nbsp;&nbsp; LIT&nbsp;&nbsp;&nbsp;&nbsp;
+4</font></tt>
+<br><tt><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTN</font></tt></p></blockquote>
+
+
+
+</body></html>

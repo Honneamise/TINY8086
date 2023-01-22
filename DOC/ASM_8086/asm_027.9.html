@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 16h,  12h (18)       Get Extended Shift Status                       many</b>
+ 
+    Returns the current keyboard shift status. This service is provided to
+    support the enhanced (101/102-key) keyboard.
+ 
+       <B>On entry:</b>      AH         12h
+ 
+       <B>Returns:</b>       AL         Shift status
+                      AH         Extended shift status
+ 
+  --------------------------------------------------------------------------
+ 
+<B>                             </b><B>Shift Status (AL)</b>
+ 
+               7 6 5 4 3 2 1 0
+               1 . . . . . . .      Insert locked
+               . 1 . . . . . .      Caps Lock locked
+               . . 1 . . . . .      Num Lock locked
+               . . . 1 . . . .      Scroll Lock locked
+               . . . . 1 . . .      Alt key is pressed
+               . . . . . 1 . .      Ctrl key is pressed
+               . . . . . . 1 .      Left Shift key is pressed
+               . . . . . . . 1      Right Shift key is pressed
+ 
+ 
+<B>                         </b><B>Extended Shift Status (AH)</b>
+ 
+               7 6 5 4 3 2 1 0
+               1 . . . . . . .      Sys Req key is pressed
+               . 1 . . . . . .      Caps Lock key is pressed
+               . . 1 . . . . .      Num Lock key is pressed
+               . . . 1 . . . .      Scroll Lock key is pressed
+               . . . . 1 . . .      Right Alt key is pressed
+               . . . . . 1 . .      Right Ctrl key is is pressed
+               . . . . . . 1 .      Left Alt key is pressed
+               . . . . . . . 1      Left Ctrl key is pressed
+ 
+       <B>Notes:</b>         This service is supported only on the AT dated
+                      11/15/85 and after, the XT dated 1/10/86 and after,
+                      and the XT-286.
+ 
+                      The shift status byte return in AL is obtained from
+                      the byte at memory location 0:0417h. Note that this
+                      is the same value that is returned by Service 02h.
+ 
+                      Note that the Extended Shift Status (value returned
+                      in AH) reports if keys are being pressed, not
+                      locked.
+ 
+                      See Service 02h for an equivalent service that works
+                      with all keyboards, not supporting the new keys on
+                      the enhanced (101/102-key) keyboard.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_027.3.html"> INT 16h, 02h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

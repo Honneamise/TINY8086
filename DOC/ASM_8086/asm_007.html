@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<A HREF="asm_007.1.html"> !                Literal-Character Operator </A>
+<A HREF="asm_007.2.html"> $                Location Counter Operand </A>
+<A HREF="asm_007.3.html"> %                Expression Operator </A>
+<A HREF="asm_007.4.html"> &                Substitute Operator </A>
+<A HREF="asm_007.5.html"> *                Multiplication </A>
+<A HREF="asm_007.6.html"> +                Addition or Unary Plus </A>
+<A HREF="asm_007.7.html"> -                Subtraction or Unary Minus </A>
+<A HREF="asm_007.8.html"> .                Structure Field-Name Operator </A>
+<A HREF="asm_007.9.html"> /                Division </A>
+<A HREF="asm_007.10.html"> :                Segment-Override Operator </A>
+<A HREF="asm_007.11.html"> ;;               Macro Comment </A>
+<A HREF="asm_007.12.html"> &lt;&gt;               Literal-Text Operator </A>
+<A HREF="asm_007.13.html"> []               Index Operator </A>
+<A HREF="asm_007.14.html"> =                Create Absolute Symbol </A>
+<A HREF="asm_007.15.html"> .186             Enable 80186 Instructions </A>
+<A HREF="asm_007.16.html"> .286c            Enable Real Mode 80286 Instructions </A>
+<A HREF="asm_007.17.html"> .286p            Enable Protected Mode 80286 Instructions </A>
+<A HREF="asm_007.18.html"> .287             Enable 80287 Instructions </A>
+<A HREF="asm_007.19.html"> .8086            Enable 8086 Instructions </A>
+<A HREF="asm_007.20.html"> .8087            Enable 8087 Instructions </A>
+<A HREF="asm_007.21.html"> AND              Bitwise Logical AND </A>
+<A HREF="asm_007.22.html"> ASSUME           Associate Segment with Segment Register </A>
+<A HREF="asm_007.23.html"> AT               Define Absolute Segment </A>
+<A HREF="asm_007.24.html"> BYTE             Align Segment on Any Byte Address </A>
+<A HREF="asm_007.25.html"> BYTE             Data Type for 1 byte </A>
+<A HREF="asm_007.26.html"> COMMENT          Enter Multi-Line Comment </A>
+<A HREF="asm_007.27.html"> COMMON           Define Overlapping Segments </A>
+<A HREF="asm_007.28.html"> .CREF            Enable Cross-Reference Listings </A>
+<A HREF="asm_007.29.html"> DB               Define Byte </A>
+<A HREF="asm_007.30.html"> DD               Define Doubleword </A>
+<A HREF="asm_007.31.html"> DQ               Define Quadword </A>
+<A HREF="asm_007.32.html"> DT               Define Ten-byte Unit </A>
+<A HREF="asm_007.33.html"> DW               Define Word </A>
+<A HREF="asm_007.34.html"> DWORD            Data Type for 4 bytes </A>
+<A HREF="asm_007.35.html"> DUP              Duplicate Occurrences </A>
+<A HREF="asm_007.36.html"> ELSE             Assemble If Condition Not Met </A>
+<A HREF="asm_007.37.html"> END              Terminate Module </A>
+<A HREF="asm_007.38.html"> ENDIF            Terminate Conditional Block </A>
+<A HREF="asm_007.39.html"> ENDM             Terminate Macro or Repeat Block </A>
+<A HREF="asm_007.40.html"> ENDP             Terminate Procedure Definition </A>
+<A HREF="asm_007.41.html"> ENDS             End Segment or Structure Definition </A>
+<A HREF="asm_007.42.html"> EQ               Equal Relational Operator </A>
+<A HREF="asm_007.43.html"> EQU              Create Symbol </A>
+<A HREF="asm_007.44.html"> .ERR             Force Error </A>
+<A HREF="asm_007.45.html"> .ERR1            Force Error during Pass 1 </A>
+<A HREF="asm_007.46.html"> .ERR2            Force Error during Pass 2 </A>
+<A HREF="asm_007.47.html"> .ERRB            Error If String Is Blank </A>
+<A HREF="asm_007.48.html"> .ERRDEF          Error If Name Is Defined </A>
+<A HREF="asm_007.49.html"> .ERRDIF          Error If Strings Differ </A>
+<A HREF="asm_007.50.html"> .ERRE            Error If False </A>
+<A HREF="asm_007.51.html"> .ERRIDN          Error If Strings Are Identical </A>
+<A HREF="asm_007.52.html"> .ERRNB           Error If String Is Not Blank </A>
+<A HREF="asm_007.53.html"> .ERRNDEF         Error If Name Is Not Defined </A>
+<A HREF="asm_007.54.html"> .ERRNZ           Error If True </A>
+<A HREF="asm_007.55.html"> EVEN             Align on Word Boundary </A>
+<A HREF="asm_007.56.html"> EXITM            Immediate Macro Exit </A>
+<A HREF="asm_007.57.html"> EXTRN            Define External </A>
+<A HREF="asm_007.58.html"> FAR              Data Type for Label in Different Segment </A>
+<A HREF="asm_007.59.html"> GE               Greater Than or Equal Relational Operator </A>
+<A HREF="asm_007.60.html"> GROUP            Define Segment Group </A>
+<A HREF="asm_007.61.html"> GT               Greater Than Relational Operator </A>
+<A HREF="asm_007.62.html"> HIGH             Return High-Order 8 Bits </A>
+<A HREF="asm_007.63.html"> IF               Initiate Conditional Block </A>
+<A HREF="asm_007.64.html"> IF1              Assemble If Pass 1 </A>
+<A HREF="asm_007.65.html"> IF2              Assemble If Pass 2 </A>
+<A HREF="asm_007.66.html"> IFB              Assemble If Argument Is Blank </A>
+<A HREF="asm_007.67.html"> IFDEF            Assemble If Name Is Defined </A>
+<A HREF="asm_007.68.html"> IFDIF            Assemble If Arguments Differ </A>
+<A HREF="asm_007.69.html"> IFE              Assemble If False </A>
+<A HREF="asm_007.70.html"> IFIDN            Assemble If Arguments Are Identical </A>
+<A HREF="asm_007.71.html"> IFNB             Assemble If Argument Is Not Blank </A>
+<A HREF="asm_007.72.html"> IFNDEF           Assemble If Name Is Not Defined </A>
+<A HREF="asm_007.73.html"> INCLUDE          Process Code from External File </A>
+<A HREF="asm_007.74.html"> IRP              Assemble Once for Each Parameter </A>
+<A HREF="asm_007.75.html"> IRPC             Assemble Once for Each Character </A>
+<A HREF="asm_007.76.html"> LABEL            Create Variable or Label </A>
+<A HREF="asm_007.77.html"> .LALL            List All Macro Expansions </A>
+<A HREF="asm_007.78.html"> LE               Less Than or Equal Relational Operator </A>
+<A HREF="asm_007.79.html"> LENGTH           Return Length of Item </A>
+<A HREF="asm_007.80.html"> .LFCOND          List False Conditionals </A>
+<A HREF="asm_007.81.html"> .LIST            Restore Source-Code Listing </A>
+<A HREF="asm_007.82.html"> LOCAL            Create Symbol for Use in Macro </A>
+<A HREF="asm_007.83.html"> LOW              Return Low-Order 8 Bits </A>
+<A HREF="asm_007.84.html"> LT               Less Than Relational Operator </A>
+<A HREF="asm_007.85.html"> MACRO            Initiate Macro Definition </A>
+<A HREF="asm_007.86.html"> MASK             Return a Bit Mask </A>
+<A HREF="asm_007.87.html"> MEMORY           Locate segment as last segment possible </A>
+<A HREF="asm_007.88.html"> MOD              Modulus </A>
+<A HREF="asm_007.89.html"> NAME             Assign Name to Module </A>
+<A HREF="asm_007.90.html"> NE               Not Equal Relational Operator </A>
+<A HREF="asm_007.91.html"> NEAR             Data Type for Label in Same Segment </A>
+<A HREF="asm_007.92.html"> NOT              Bitwise NOT </A>
+<A HREF="asm_007.93.html"> OFFSET           Offset of Expression </A>
+<A HREF="asm_007.94.html"> OR               Bitwise Logical OR </A>
+<A HREF="asm_007.95.html"> ORG              Assign Location Counter </A>
+<A HREF="asm_007.96.html"> %OUT             Display Text during Assembly </A>
+<A HREF="asm_007.97.html"> PAGE             Align on 256-byte Boundary </A>
+<A HREF="asm_007.98.html"> PAGE             Page Control for Listings </A>
+<A HREF="asm_007.99.html"> PARA             Align on 16-byte Boundary </A>
+<A HREF="asm_007.100.html"> PROC             Initiate Procedure Definition </A>
+<A HREF="asm_007.101.html"> PTR              Change Type of Variable </A>
+<A HREF="asm_007.102.html"> PUBLIC           Concatenate All Like-Named Segments </A>
+<A HREF="asm_007.103.html"> PUBLIC           Make Symbol Available to All Modules </A>
+<A HREF="asm_007.104.html"> PURGE            Delete Macro Definition </A>
+<A HREF="asm_007.105.html"> QWORD            Data Type for 8 bytes </A>
+<A HREF="asm_007.106.html"> .RADIX           Set Input Radix </A>
+<A HREF="asm_007.107.html"> RECORD           Define Record Type </A>
+<A HREF="asm_007.108.html"> REPT             Initiate Repeat Block </A>
+<A HREF="asm_007.109.html"> .SALL            Suppress All Macro Expansion Listings </A>
+<A HREF="asm_007.110.html"> SEG              Return Segment Value </A>
+<A HREF="asm_007.111.html"> SEGMENT          Initiate Segment Definition </A>
+<A HREF="asm_007.112.html"> .SFCOND          Suppress Listing of False Conditionals </A>
+<A HREF="asm_007.113.html"> SHL              Shift Left </A>
+<A HREF="asm_007.114.html"> SHORT            Sets Label To SHORT Type </A>
+<A HREF="asm_007.115.html"> SHR              Shift Right </A>
+<A HREF="asm_007.116.html"> SIZE             Return Bytes Used by Variable </A>
+<A HREF="asm_007.117.html"> STACK            Define a Stack Segment </A>
+<A HREF="asm_007.118.html"> STRUC            Define Structure Type </A>
+<A HREF="asm_007.119.html"> SUBTTL           Specify Listing Subtitle </A>
+<A HREF="asm_007.120.html"> TBYTE            Data Type for 10 bytes </A>
+<A HREF="asm_007.121.html"> .TFCOND          Toggle False Conditional Listing </A>
+<A HREF="asm_007.122.html"> THIS             Create Operand at Current Location </A>
+<A HREF="asm_007.123.html"> TITLE            Specify Listing Title </A>
+<A HREF="asm_007.124.html"> TYPE             Return Size of Type </A>
+<A HREF="asm_007.125.html"> .TYPE            Return Mode and Scope of an Expression </A>
+<A HREF="asm_007.126.html"> WIDTH            Return Width in Bits </A>
+<A HREF="asm_007.127.html"> WORD             Align on 2-byte boundary </A>
+<A HREF="asm_007.128.html"> WORD             Data Type for 2 bytes </A>
+<A HREF="asm_007.129.html"> .XALL            List Macro Expansions That Produce Code </A>
+<A HREF="asm_007.130.html"> .XCREF           Suppress Cross-Reference Listings </A>
+<A HREF="asm_007.131.html"> .XLIST           Suppress Source-Code Listing </A>
+<A HREF="asm_007.132.html"> XOR              Bitwise Logical XOR </A>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

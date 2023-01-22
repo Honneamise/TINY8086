@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  04h (4)        Verify Sectors                                   all</b>
+ 
+    Verifies one or more fixed disk or diskette sectors.
+ 
+       <B>On entry:</b>      AH         04h
+                      AL         Number of sectors to verify
+                      CH         Cylinder number (10-bit value; upper 2 bits
+                                 in CL)
+                      CL         Starting sector number
+                      DH         Head number
+                      DL         Drive number
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      AL         Number of sectors verified
+                      CF         Set if error, cleared otherwise
+ 
+  --------------------------------------------------------------------------
+ 
+    Verifies the specified number of sectors starting at the specified
+    location (head, cylinder, and track) on the disk. The verification
+    process consists of checking that the sectors can be found and read
+    (checking address fields) and that the Cyclic Redundancy Check (CRC)
+    is correct. No memory area is needed for this operation.
+ 
+       <B>Notes:</b>         Values in DL less than 80h specify floppy disks;
+                      values greater than 80h specify fixed disks. For
+                      example, 0 means the first floppy diskette, while
+                      80h means the first fixed disk.
+ 
+                      The cylinder number is a ten-bit quantity (0 through
+                      1023). Its most significant two bits are in bits 7
+                      and 6 of CL; the remaining eight bits are in CH. The
+                      starting sector number fits in the low-order portion
+                      (lower 6 bits) of CL.
+ 
+                      The value returned in AL (number of sectors
+                      verified) may not give the correct number of
+                      sectors, even though no error occurred while
+                      verifying. Use the results of the Carry flag and AH
+                      (status flag) to determine the status of the
+                      operation.
+ 
+                      The sectors verified must all be on the same
+                      cylinder and same side for diskettes, while a hard
+                      disk can verify up to 255 sectors at one time.
+ 
+                      If an error is encountered verifying a sector, use
+                      Service 0h to reset the drive and retry the
+                      operation. It is recommended that at least 3 retries
+                      be attempted before an error is signalled, since the
+                      error may have resulted from the diskette motor not
+                      being up to speed.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion. Also diskette operations that require
+                      the diskette motor to be on will call INT 15h,
+                      Service 90 (Device Busy), with the type equal to
+                      "Diskette Drive Motor Start" (Type = FDh). This
+                      allows the system to perform another task while the
+                      drive motor is waiting to get up to speed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

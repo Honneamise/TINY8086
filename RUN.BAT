@@ -1,0 +1,1 @@
+BOCHS\bochs.exe -q -noconsole

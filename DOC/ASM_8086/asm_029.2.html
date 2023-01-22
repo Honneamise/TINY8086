@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 1Ah,  01h (1)        Set System-Timer Time Counter                    all</b>
+ 
+    Sets the current time of day.
+ 
+       <B>On entry:</b>      AH         01h
+                      CX         High-order part of clock count
+                      DX         Low-order part of clock count
+ 
+       <B>Returns:</b>       None
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The following formula converts the time of day to a
+                      clock count:
+ 
+                          Count = (Hout * 65543.33) + (Minutes * 1092.38) +
+                                  (Seconds * 18.21) + (Hundreths * .182)
+ 
+                      The "system timer" (as distinguished from the real-
+                      time clock) is the timer that's set when the system
+                      is started. This time is temporary, lasting only as
+                      long as the system is turned on.
+ 
+                      The clock count may also be set as a 4-byte integer
+                      at memory location 0:046C. This 4-byte value will be
+                      set to the 4-byte integer in CX:DX after the call.
+ 
+                      After the set, the flag (at 0:0470h) stating whether
+                      24 hours has passed or not, is cleared.
+ 
+                      When TIME is typed at the command line, DOS gets the
+                      time by means of this service. Setting a new time
+                      will call this service.
+ 
+                      Counts occur at the rate of 18.2 per second.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_029.1.html"> INT 1Ah, 00h </A></LI>
+<LI><A HREF="asm_029.4.html"> INT 1Ah, 03h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

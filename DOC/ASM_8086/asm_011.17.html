@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 2Fh (47)             Multiplex Interrupt (PRINT)                ò DOS 3.1</b>
+ 
+    Provides control of the PRINT spooler.
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         Function to be performed
+ 
+       <B>Functions:</b>     AL         0        Get installed state
+                                 1        Submit file
+                                 2        Cancel file
+                                 3        Cancel all files
+                                 4        Status
+                                 5        End of status
+ 
+       <B>Error codes:</b>   1          Invalid function
+                      2          File not found
+                      3          Path not found
+                      4          Too many open files
+                      5          Access denied
+                      8          Queue full
+                      9          Busy
+                      12         Name too long
+                      15         Invalid drive
+ 
+       <B>Returns:</b>       See below
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 0      Get Installed State
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         00h
+ 
+       <B>Returns:</b>       AL         00h     Not installed, okay to install
+                                 01h     Not installed, not okay to install
+                                 FFh     Installed
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 1      Submit File
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         01h
+                      DS:DX      Pointer to submit packet
+ 
+       <B>Returns:</b>       AX         Error code (see above)
+ 
+    The submit packet must include a "level" value (one byte; for DOS 3.1
+    through 3.3, the level value must be 0), followed by an ASCIIZ string
+    containing the drive, path, and filename of the file to be printed.
+    Wildcard characters are not supported.
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 2      Cancel File (remove from queue)
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         02h
+                      DS:DX      Pointer to ASCIIZ string specifying file to
+                                 be cancelled.
+ 
+       <B>Returns:</b>       AX         Error code (see above)
+ 
+    Wildcard characters are supported.
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 3      Cancel All Files (purge queue)
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         03h
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 4      Status (inspect queue)
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         04h
+ 
+       <B>Returns:</b>       DX         Error count
+                      DS:SI      Pointer to print queue
+ 
+    The error count reports the number of consecutive failures experienced
+    by PRINT in outputting the most recent character.
+ 
+    The print queue, pointed to by DS:SI, is a series of 64-byte entries
+    specifying the files to be printed. The file currently being printed
+    appears first. The end of the queue is indicated by an entry beginning
+    with 00h.
+ 
+    A call to Status freezes the files in the queue. Call End of Status
+    (AL=5) to release the files for printing.
+ 
+  --------------------------------------------------------------------------
+ 
+    AL = 5      End of Status
+ 
+       <B>On entry:</b>      AH         01h
+                      AL         05h
+ 
+       <B>Returns:</b>       AX         Error code (see above)
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_011.16.html"> INT 2Fh... </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

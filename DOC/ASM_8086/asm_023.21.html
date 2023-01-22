@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  14h (20)       LCD Handler                              Convertible</b>
+ 
+    Allows the use of user-defined fonts and the mapping for the high-
+    intensity attribute to a different attribute on an LCD display. This
+    service is available only on the PC Convertible.
+ 
+       <B>On entry:</b>      AH         14h
+                      AL         Subservice
+                      00h - Load user specified font
+                                 ES:DI    Pointer to first font of font table
+                                 CX       Number of characters to store (1 -
+                                          256)
+                                 DX       Character offset into RAM font
+                                          buffer
+                                 BL       Font block to load
+                                          0 - Main font (block 0)
+                                          1 - Alternate font (block 1)
+                                 BH       Bytes per character (1 - 255)
+ 
+                      01h - Load system ROM default font block
+                                 BL     Font block to load
+                                          0 - Main font (block 0)
+                                          1 - Alternate font (block 1)
+ 
+                      02h - Mapping of LCD high-intensity attribute
+                                 BL     Mapping scheme
+                                          0 - Ignore high-intensity
+                                              attribute
+                                          1 - Map high-intensity to
+                                              reverse video
+                                          2 - Map high-intensity to
+                                              underline
+                                          3 - Map high-intensity to select
+                                              alternate font
+ 
+       <B>Returns:</b>       None
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.22.html"> INT 10h, 15h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 0Ah (10)        Buffered Input</b>
+ 
+    Reads a string of characters from the standard input device until the
+    Enter key is pressed.  Echos the characters and checks for Ctrl-Break
+    and Ctrl-C.
+ 
+       <B>On entry:</b>      AH         0Ah
+                      DS:DX      Pointer to an input buffer; offset 0 (first
+                                 byte) of buffer specifies maximum buffer
+                                 length.
+ 
+       <B>Returns:</b>       See notes
+ 
+  -------------------------------------------------------------------------
+ 
+    This function reads characters from the standard input device, until a
+    carriage return is encountered. The characters, including the carriage
+    return, are stored beginning at offset 2 (third byte) of a buffer
+    specified in DS:DX.
+ 
+       <B>Setup:</b>         Store maximum capacity of buffer (255 or less) at
+                      the first byte at DS:DX; include the terminating
+                      carriage return in the count.
+ 
+       <B>On Return:</b>     At offset 1 (second byte) of DS:DX, DOS returns the
+                      number of characters that were actually received,
+                      not including the final carriage return.
+ 
+       <B>Notes:</b>         If DOS encounters a Ctrl-Break or Ctrl-C, it
+                      executes an INT 23h.
+ 
+                      The DOS editing commands are active during input
+                      with this function.
+ 
+                      If the buffer becomes filled to within one byte of
+                      capacity, DOS rejects all further characters up to,
+                      but not including, the terminating carriage return.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.2.html"> 01h </A></LI>
+<LI><A HREF="asm_010.7.html"> 06h </A></LI>
+<LI><A HREF="asm_010.8.html"> 07h </A></LI>
+<LI><A HREF="asm_010.9.html"> 08h </A></LI>
+<LI><A HREF="asm_010.13.html"> 0Ch </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>0:474h                   Last Fixed Disk Operation Status</b>
+ 
+ <B>Length: 1 byte</b>
+ 
+    Holds the status of the last fixed disk operation.
+ 
+<B>                Value           Last Fixed Disk Operation</b>
+                 00h            No error
+                 01h            Invalid command
+                 02h            Address mark not found
+                 03h            Attempt to write on write-protected disk
+                 04h            Sector not found
+                 05h            Reset failed
+                 07h            Drive parameter activity failed
+                 08h            DMA overrun
+                 09h            Attempt to DMA across a 64K boundary
+                 0Ah            Bad sector flag detected
+                 0Bh            Bad cylinder found
+                 0Dh            Invalid number sectors on format
+                 0Eh            Control data address mark detected
+                 0Fh            DMA arbitration level out of range
+                 10h            ECC data error
+                 11h            ECC corrected data error
+                 20h            Controller failure
+                 40h            Seek failure
+                 80h            Time out
+                 AAh            Drive not ready
+                 BBh            Undefined error
+                 CCh            Write fault
+                 E0h            Status error
+                 FFh            Sense operation failed
+ 
+       <B>Note:</b>          Use INT 13h, Service 01h, to obtain this
+                      information.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  05h (5)        Set Active Display Page</b>
+ 
+    Sets the active display page.
+ 
+       <B>On entry:</b>      AH         05h
+                      AL         Display page number
+ 
+       <B>Returns:</b>       None
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+<B>                         </b><B>Legal Page Values (AL)</b>
+ 
+            <B>   </b><B>Video Mode                   LegalPages</b>
+                   00h                         0-7
+                   01h                         0-7
+                   02h                         0-3
+                   03h                         0-3
+                   04h                          0
+                   05h                          0
+                   06h                          0
+                   07h                          0
+                   08h                          0
+                   09h                          0
+                   0Ah                          0
+                   0Dh                         0-7
+                   0Eh                         0-3
+                   0Fh                         0-1
+                   10h                         0-1
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The contents of a display page are not destroyed
+                      when the current display page is changed. In fact,
+                      you can write to an inactive page, then switch to
+                      it--thereby producing fast screen updates.
+ 
+                      Use Service 0Fh to determine the current active
+                      display page.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.16.html"> INT 10h, 0Fh </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

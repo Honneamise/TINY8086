@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 46h (70)        Force Handle Duplication (FORCDUP)</b>
+ 
+    Force one handle to refer to the same file as another handle. (Both
+    handles must already exist.)
+ 
+       <B>On entry:</b>      AH         46h
+                      BX         First file handle
+                      CX         Handle to be changed
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+ 
+       <B>Error codes:</b>   4          No handles available
+                      6          Invalid handle
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+  --------------------------------------------------------------------------
+ 
+    This function causes the second handle (in CX) to refer to the same
+    file, at the same location, as the first handle (in BX). If the second
+    handle refers to an open file, that file is closed before the handle
+    is set equal to the first handle.
+ 
+       <B>Notes:</b>         Moving the file pointer of either handle by a Read,
+                      Write, or Lseek causes the other handle to be
+                      changed also. However, closing one handle does not
+                      close the other.
+ 
+                      This function is useful for redirection. For
+                      example, to redirect standard output (predefined as
+                      Handle 1) to a file, place 1 in CX, and in BX place
+                      the handle for the file to which output is to be
+                      redirected.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.85.html"> 45h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

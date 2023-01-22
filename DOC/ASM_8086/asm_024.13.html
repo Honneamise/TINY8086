@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  0Ch (12)       Seek to Cylinder                          fixed disk</b>
+ 
+    Positions the read/write heads over a specified cylinder for a fixed
+    disk. This service can be performed on fixed disks only.
+ 
+       <B>On entry:</b>      AH         0Ch
+                      CH         Cylinder number (10-bit value; upper 2 bits
+                                 in CL)
+                      DH         Head number
+                      DL         Drive number (Bit 7 must be set)
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      CF         Set if error, else cleared
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The cylinder number is a ten-bit quantity (0 through
+                      1023). Its most significant two bits are in bits 7
+                      and 6 of CL; the remaining eight bits are in CH. The
+                      starting sector number fits in the low-order portion
+                      (lower 6 bits) of CL.
+ 
+                      If an error is encountered, use Service 0h to reset
+                      the drive and retry the operation.
+ 
+                      Even though the head value is not needed, you must
+                      supply a legal value--or else the seek will not be
+                      performed and an error will be returned.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

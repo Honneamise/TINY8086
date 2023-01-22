@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 43h (67)        Get or Set File Attributes (CHMOD)</b>
+ 
+    Gets or sets the attributes of a specified file.
+ 
+     1.  To get attributes
+ 
+       <B>On entry:</b>      AH         43h
+                      AL         00h
+                      DS:DX      Pointer to filespec (ASCIIZ string)
+ 
+       <B>Returns:</b>       CX         File's attributes, or
+                      AX         Error code, if CF is set
+ 
+     2.  To set attributes
+ 
+       <B>On entry:</b>      AH         43h
+                      AL         01h
+                      CX         Desired attributes
+                      DS:DX      Pointer to filespec (ASCIIZ string)
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+ 
+       <B>Error codes:</b>   1          Invalid function code
+                      2          File not found
+                      3          Path not found
+                      5          Access denied
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+       <B>Network:</b>       To change any attribute bit other than archive,
+                      requires Create access rights.
+ 
+  --------------------------------------------------------------------------
+ 
+    This function returns or sets the attribute byte of the specified
+    file. To determine the current attributes, put 00h in AL; the
+    attribute byte is returned in CX. To set attributes, put 01h in AL and
+    the desired attribute byte in CX.
+ 
+       <B>Notes:</b>         The CX register specifies the attribute of the file
+                      you're creating, as follows:
+ 
+       <B>                        CX         Attribute specified</b>
+                               00h        Normal
+                               01h        Read-only
+                               02h        Hidden
+                               04h        System
+                               20h        Archive
+ 
+                      Sum the values to combine attributes.
+ 
+                      Setting any of the bits other than the above will
+                      generate an error.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.61.html"> 3Ch </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+<LI><A HREF="asm_013.html"> File Attributes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

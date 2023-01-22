@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>LOCK             Lock the Bus                        Flags: not altered</b>
+ 
+<B>LOCK</b>
+ 
+    LOCK is a one-byte prefix that can precede any instruction. LOCK
+    causes the processor to assert its bus lock signal while the
+    instruction that follows is executed. If the system is configured such
+    that the LOCK signal is used, it prevents any external device or event
+    from accessing the bus, including interrupts and DMA transfers.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   no operands                 2          -        1     LOCK XCHG FLAG,AL
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          This instruction was provided to support multiple
+                      processor systems with shared resources. In such a
+                      system, access to those resources is generally
+                      controlled via a software-hardware combination using
+                      semaphores.
+ 
+                      This instruction should only be used to prevent
+                      other bus masters from interrupting a data movement
+                      operation.  This prefix should only be used with
+                      XCHG, MOV, and MOVS.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.25.html"> HLT </A></LI>
+<LI><A HREF="asm_000.119.html"> WAIT </A></LI>
+<LI><A HREF="asm_000.24.html"> ESC </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

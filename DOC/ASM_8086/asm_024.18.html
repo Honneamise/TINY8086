@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  11h (17)       Recalibrate Drive                         fixed disk</b>
+ 
+    This service recalibrates a specified fixed disk drive to reset the
+    seek speed. This service can be performed on fixed disks only.
+ 
+       <B>On entry:</b>      AH         11h
+                      DL         Drive number (Bit 7 must be set)
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      CF         Set if error; otherwise cleared
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is called by both Service 00h and
+                      Service 0Dh. Thus calling either of these services
+                      will accomplish the same as calling Service 11h.
+ 
+                      This service sends the RECALIBRATE command to the
+                      disk controller, making the controller default to
+                      its original state and place the read/write arm at
+                      track 0.
+ 
+                      If an error is encountered, use Service 0h to reset
+                      the drive and retry the operation.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.1.html"> INT 13h, 00h </A></LI>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+<LI><A HREF="asm_024.14.html"> INT 13h, 0Dh </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

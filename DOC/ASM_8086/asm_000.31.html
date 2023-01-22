@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INTO             Interrupt on Overflow               Flags: O D I T S Z A P C</b>
+                                                            0 0
+<B>INTO</b>
+ 
+          <B>Logic:</b>    if (OF = 1)
+                        PUSHF              ; Push flags onto stack
+                        TF  0             ; Clear Trap Flag
+                        IF  0             ; Disable Interrupts
+                        CALL FAR (10h)     ; The INTO vector is at 0000:0010h
+ 
+    INTO activates interrupt type 4 if the Overflow Flag is set; otherwise
+    it does nothing. This interrupt operates identically to an "INT 4" if
+    the overflow flag is set, in which case INTO pushes the flags
+    register, clears the Trap and Interrupt-enable Flags, pushes CS and
+    IP, then transfers control to the interrupt-num 4 handler, which is
+    pointed to by the vector at location 10h.  If the interrupt handler
+    returns using an IRET instruction, the original flags are restored.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   <B>                        byte(word)</b>
+   no operands              53 or 4       5        1     INTO
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The flags are stored in the same format as that used
+                      by the PUSHF instruction.
+ 
+                      INTO can be used after an operation that may cause
+                      overflow, to call a recovery procedure.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.30.html"> INT </A></LI>
+<LI><A HREF="asm_000.32.html"> IRET </A></LI>
+<LI><A HREF="asm_000.55.html"> JNO </A></LI>
+<LI><A HREF="asm_000.59.html"> JO </A></LI>
+<LI><A HREF="asm_000.91.html"> PUSHF </A></LI>
+<LI><A HREF="asm_000.9.html"> CALL </A></LI>
+<LI><A HREF="asm_001.5.html"> INT 04h </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

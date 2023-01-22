@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 15h,  90h (138)      Device Busy                                     many</b>
+ 
+    This service is called to notify the system that a device is waiting
+    to be serviced.
+ 
+       <B>On entry:</b>      AH         90h
+                      AL         Device type (see below)
+ 
+       <B>Returns:</b>       Carry      0 - Wait not satisfied
+                                 1 - Minimum wait time satisfied
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is not available for the PC, PCjr, and
+                      XT dated 11/08/82.
+ 
+    The device types are classified into three generalized groups. These
+    groups are:
+ 
+        00h - 7Fh     Serially reusable devices.
+        80h - BFh     Reentrant devices. ES:BX is used to differentiate calls.
+        C0h - FFh     Devices that are time-out only with no posting.
+ 
+    The defined device types are listed below:
+ 
+<B>      Device Type (AL)    Device                                     Time-out</b>
+            00h           Fixed disk                                    Yes
+            01h           Diskette                                      Yes
+            02h           Keyboard                                      No
+            03h           Pointing Device                               Yes
+            80h           Network                                        No
+                          (ES:BX, pointer to Network Control Block)
+            FDh           Diskette drive motor start                    Yes
+            FEh           Printer                                       Yes
+ 
+                      When a device is needed by a process, but access to
+                      it is delayed, the system can perform another task
+                      to achieve maximum performance until the device is
+                      freed up for the process to use. In a multi-tasking
+                      environment, that is the purpose for this service.
+                      The operating system can keep track of which process
+                      is waiting for which device, and perform another
+                      task while the device is busy. See Service 91h for a
+                      service that signals that a device is ready for a
+                      process.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_026.18.html"> INT 15h, 91h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

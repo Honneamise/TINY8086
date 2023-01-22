@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>SCASB            Scan String Byte                    Flags: O D I T S Z A P C</b>
+                                                            *       * * * * *
+<B>SCASB</b>
+ 
+          <B>Logic:</b>    CMP AL, (ES:DI)         ; Sets flags only
+                    if DF = 0
+                        DI  DI + 1
+                    else
+                        DI  DI - 1
+ 
+    This instruction compares two bytes by subtracting the destination
+    byte, pointed to by ES:DI, from AL. SCASB sets the flags according to
+    the results of the comparison. The operands themselves are not
+    altered. After the comparison, DI is incremented (if the direction
+    flag is cleared) or decremented (if the direction flag is set), in
+    preparation for comparing the next byte.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        15         1        1     SCASB
+   (repeat)                9 + 15/rep   1/rep      1     REPNE SCASB
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         SCAS is useful for searching a block for a given
+                      byte or word value. Use CMPS, Compare String, if you
+                      wish to compare two strings (or blocks) in memory,
+                      element by element.
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    The following example searches the 100-byte block starting at LOST_A
+    for the character 'A' (65 decimal).
+ 
+          MOV     AX, DS
+          MOV     ES, AX          ;SCAS uses ES:DI, so copy DS to ES
+          CLD                     ;Scan in the forward direction
+          MOV     AL, 'A'         ;Searching for the lost 'A'
+          MOV     CX,100          ;Scanning 100 bytes (CX is used by REPNE)
+          LEA     DI, LOST_A      ;Starting address to DI
+  REPNE   SCASB                   ;   ...and scan it.
+          JE      FOUND           ;The Zero Flag will be set if we found
+                                  ;   a match.
+  NOTFOUND:       .               ;If we get here, no match was found
+                  .
+                  .
+  FOUND:  DEC     DI              ;Back up DI so it points to the first
+                  .               ;   matching 'A'
+                  .
+ 
+    Upon exit from the REPNE SCASB loop, the Zero Flag will be set if a
+    match was found, and cleared otherwise. If a match was found, DI will
+    be pointing one byte past the match location; the DEC DI at FOUND
+    takes care of this problem.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.108.html"> SCASW </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

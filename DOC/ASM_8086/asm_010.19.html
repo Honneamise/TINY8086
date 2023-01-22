@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 12h (18)        Search for Next Matching File, using FCBs</b>
+ 
+    Searches the current directory for next matching filename, following a
+    Function 11h call or a previous Function 12h call.
+ 
+       <B>On entry:</b>      AH         12h
+                      DS:DX      Pointer to the unopened FCB specified in
+                      a previous Function 11h or Function 12h
+ 
+       <B>Returns:</b>       AL         00h       If another match found
+                                 FFh       If no match found
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Warning:</b>       The information needed by Function 12h is destroyed
+                      by any operation on the file using the FCB created
+                      via Function 11h. Therefore, if you want to search
+                      for several files and also do I/O on them, you must
+                      save the search information that is stored in the
+                      FCB.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.18.html"> 11h </A></LI>
+<LI><A HREF="asm_010.94.html"> 4Eh </A></LI>
+<LI><A HREF="asm_010.95.html"> 4Fh </A></LI>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

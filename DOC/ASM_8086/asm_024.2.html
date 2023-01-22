@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  01h (1)        Get Disk System Status                           all</b>
+ 
+    Returns status information about the most recent fixed or floppy disk
+    operation.
+ 
+       <B>On entry:</b>      AH         01h
+                      DL         Drive number
+ 
+       <B>Returns:</b>       AH         Status of operation (see below)
+                      CF         Set if error, otherwise cleared
+ 
+  --------------------------------------------------------------------------
+<B>                          Status of Operation (AH)</b>
+ 
+       <B>AH</b><B>             </b><B>Meaning</b>
+       FFh            Sense operation failed             (fixed)
+       E0h            Status error                       (fixed)
+       CCh            Write fault                        (fixed)
+       BBh            Undefined error                    (fixed)
+       80h            Drive not ready
+       40h            Seek failure
+       20h            Controller failure
+       11h            ECC corrected data error           (fixed)
+       10h            CRC or ECC data error
+       0Fh            DMA arbitration level out of range (fixed)
+       0Eh            Control data address mark detected (fixed)
+       0Dh            Invalid number sectors on format   (fixed)
+       0Ch            Media type not found               (floppy)
+       0Bh            Bad cylinder found                 (fixed)
+       0Ah            Bad sector flag detected           (fixed)
+       09h            Attempt to DMA across a 64K boundary
+       08h            DMA overrun
+       07h            Drive parameter activity failed    (fixed)
+       06h            Diskette change line active         (floppy)
+       05h            Reset failed                       (fixed)
+       04h            Sector not found
+       03h            Attempt to write on write-protected disk
+       02h            Address mark not found
+       01h            Invalid command
+       00h            No error
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The most recent diskette operation status is found
+                      at 0:441h. The most recent fixed disk operation
+                      status is at 0:474h.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion. Also diskette operations that require
+                      the diskette motor to be on will call INT 15h,
+                      Service 90 (Device Busy), with the type equal to
+                      "Diskette Drive Motor Start" (Type = FDh). This
+                      allows the system to perform another task while the
+                      drive motor is waiting to get up to speed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.1.html"> INT 13h, 00h </A></LI>
+<LI><A HREF="asm_002.16.html"> 0:441h </A></LI>
+<LI><A HREF="asm_002.33.html"> 0:474h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

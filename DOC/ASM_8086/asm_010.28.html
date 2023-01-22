@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 1Bh (27)        Get FAT Information for Current Drive</b>
+ 
+    Gets disk characteristics and the media descriptor byte for the
+    current drive. (The media descriptor byte specifies the type of
+    drive.)
+ 
+       <B>On entry:</b>      AH         1Bh
+ 
+       <B>Returns:</b>       AL         Number of sectors per cluster
+                      CX         Sector size in bytes
+                      DX         Total number of disk clusters
+                      DS:BX      Pointer to the media descriptor byte (FAT ID
+                                 byte)
+ 
+  --------------------------------------------------------------------------
+ 
+<B>  Media Descriptor (FAT ID) Byte</b>
+ 
+    The media descriptor byte is limited to the values F0 through FF. This
+    range is no longer sufficient to provide unique identifiers for each
+    media type. The following values are defined:
+ 
+          FFh            Double-sided 5 1/4" floppy, 8 sectors
+          FEh            Single-sided 5 1/4" floppy, 8 sectors or
+                         Single-sided 8" floppy, 26 sectors or
+                         Single-sided 8" floppy, 8 sectors
+          FDh            Double-sided 5 1/4" floppy, 9 sectors or
+                         Single-sided 8" floppy, 26 sectors
+          FCh            Single-sided floppy, 9 sectors per track
+          F9h            Double-sided 5 1/4" floppy, 15 sectors or
+                         Double-sided 3 1/2" floppy, 9 sectors
+          F8h            Hard disk
+          F0h            Double-sided 3 1/2" floppy, 18 sectors or
+                         Any other undefined media type
+ 
+    For more reliable information about media type, use Interrupt 25h to
+    read the BIOS Parameter Block (BPB) in the boot record.
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This function changes the current value of DS. To
+                      ensure the stability of your program, it's best to
+                      PUSH DS before calling this service.
+ 
+                      To perform the same function for a drive other than
+                      the default, use Function 1Ch.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.29.html"> 1Ch </A></LI>
+<LI><A HREF="asm_010.55.html"> 36h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

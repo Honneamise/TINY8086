@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  03h (3)        Read Cursor Position and Size</b>
+ 
+    Reports the cursor position (row and column) and size for a specified
+    display page.
+ 
+       <B>On entry:</b>      AH         03h
+                      BH         Display page number
+ 
+       <B>Returns:</b>       CH         Cursor start line
+                      CL         Cursor end line
+                      DH         Row
+                      DL         Column
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+<B>          </b><B>Cursor Start and End line values (CH and CL)</b>
+ 
+<B>                            Legal               Default</b>
+<B>      Adapter</b><B>  </b><B>          Start</b><B>  </b><B>End</b><B>   </b><B>      Start</b><B>      </b><B>End</b>
+       CGA                 0     7            6         7
+       MDA                 0    13           11        12
+       EGA                 0    13          6(11)     7(12)  Depends on mode
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service can report the position of the cursor
+                      on the active display page or on an inactive page.
+                      Since there is only one hardware cursor, the cursor
+                      start line (CH) and cursor end line (CL) (and hence
+                      the size of the cursor) will be the same no matter
+                      what page number is specified.
+ 
+                      In graphics modes, this service reports the logical
+                      position of the cursor, even though the cursor
+                      itself is not displayed.
+ 
+                      The upper left corner of the display is DH = 0h,
+                      DL = 0h, while the lower right corner is DH = 18h
+                      (24), DL = 27h (39) for 40-column mode or 4Fh (79)
+                      for 80-column mode.
+ 
+                      See Service 05h for a list of legal page numbers for
+                      the different display modes. Because the service
+                      does no value checking, erratic results can occur if
+                      you specify an illegal page number. The page number
+                      for graphics modes is 0.
+ 
+                      Use Service 02h to set the current cursor position.
+ 
+                      Use Service 01h to set the current cursor size.
+ 
+                      Early versions of the Monochrome Display Adapter
+                      (MDA) and the Compaq display adapter had a bug. They
+                      incorrectly reported the cursor start and end scan
+                      lines after the video adapters were initialized (the
+                      mode had changed or the machine was powered on). The
+                      MDA would report the cursor size as CH = 06h, CL =
+                      07h, instead of CH = 0Bh, CL = 0Ch. The Compaq
+                      reported the cursor size as CH = 00h, CL = 67h, for
+                      any display mode. Note that this is a problem only
+                      after the mode has changed or after power-up. Once
+                      the cursor size is set (using service 01h), then
+                      this service will report the correct cursor size.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.2.html"> INT 10h, 01h </A></LI>
+<LI><A HREF="asm_023.3.html"> INT 10h, 02h </A></LI>
+<LI><A HREF="asm_023.6.html"> INT 10h, 05h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

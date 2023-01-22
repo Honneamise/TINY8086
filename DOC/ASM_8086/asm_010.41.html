@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 28h (40)        Random Block Write, Using FCBs</b>
+ 
+    Writes one or more records from the current Disk Transfer Address to a
+    file.
+ 
+       <B>On entry:</b>      AH         28h
+                      CX         Number of records to write
+                      DS:DX      Pointer to an opened FCB
+ 
+       <B>Returns:</b>       AL         00h      If write was successful
+                                 01h      If disk full
+                                 02h      If DTA too small (segment wrap)
+                      CX         Number of records written
+ 
+       <B>Network:</b>       Requires Write access rights
+ 
+  --------------------------------------------------------------------------
+ 
+    This function writes the number of records specified by CX, starting
+    at the file offset specified by random-record (offset 21h) and record-
+    size (0Eh) fields of the FCB. The current block and current record
+    fields are set to reflect the random-record field, and the records are
+    written to the file from the current DTA.
+ 
+       <B>Notes:</b>         The data to be written is taken from the current
+                      Disk Transfer Address (DTA). Use Function 1Ah to set
+                      the DTA. If the transfer of data would cause segment
+                      wraparound, an error 2 is generated.
+ 
+                      If the records being written don't fill an entire
+                      sector, DOS buffers the data for an eventual write
+                      when a full sector's worth of data is accumulated.
+ 
+                      If the file specified has the read-only attribute
+                      set, the write is not performed.
+ 
+                      If you specify a value of 0 in CX, the function
+                      writes no records, but it adjusts the file's length
+                      to the position of the specified random record. This
+                      is useful if you have logically deleted records at
+                      the end of the file, since it enables you to
+                      truncate the file appropriately and free up disk
+                      space.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.22.html"> 15h </A></LI>
+<LI><A HREF="asm_010.27.html"> 1Ah </A></LI>
+<LI><A HREF="asm_010.35.html"> 22h </A></LI>
+<LI><A HREF="asm_010.65.html"> 40h </A></LI>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

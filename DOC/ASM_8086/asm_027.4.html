@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 16h,  03h (3)        Set Typematic Rate                  PCjr, XT-286, AT</b>
+ 
+    Sets the typematic rate and delay of the keyboard.
+ 
+       <B>On entry:</b>      AH         03h
+                      AL         Subservice
+                                    0 - Return to default keyboard state
+                                    1 - Increase initial delay
+                                    2 - Slow typematic rate by 1/2
+                                    3 - Perform Subservices 1 and 2
+                                    4 - Turns off typematic characters
+                                    5 - Set typematic rate and delay
+                                        BL - Typematic rate (see below)
+                                        BH - Delay value (see below)
+ 
+       <B>Returns:</b>       None
+ 
+  --------------------------------------------------------------------------
+ 
+<B>  </b><B>Typematic Rate in Characters per Second (BL)</b>
+ 
+<B>     BL        Rate</b><B>              </b><B>BL        Rate              BL        Rate</b>
+     00h       30.0              0Bh       10.9              16h        4.3
+     01h       26.7              0Ch       10.0              17h        4.0
+     02h       24.0              0Dh        9.2              18h        3.7
+     03h       21.8              0Eh        8.6              19h        3.3
+     04h       20.0              0Fh        8.0              1Ah        3.0
+     05h       18.5              10h        7.5              1Bh        2.7
+     06h       17.1              11h        6.7              1Ch        2.5
+     07h       16.0              12h        6.0              1Dh        2.3
+     08h       15.0              13h        5.5              1Eh        2.1
+     09h       13.3              14h        5.0              1Fh        2.0
+     0Ah       12.0              15h        4.6
+ 
+<B>  Delay Value in Milliseconds (BH)</b>
+ 
+             BH                  Delay
+              0                   250
+              1                   500
+              2                   750
+              3                  1000
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         Subservices 0 through 4 are available only for the
+                      PCjr. Subservice 5 is available only for ATs dated
+                      11/15/85 and after, and for XT-286s.
+ 
+                      Subservice 0 (Return to Default Keyboard State)
+                      restores the keyboard to its original state. The
+                      original state at power-on is typematic on, normal
+                      initial delay and normal typematic rate.
+ 
+                      Subservice 1 (Increase Initial Delay) increases the
+                      delay between the first character typed and the
+                      burst of typematic characters.
+ 
+                      For Subservices 0 through 4, each time the typematic
+                      rate is changed, all previous states are removed.
+                      For example, if you want to increase the typematic
+                      delay and the rate is currently being slowed, use
+                      Subservice 3 (Perform Subservices 1 and 2) rather
+                      than Subservice 1 (Increase Initial Delay) by
+                      itself.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 1Bh (27)             Keyboard Break</b>
+ 
+    Called when a Control-Break key sequence is encountered.
+ 
+  --------------------------------------------------------------------------
+ 
+    When the machine is powered on, the interrupt handler for this
+    interrupt just IRETs back to the caller. DOS, however, installs a
+    Ctrl-Break handler that sets an internal flag to signal that a
+    keyboard Break condition has occurred.
+ 
+       <B>Notes:</b>         DOS tests the state of the internal flag
+                      occasionally, depending on the state of the Control-
+                      Break Check (INT 21h, Function 33h). If the flag is
+                      on during a test, then the string "^C", followed by
+                      a Carriage-Return/ Line-Feed combination, is
+                      displayed on the screen, the DOS internal flag is
+                      reset, and INT 23h (Control-Break Exit Address) is
+                      called.
+ 
+                      Note that INT 09h (Keyboard) sets the byte at
+                      0:0471h to signal that a Control-Break key has been
+                      entered.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_011.4.html"> INT 23h </A></LI>
+<LI><A HREF="asm_002.31.html"> 0:471h </A></LI>
+<LI><A HREF="asm_010.52.html"> 33h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>LODSB            Load String Byte                    Flags: not altered</b>
+ 
+<B>LODSB</b>
+ 
+          <B>Logic:</b>    AL  (DS:SI)
+                    if DF = 0
+                        SI  SI + 1
+                    else
+                        SI  SI - 1
+ 
+    LODSB transfers the byte pointed to by DS:SI into AL and increments or
+    decrements SI (depending on the state of the Direction Flag) to point
+    to the next byte of the string.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        12         -        1     LODSB
+   (repeat)                 9+13/rep    1/rep      1     REP LODSB
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          Although it is legal to repeat this instruction, it
+                      is almost never done since doing so would
+                      continually overwrite the value in AL.
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    The following example sends the eight bytes at INIT_PORT to port 250.
+    (Don't try this on your machine, unless you know what's hanging off
+    port 250.)
+ 
+  INIT_PORT:
+          DB      '$CMD0000'      ;The string we want to send
+          .
+          .
+          CLD                     ;Move forward through string at INIT_PORT
+          LEA     SI, INIT_PORT   ;SI gets starting address of string
+          MOV     CX, 8           ;CX is counter for LOOP instruction
+  AGAIN:  LODSB                   ;Load a byte into AL...
+          OUT     250,AL          ;   ...and output it to the port.
+          LOOP    AGAIN
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.70.html"> LODS </A></LI>
+<LI><A HREF="asm_000.72.html"> LODSW </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.79.html"> MOVS </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.114.html"> STOS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

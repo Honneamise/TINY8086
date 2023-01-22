@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 3Fh (63)        Read from File or Device, Using a Handle</b>
+ 
+    Read bytes from a file or device into a buffer.
+ 
+       <B>On entry:</b>      AH         3Fh
+                      BX         File handle
+                      CX         Number of bytes to read
+                      DS:DX      Address of buffer
+ 
+       <B>Returns:</b>       AX         Number of bytes read, or
+                                 Error code, if CF is set
+ 
+       <B>Error codes:</b>   5          Access denied
+                      6          Invalid handle
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+       <B>Network:</b>       Requires Read access rights
+ 
+  --------------------------------------------------------------------------
+ 
+    This function reads data from the file or device whose handle is in
+    BX. Data is read starting at the location pointed to by the file
+    pointer. The file pointer is incremented by the number of bytes read.
+ 
+       <B>Notes:</b>         If the Carry Flag is not set and AX = 0, the file
+                      pointer was at the end of the file when the function
+                      was called.
+ 
+                      If the Carry Flag is not set and AX is less than the
+                      number of bytes requested, either the function read
+                      to the end of the file, or an error occurred.
+ 
+                      You can read bytes from anywhere in the file by
+                      calling function 42h to move to file poniter before
+                      reading data.
+ 
+                      If the keyboard device is specified, this function
+                      reads either the specified number of bytes, or all
+                      bytes up to the next carriage return, whichever is
+                      less. (If the number of bytes specified is at least
+                      two larger than the number of characters typed, the
+                      carriage-return line-feed pair will be returned as
+                      the last two bytes, and will count as two bytes.)
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.21.html"> 14h </A></LI>
+<LI><A HREF="asm_010.34.html"> 21h </A></LI>
+<LI><A HREF="asm_010.40.html"> 27h </A></LI>
+<LI><A HREF="asm_010.67.html"> 42h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

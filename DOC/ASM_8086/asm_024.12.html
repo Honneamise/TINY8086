@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  0Bh (11)       Write Long                               diagnostics</b>
+ 
+    Writes one or more long sectors to a fixed disk from memory. A long
+    sector is a sector of information plus 4 bytes representing the ECC
+    code for the sector. This service can be performed on fixed disks
+    only.
+ 
+       <B>On entry:</b>      AH         0Bh
+                      AL         Number of sectors to write (1-127)
+                      CH         Cylinder number (10-bit value; upper 2 bits
+                                 in CL)
+                      CL         Starting sector number
+                      DH         Head number
+                      DL         Drive number (Bit 7 must be set)
+                      ES:BX      Address of memory buffer
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      AL         Number of sectors written
+                      CF         Set if error, else cleared
+ 
+    Writes the information at a memory buffer to the sectors starting at
+    the specified location (head, cylinder, and track)
+ 
+       <B>Notes:</b>         This service is for diagnostics only. For a more
+                      generalized version, see Service 03h, which writes
+                      sectors for both diskettes and fixed disks. Also see
+                      INT 26h (DOS), which  allows the writing of absolute
+                      sectors from any type of block device.
+ 
+                      The cylinder number is a ten-bit quantity (0 through
+                      1023). Its most significant two bits are in bits 7
+                      and 6 of CL; the remaining eight bits are in CH. The
+                      starting sector number fits in the low-order portion
+                      (lower 6 bits) of CL.
+ 
+                      The value returned in AL (number of sectors written)
+                      may not give the correct number of sectors, even
+                      though no writing error has occurred. Use the
+                      results of the Carry flag and AH (status flag) to
+                      determine the status of the operation.
+ 
+                      The number of sectors to write (AL) can be 127
+                      sectors at most.
+ 
+                      If an error is encountered while writing a sector,
+                      use Service 0h to reset the drive and retry the
+                      operation. It is recommended that at least 3 retries
+                      be attempted before an error is signalled, since the
+                      error may have resulted from the diskette motor not
+                      being up to speed.
+ 
+                      Because of the architecture of the DMA channel, an
+                      error will occur if the buffer in memory for the
+                      sectors overlaps a 64K page boundary. A 64K page
+                      boundary is a memory location which is one of the
+                      following (10000h, 20000h, 30000h, etc.). Ensure
+                      that no part of your buffer falls on such a
+                      boundary. If it does, then create a new buffer or
+                      start the buffer just after the boundary.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+<LI><A HREF="asm_024.4.html"> INT 13h, 03h </A></LI>
+<LI><A HREF="asm_011.7.html"> INT 26h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

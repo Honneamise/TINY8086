@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Overview         Overview of the Instruction Format</b>
+ 
+    Each entry in this list includes information on which flags in the
+    8088's flag register are changed, and how they're changed.  Since
+    there are 9 flags in the flags register, the flags display is very
+    compact:
+ 
+ 
+          <B>              Flags: O D I T S Z A P C</b>
+                               0       * * ? * 0
+ 
+           <B>?</b>      Undefined after the operation.
+           <B>*</b>      Changed to reflect the results of the instruction.
+           <B>0</b>      Always cleared
+           <B>1</b>      Always set
+ 
+  --------------------------------------------------------------------------
+ 
+    The timing charts show timings for the 8088.  Since the 80x8x
+    processors execute instructions in fewer clock cycles than the 8088,
+    these charts represent the worst case.
+ 
+       <B>Operands</b>       This field gives the list of possible operands and
+                      addressing modes for each instruction.
+ 
+       <B>Clocks</b>         Number of clock cycles required to execute the
+                      instruction on an 8088.  Effective Address
+                      calculations (EA) take additional time, as outlined
+                      in the EA table.
+ 
+       <B>Transfers</b>      The number of memory references.  4 clock cycles are
+                      required for each memory reference.
+ 
+       <B>Bytes</b>          Number of bytes in the instruction.
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          The additional clock cycles required to reinitialize
+                      the instruction que and fetch the next instruction
+                      after a control transfer instruction (such as JMP or
+                      CALL) is already included in the timing tables.  Two
+                      clock times are listed for conditional transfer
+                      instructions (such as JZ); the shortest time is for
+                      the case when there is no transfer.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_005.html"> EA </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>DAA              Decimal Adjust after Addition       Flags: O D I T S Z A P C</b>
+                                                            ?       * * * * *
+<B>DAA</b>
+ 
+          <B>Logic:</b>    If (AL & 0Fh) &gt; 9 or (AF = 1) then
+                        AL  AL + 6
+                        AF  1
+                    else AF  0
+                    If (AL &gt; 9Fh) or (CF = 1) then
+                        AL  AL + 60h
+                        CF  1
+                    else CF  0
+ 
+    DAA corrects the result of a previous addition of two valid packed
+    decimal operands (note that this result must be in AL). This
+    instruction changes the content of AL so that it will contain a pair
+    of valid packed decimal digits.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   no operands                 4          -        1     DAA
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          Packed BCD stores one digit per nibble (4 bits); the
+                      least significant digit is in the lower nibble.
+ 
+                      It is not possible to apply an adjustment after
+                      division or multiplication of packed BCD numbers.
+                      If you need to use multiplication or division, it is
+                      better to use unpacked BCD numbers.  See, for
+                      example, the description of AAM (ASCII Adjust after
+                      Multiply).
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.21.html"> DAS </A></LI>
+<LI><A HREF="asm_000.2.html"> AAA </A></LI>
+<LI><A HREF="asm_000.5.html"> AAS </A></LI>
+<LI><A HREF="asm_000.4.html"> AAM </A></LI>
+<LI><A HREF="asm_000.3.html"> AAD </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

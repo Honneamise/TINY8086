@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 3Dh (61)        Open a File</b>
+ 
+    Opens a file with the specified access code.
+ 
+       <B>On entry:</b>      AH         3Dh
+                      AL         Open mode
+                      DS:DX      Pointer to filename (ASCIIZ string)
+ 
+       <B>Returns:</b>       AX         File handle
+                                 Error code, if CF is set
+ 
+       <B>Error codes:</b>   1          Function number invalid
+                      2          File not found
+                      3          Path not found
+                      4          No handle available
+                      5          Access denied
+                      12         Open mode invalid
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+  --------------------------------------------------------------------------
+ 
+    This function opens the file whose pathname is specified in the ASCIIZ
+    string at DS:DX using the "open mode" byte to determine how the file
+    may be accessed. The function opens any existing file, including
+    hidden files, and sets the record size to 1 byte.
+ 
+  --------------------------------------------------------------------------
+<B>  Open Mode Coding in AL</b>
+ 
+              <B>AL</b>
+          <B>Bit Number</b>             <B>Open Mode</b>            <B>DOS 2.x usage</b>
+        7 6 5 4 3 2 1 0
+        . . . . . A A A          Access mode          Read/Write access
+        . . . . R . . .          Reserved             Always 0
+        . S S S . . . .          Sharing mode         Must be 0 in DOS 2
+        I . . . . . . .          Inheritance flag     Must be 0 in DOS 2
+ 
+  ---------------------------------------------------------------------------
+<B>  Access Mode (lower three bits of AL):</b>
+ 
+    The low-order three bits (access mode) are used in the same manner in
+    both DOS 2 and 3. These bits indicate allowable access (read, write,
+    or read/write).
+ 
+             <B>Bit           Hex       Access Mode</b>
+            2 1 0
+            0 0 0           0        Read-only access
+            0 0 1           1        Write-only access
+            0 1 0           2        Read/write access
+ 
+  ---------------------------------------------------------------------------
+<B>  Bit 3 Reserved (must always be zero)</b>
+ 
+  ---------------------------------------------------------------------------
+<B>  Sharing Mode (Bits 4, 5, and 6 of AL) -- DOS 3.0 and above</b>
+ 
+    In DOS 3.0 and above, bits 4, 5, and 6 specify a sharing mode (must be
+    set to 0 in DOS 2.x). These bits govern the manner (if any) in which
+    other users on a network may open and use the file after you have
+    opened it. The following settings (and no others) are valid:
+ 
+             <B>Bit           Hex       Sharing Mode</b>
+            6 5 4
+            0 0 0           0        Compatibility mode
+            0 0 1           1        Deny Read/Write mode (Exclusive mode)
+            0 1 0           2        Deny Write mode
+            0 1 1           3        Deny Read mode
+            1 0 0           4        Deny None mode
+ 
+  ---------------------------------------------------------------------------
+<B>  Inheritance Flag (bit 7 of AL) -- DOS 3.0 and above</b>
+ 
+    The Inheritance Flag (bit 7), specifies whether or not child processes
+    will inherit the use of this file. If bit 7 is 0, child processes
+    automatically have access to the file. If bit 7 is 1, the file is not
+    automatically available to child processes. Like any other process,
+    however, a child process can request access to the file on a shared
+    basis; see the discussion of sharing/access mode interactions, below.
+ 
+            <B>Bit 7    </b> <B>    Inheritance Flag</b>
+              0           File is inherited by child processes
+              1           File is not inherited
+ 
+  ---------------------------------------------------------------------------
+<B>  Availability of an opened file to subsequent processes</b>
+ 
+    Once a file has been opened by a process, the availability of that
+    file to other processes is determined by both the sharing mode and
+    access mode of the original process as well as by the sharing mode and
+    access mode specified by the subsequent process. Here is a case-by-
+    case overview of these interactions:
+ 
+     1.  The file is first opened in compatibility sharing mode.  A file
+         is considered to be in "compatibility" mode if it is opened:
+ 
+         þ   via an FCB function
+         þ   via any of the CREATE functions
+         þ   via any handle function call in which compatibility mode is
+             specified.
+ 
+    A file in compatibility mode may be opened any number of times by a
+    single process, unless the file is already open under one of the other
+    four sharing modes. If the file has the read-only attribute, however,
+    and it is currently open in Deny Write sharing mode with Read access,
+    the file may be opened in Compatibility mode with Read access.
+ 
+     2.  The file is opened in one of the other sharing modes.  See the
+         table below.
+ 
++-------------------------+--------------------------------------------------+
+|<B>A file first opened in</b>   |   <B>May be reopened in</b>                             |
++-------------------------+--------------------------------------------------+
+|Deny Read/Write mode,    |   May not be reopened                            |
+|Read Only access         |                                                  |
+|        (AL=X0010000)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Read/Write mode,    |   May not be reopened                            |
+|Write Only access        |                                                  |
+|        (AL=X0010001)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Read/Write mode,    |   May not be reopened                            |
+|Read/Write access        |                                                  |
+|        (AL=X0010010)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Write mode,         |   Deny Write, Read Only         (AL = x0100000)  |
+|Read Only access         |   Deny None, Read Only          (AL = x1000000)  |
+|        (AL=X0100000)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Write mode,         |   Deny Read, Read Only          (AL = x0110000)  |
+|Write Only access        |   Deny None, Read Only          (AL = x1000000)  |
+|        (AL=X0100001)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Write mode,         |   Deny None, Read Only          (AL = x1000000)  |
+|Read/Write access        |                                                  |
+|        (AL=X0100010)    |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Read mode,          |   Deny Write, Write Only        (AL = x0100001)  |
+|Read Only access         |   Deny None, Write Only         (AL = x1000001)  |
+|        (AL = x0110000)  |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Read mode,          |   Deny Read,  Write Only        (AL = x0110001)  |
+|Write Only access        |   Deny None,  Write Only        (AL = x1000001)  |
+|        (AL = x0110001)  |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny Read mode,          |   Deny None,  Write Only        (AL = x1000001)  |
+|Read/Write access        |                                                  |
+|        (AL = x0110010)  |                                                  |
++-------------------------+--------------------------------------------------+
+|Deny None mode,          |   Deny Write, Read Only         (AL = x0100000)  |
+|Read Only access         |   Deny Write, Write Only        (AL = x0100001)  |
+|        (AL = x1000000)  |   Deny Write, Read/Write        (AL = x0100010)  |
+|                         |   Deny None,  Read Only         (AL = x1000000)  |
+|                         |   Deny None,  Write Only        (AL = x1000001)  |
+|                         |   Deny None,  Read/Write        (AL = x1000010)  |
++-------------------------+--------------------------------------------------+
+|Deny None mode,          |   Deny Read, Read Only          (AL = x0110000)  |
+|Write Only access        |   Deny Read, Write Only         (AL = x0110001)  |
+|        (AL = x1000001)  |   Deny Read, Read/Write         (AL = x0110010)  |
+|                         |   Deny None, Read Only          (AL = x1000000)  |
+|                         |   Deny None, Write Only         (AL = x1000001)  |
+|                         |   Deny None, Read/Write         (AL = x1000010)  |
++-------------------------+--------------------------------------------------+
+|Deny None mode,          |   Deny None, Read Only          (AL = x1000000)  |
+|Read/Write access        |   Deny None, Write Only         (AL = x1000001)  |
+|        (AL = x1000010)  |   Deny None, Read/Write         (AL = x1000010)  |
++-------------------------+--------------------------------------------------+
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         Files that end with a colon (devices) are not opened
+                      with this function call.
+ 
+                      File sharing must be loaded for the sharing modes of
+                      this function to work.
+ 
+                      Child processes that inherit files also inherit
+                      their sharing and access restrictions.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.16.html"> 0Fh </A></LI>
+<LI><A HREF="asm_010.23.html"> 16h </A></LI>
+<LI><A HREF="asm_010.61.html"> 3Ch </A></LI>
+<LI><A HREF="asm_010.105.html"> 5Ah </A></LI>
+<LI><A HREF="asm_010.106.html"> 5Bh </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

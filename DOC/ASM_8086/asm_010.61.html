@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 3Ch (60)        Create a File (CREAT)</b>
+ 
+    Create a new file or open and truncate an existing file to zero
+    length.
+ 
+       <B>On entry:</b>      AH         3Ch
+                      CX         File attribute
+                      DS:DX      Pointer to filename (ASCIIZ string)
+ 
+       <B>Returns:</b>       AX         File handle, if CF is not set, or
+                                 Error code, if CF is set
+ 
+       <B>Error codes:</b>   3          Path not found
+                      4          No handle available
+                      5          Access denied (file is read-only, or root
+                                 directory is full)
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+       <B>Network:</b>       Requires Create access rights.
+ 
+  --------------------------------------------------------------------------
+ 
+    This function opens the file whose pathname is specified in the ASCIIZ
+    string at DS:DX. If the file doesn't already exist, it is created.
+    Warning: If a file with the specified name already exists, it is
+    truncated to zero length, effectively deleting the old data from the
+    file. The file is opened for read/write.
+ 
+       <B>Notes:</b>         The CX register specifies the attribute of the file
+                      you're creating, as follows:
+ 
+                      <B>      CX       Attribute specified</b>
+                            00h      Normal
+                            01h      Read-only
+                            02h      Hidden
+                            04h      System
+ 
+                      Sum the values to combine attributes.
+ 
+                      Information can be written to a file created in
+                      Read-only mode. However, using this function to open
+                      an existing read-only file will generate an error.
+ 
+                      The CHMOD function (43h) can be used to change the
+                      file's attribute.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.23.html"> 16h </A></LI>
+<LI><A HREF="asm_010.68.html"> 43h </A></LI>
+<LI><A HREF="asm_010.105.html"> 5Ah </A></LI>
+<LI><A HREF="asm_010.106.html"> 5Bh </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+<LI><A HREF="asm_013.html"> File attribute </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

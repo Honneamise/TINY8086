@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 16h,  10h (16)       Extended Keyboard Read                          many</b>
+ 
+    Returns the next character in the keyboard buffer; if no character is
+    available, this service waits until one is available. This service is
+    provided to support the enhanced (101/102-key) keyboard.
+ 
+       <B>On entry:</b>      AH         10h
+ 
+       <B>Returns:</b>       AL         ASCII character code
+                      AH         Scan code
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is supported only on the AT dated
+                      11/15/85 and after, PC XT dated 1/10/86 and after,
+                      and XT-286.
+ 
+                      The scan codes are the numbers representing the
+                      location of the key on the keyboard. As new keys
+                      have been added and the keyboard layout rearranged,
+                      this numbering scheme has not been consistent with
+                      its original purpose. See the list of scan codes.
+ 
+                      If the character is a special character, AL will be
+                      0 and the value in AH will be the extended scan code
+                      for the key. See the list of scan codes.
+ 
+                      Use the scan codes to differentiate between keys
+                      representing the same ASCII code, such as the plus
+                      key across the top of the keyboard and the gray plus
+                      key.
+ 
+                      After the character has been removed from the
+                      keyboard buffer, the keyboard buffer start pointer
+                      (at 0:041Ah) is increased by 2. If the start pointer
+                      is beyond the end of the buffer, the start pointer
+                      is reset to the start of the keyboard buffer.
+ 
+                      If no character is available at the keyboard, an INT
+                      15h, Service 90h (Device Busy), will be issued for
+                      the keyboard, informing the operating system that
+                      there is a keyboard loop taking place and thereby
+                      allowing the operating system to perform another
+                      task.
+ 
+                      After every character is typed, an INT 15h, Service
+                      91h (Interrupt Complete), is issued. This allows the
+                      operating system to switch back to a task that is
+                      waiting for a character at the keyboard.
+ 
+                      See Service 00h for an equivalent service that works
+                      with all keyboards, not supporting the new keys on
+                      the enhanced (101/102-key) keyboard.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_027.1.html"> INT 16h, 00h </A></LI>
+<LI><A HREF="asm_027.6.html"> INT 16h, 05h </A></LI>
+<LI><A HREF="asm_021.html"> Scan Codes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>:                Segment-Override Operator                      MASM Operator</b>
+ 
+    segmentRegister<B>:</b>expression
+ or
+    segmentName<B>:</b>expression
+ or
+    groupName<B>:</b>expression
+ 
+    This operator forces a label or variable's address to be computed
+    using the beginning of a segmentRegister, segmentName, or groupName.
+ 
+       <B>Notes:</b>     The segmentRegister must be CS, SS, ES, or DS.
+ 
+                  SegmentName and groupName must have been defined using
+                  the SEGMENT or GROUP directives. Also they must have
+                  been assigned to a segment register with the ASSUME
+                  directive.
+ 
+                  The expression can be a relocatable operand or an
+                  absolute symbol.
+ 
+                  Depending on the instruction and operand types, the
+                  effective address of an operand is computed relative to
+                  ES, DS, and SS. By using this operator, these defaults
+                  can be overridden.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_007.111.html"> SEGMENT </A></LI>
+<LI><A HREF="asm_007.60.html"> GROUP </A></LI>
+<LI><A HREF="asm_007.22.html"> ASSUME </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

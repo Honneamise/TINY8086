@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Standard file handles</b>
+ 
+          0       Standard input device           Stdin
+          1       Standard output device          Stdout
+          2       Standard error device           Stderr
+          3       Standard auxiliary device       Stdaux
+          4       Standard printer device         Stdprn
+ 
+ 
+       <B>Stdin</b>          This is usually the keyboard, but it can be
+                      redirected so that input is read from a file.
+ 
+       <B>Stdout</b>         This is usually the display, but can be redirected
+                      so the output is written to a file.
+ 
+       <B>Stderr</b>         This is the display and cannot be redirected on the
+                      command line.  Stderr is useful for displaying error
+                      or copyright messages that you don't want
+                      redirected.
+ 
+       <B>Stdaux</b>         This is usually a serial device, and is the same as
+                      the DOS `AUX:' device.  You can both read from and
+                      write to this device.
+ 
+       <B>Stdprn</b>         This is usually the printer, and is the same as the
+                      DOS `PRN:' device.  You can both read from and write
+                      to this device.
+ 
+  --------------------------------------------------------------------------
+ 
+    The file handles listed above are open when a program first starts.
+    You don't need to explicitly open any of these devices unless you had
+    previously closed one of these file handles.
+ 
+       <B>Notes:</b>         All five predefined handles are in ASCII mode, which
+                      means that DOS attaches special meaning to a number
+                      of characters, including Ctrl-C (Ctrl-Break), Ctrl-
+                      S, and Ctrl-P.  In ASCII mode, Ctrl-Z is treated as
+                      an end-of-file mark; characters read from Stdin are
+                      echoed to the screen; control characters written to
+                      Stdout and Stderr are displayed as a ^x sequence
+                      (for example, ^D); and tabs are filled with spaces
+                      to the next 8-character boundary.
+ 
+                      You can change the mode of these devices between
+                      ASCII and binary using the IOCTL calls (DOS function
+                      44h).  Note, however, that because the first three
+                      devices (Stdin, Stdout, and Stderr) are all
+                      duplicate handles, changing the mode on any one
+                      changes the mode for the other two.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.69.html"> 44h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>SEGMENT          Initiate Segment Definition                   MASM Directive</b>
+ 
+  name      <B>SEGMENT</b>   [align] [combine] ['class']
+  name      ENDS
+ 
+    Marks the beginning of a segment.
+ 
+       <B>Notes:</b>     A segment is a collection of instructions or data whose
+                  addresses are all computed relative to the same segment
+                  register.
+ 
+                  Your program may have more than one segment definition
+                  using the same name. The assembler treats all segments
+                  having the same name as one segment.
+ 
+                  The align, combine, and class parameters should be
+                  specified in the order outlined above, if they are
+                  included.  All of these parameters are optional.
+ 
+                  The align parameter, if included, tells the assembler
+                  how to select a starting address for the segment. See
+                  each of the following options for a more detailed
+                  description: BYTE, WORD, PARA, and PAGE.
+ 
+                  The combine parameter, if included, tells the assembler
+                  how to handle multiple segments of the same name. See
+                  each of the following options for a more detailed
+                  description: PUBLIC, STACK, COMMON, MEMORY, and AT.
+ 
+                  The 'class' parameter, if included, tells LINK which
+                  segments are to be loaded into contiguous memory blocks,
+                  one after the other.  The class name must be enclosed
+                  within single quotation marks.  Unless /ML or /MX is
+                  used, the class name is case-insensitive.  Note that a
+                  class name can not be assigned to any other symbol in a
+                  program.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_007.24.html"> BYTE </A></LI>
+<LI><A HREF="asm_007.127.html"> WORD </A></LI>
+<LI><A HREF="asm_007.99.html"> PARA </A></LI>
+<LI><A HREF="asm_007.97.html"> PAGE </A></LI>
+<LI><A HREF="asm_007.117.html"> STACK </A></LI>
+<LI><A HREF="asm_007.27.html"> COMMON </A></LI>
+<LI><A HREF="asm_007.87.html"> MEMORY </A></LI>
+<LI><A HREF="asm_007.23.html"> AT </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

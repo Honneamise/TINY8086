@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>PSP Structure</b>
+ 
+    <B>        Length</b>
+    <B>Offset  (bytes)     Description</b>
+ 
+    00h        2        <B>INT 20h</b> instruction.
+    02h        2        <B>Top of</b> <B>memory</b>. Segment address of the top of the
+                        current program's memory  allocation block.
+    04h        1        <B>Reserved</b>.
+    05h        1        <B>INT 21h</b> instruction.
+    06h        2        <B>Available memory</b>--the number of bytes available in
+                        the segment.
+    08h        2        <B>Reserved</b>.
+    0Ah        4        <B>Terminate address</b> (IP,CS). Address of the
+                        termination interrupt handler (INT 22h) inherited
+                        by the current program. DOS uses this value to
+                        restore the INT 22h vector when the program
+                        terminates.
+    0Eh        4        <B>Ctrl-Break address</b> (IP,CS). Address of the Ctrl-
+                        Break interrupt handler (INT 23h) inherited by the
+                        current program. DOS uses this value to restore the
+                        INT 23h vector when the program terminates.
+    12h        4        <B>Critical error address</b> (IP,CS). Address of the
+                        Critical error interrupt handler (INT 24h)
+                        inherited by the current program. DOS uses this
+                        value to restore the INT 24h vector when the
+                        program terminates.
+    16h       22        <B>Reserved</b>.
+    2Ch        2        <B>Environment</b>--the segment address of the DOS
+                        environment.
+    2Eh       46        <B>Reserved.</b>
+    5Ch       16        <B>Unopened standard FCB1</b>, as parsed from the first
+                        parameter in the command tail.
+    6Ch       20        <B>Unopened standard FCB2</b>, as parsed from the second
+                        parameter in the command tail.
+    80h        1        <B>Parameter length</b>--the length, in bytes, of the
+                        command tail.
+    81h      127        <B>Command tail</b>. Also used as default DTA for FCB
+                        functions.
+ 
+  --------------------------------------------------------------------------
+ 
+      <B>Notes:</b>    Programs should not alter any of the data below 5Ch in the
+                PSP, since DOS uses this information when the program
+                exits.
+ 
+                The second FCB at 6Ch will be overwritten if the first FCB
+                is used to open a file.  This happens because the only 16
+                bytes are reserved for the first FCB, whereas an entire
+                FCB is 37 bytes long.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 16h,  11h (17)       Extended Keyboard Status                        many</b>
+ 
+    Checks to see if a character is available in the buffer. This service
+    is provided to support the extended keyboard (101/102-key keyboard).
+ 
+       <B>On entry:</b>      AH         11h
+ 
+       <B>Returns:</b>       Zero       0, if character is available
+                                 1, if character is not available
+ 
+                      AX         If character is available, then set to
+                                 character as in Service 10h
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is supported only on the AT dated
+                      11/15/85 and after, the XT dated 1/10/86 and after,
+                      and the XT-286.
+ 
+                      If a character is available, the Zero Flag is
+                      cleared and AX contains the ASCII value in AL and
+                      the scan code in AH. The character is not removed
+                      from the buffer. Use Service 10h to remove the
+                      character from the buffer. See Service 10h for a
+                      complete description of the meaning of AX if a
+                      character is available.
+ 
+                      This service is excellent for clearing the keyboard
+                      or allowing a program to be interruptable by a
+                      specific key sequence.
+ 
+                      See Service 01h for an equivalent service that works
+                      with all keyboards, not supporting the new keys on
+                      the enhanced (101/102-key) keyboard.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_027.2.html"> INT 16h, 01h </A></LI>
+<LI><A HREF="asm_027.7.html"> INT 16h, 10h </A></LI>
+<LI><A HREF="asm_021.html"> Scan Codes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

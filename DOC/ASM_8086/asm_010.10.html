@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 09h (9)         Print String</b>
+ 
+    Outputs a string of characters to the standard output device. Checks
+    for Ctrl-Break (Ctrl-C).
+ 
+       <B>On entry:</b>      AH         09h
+                      DS:DX      Pointer to character string
+ 
+       <B>Returns:</b>       Nothing
+ 
+  --------------------------------------------------------------------------
+ 
+    The function outputs a string to the standard output device, checking
+    for Ctrl-Break and Ctrl-C.
+ 
+       <B>Notes:</b>         The string must be terminated with a $ (dollar-
+                      sign); the dollar-sign is not displayed. This
+                      function is therefore not suitable for displaying
+                      strings that include the dollar-sign character. All
+                      other characters, including control characters, are
+                      displayed.
+ 
+                      If a Ctrl-Break or Ctrl-C is detected, an INT 23h is
+                      generated following output.
+ 
+                      To output a single character, see Function 02h.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.3.html"> 02h </A></LI>
+<LI><A HREF="asm_010.7.html"> 06h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

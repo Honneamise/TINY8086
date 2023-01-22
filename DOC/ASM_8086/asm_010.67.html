@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 42h (66)        Move File Pointer (LSEEK)</b>
+ 
+    Move the file-pointer the specified number of bytes from the
+    beginning, end, or current location, as determined by the mode code in
+    AL.
+ 
+       <B>On entry:</b>      AH         42h
+                      BX         File handle
+                      CX:DX      Offset, in bytes (signed 32-bit integer)
+                      AL         Mode code (see below)
+ 
+       <B>Mode Code:     AL         Action</b>
+                      0          Move pointer CX:DX bytes from beginning of
+                                 file
+                      1          Move pointer CX:DX bytes from current
+                                 location
+                      2          Move pointer CX:DX bytes from end of file
+ 
+       <B>Returns:</b>       DX:AX      New pointer location (signed 32-bit integer),
+                      or AX      Error code, if CF is set
+ 
+       <B>Error codes:</b>   1          Invalid mode code
+                      6          Invalid handle
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+  --------------------------------------------------------------------------
+ 
+    This function changes the logical read/write position in the specified
+    file, by incrementing or decrementing the value assigned to the file
+    pointer. The offset to add to the file pointer is given as a signed
+    32-bit integer in the CX:DX register pair--the more significant
+    portion of the offset in CX. A mode code, specified in AL, indicates
+    whether the offset specified in CX:DX is referenced to the beginning
+    of the file (mode 0), the pointer's current location (mode 1), or the
+    end of the file (mode 2).
+ 
+       <B>Notes:</b>         No matter what mode is specified in AL, a positive
+                      offset value in CX:DX always increases the value of
+                      the file pointer. Note that using mode 2 with a
+                      positive value in CX:DX will therefore move the file
+                      pointer beyond the end of the file.
+ 
+                      Use a mode code of 2 with an offset of 0 to move the
+                      file pointer to the end of the file, or to find the
+                      length of the file.
+ 
+                      It is possible to move the pointer to a location
+                      before the beginning of the file or after the end of
+                      the file. Moving the pointer to a position before
+                      the start of the file will not generate an error,
+                      but the next read or write operation will fail.
+ 
+                      A file can be extended by moving the file pointer
+                      past the end of the file and writing one or more
+                      bytes of data.
+ 
+                      A file can be truncated my moving the file pointer
+                      to the new end of file and writing zero bytes using
+                      function 40h.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.65.html"> 40h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

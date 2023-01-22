@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>0:413h                   Memory Size in Kilobytes (0-640)</b>
+ 
+ <B>Length: 2 bytes</b>
+ 
+    Contains the number of contiguous 1K memory blocks in the system (up
+    to 640K).
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:         </b>Use INT 12h to access the memory size using the ROM
+                      BIOS interface.
+ 
+                      This memory value is determined at power-on time by
+                      either examining the DIP switches on the system
+                      board or using the value stored in the CMOS battery,
+                      whichever way is appropriate according to the type
+                      of machine.
+ 
+                      This is the amount of memory available to the entire
+                      system. This is not the amount of memory available
+                      to the user's program. Use INT 21h, Function 48h, to
+                      determine the amount of memory available to a user's
+                      program.
+ 
+                      To determine the amount of memory above the 1024K
+                      address range, use INT 15h, Service 88h.
+ 
+                      If the CMOS battery memory value or the DIP switch
+                      value is greater than the actual amount of memory,
+                      then the actual amount of memory is returned by this
+                      interrupt.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_001.10.html"> INT 12h </A></LI>
+<LI><A HREF="asm_010.88.html"> 48h </A></LI>
+<LI><A HREF="asm_026.15.html"> INT 15h, 88h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

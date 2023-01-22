@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Error Codes</b>
+ 
+    All the FCB functions report an error by returning 0FFh in the AL
+    register.  Other functions report an error by setting the carry flag
+    and placing an error code in the AX register.  DOS 2.x functions
+    return the error codes 0 - 12h.  Under DOS 3.x, it is best to call
+    function 59h to obtain more detailed error information.
+ 
+<B>Code  Meaning                           Code  Meaning</b>
+ 00h  No error                           22h  Invalid disk change
+ 01h  Invalid function number            23h  FCB unavailable
+ 02h  File not found                     24h  Sharing buffer overflow
+ 03h  Path not found                     32h  Network request not supported
+ 04h  No handle available                33h  Remote computer not listening
+ 05h  Access denied                      34h  Duplicate name on network
+ 06h  Invalid handle                     35h  Network name not found
+ 07h  Memory control blocks destroyed    36h  Network busy
+ 08h  Insufficient memory                37h  Network device no longer exists
+ 09h  Invalid memory block address       38h  Net BIOS command limit exceeded
+ 0Ah  Invalid environment                39h  Network adapter hardware error
+ 0Bh  Invalid format                     3Ah  Incorrect response from network
+ 0Ch  Invalid access code                3Bh  Unexpected network error
+ 0Dh  Invalid data                       3Ch  Incompatible remote adapter
+ 0Eh  Reserved                           3Dh  Print queue full
+ 0Fh  Invalid drive specification        3Eh  Not enough space for print file
+ 10h  Attempt to remove the current      3Fh  Print file was deleted
+      directory                          40h  Network name was deleted
+ 11h  Not same device                    41h  Access denied
+ 12h  No more files                      42h  Network device type incorrect
+ 13h  Disk write-protected               43h  Network name not found
+ 14h  Unknown unit                       44h  Network name limit exceeded
+ 15h  Drive not ready                    45h  Net BIOS session limit exceeded
+ 16h  Unknown command                    46h  Temporarily paused
+ 17h  Disk data error (CRC)              47h  Network request not accepted
+ 18h  Bad request structure length       48h  Print or disk redirection paused
+ 19h  Seek error                         50h  File exists
+ 1Ah  Unknown media type                 51h  Reserved
+ 1Bh  Sector not found                   52h  Cannot make directory entry
+ 1Ch  Printer out of paper               53h  Critical-error interrupt failure
+ 1Dh  Write fault                        54h  Too many redirections
+ 1Eh  Read fault                         55h  Duplicate redirection
+ 1Fh  General failure                    56h  Invalid password
+ 20h  File sharing violation             57h  Invalid parameter
+ 21h  File locking violation             58h  Network device fault
+ 
+  --------------------------------------------------------------------------
+ 
+  The following information is returned by the DOS function 59h:
+ 
+<B>  Error class:</b>
+ 
+    <B>Code    Meaning</b>
+     01h    Out of resource
+     02h    Temporary situation; try again later
+     03h    Authorization
+     04h    Internal error in system software
+     05h    Hardware failure
+     06h    System failure; serious failure of system software
+     07h    Application software error
+     08h    Item requested not found
+     09h    Bad format (e.g., unrecognizable disk)
+     0Ah    Item locked
+     0Bh    Media error (e.g., CRC error)
+     0Ch    Already exists
+     0Dh    Unknown
+ 
+<B>  Suggested action:</b>
+ 
+    <B>Code    Meaning</b>
+     01h    Try again now.
+     02h    Try again (a few times) after a pause, then prompt user to
+            continue or abort.
+     03h    Ask user to correct input, then retry.
+     04h    Orderly abort; close files, then shut down the application.
+     05h    Immediate abort; don't even try to close files.
+     06h    Ignore.
+     07h    Ask user to do something (like insert appropriate disk), then
+            retry.
+ 
+<B>  Locus of error:</b>
+ 
+    <B>Code    Meaning</b>
+     01h    Unknown
+     02h    Block device (e.g., disk drive)
+     03h    Network
+     04h    Serial device
+     05h    Memory
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

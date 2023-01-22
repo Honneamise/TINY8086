@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>F000:FFFEh               System Model ID</b>
+ 
+ <B>Length: 1 byte</b>
+ 
+    This byte specifies the machine type.
+ 
+  --------------------------------------------------------------------------
+ 
+    Use INT 15h, Service C0h, for a more accurate test of the system model
+    ID and the sub-model ID.
+ 
+<B>               ID                  Machine Type</b>
+               FFh                 Original PC
+               FEh                 Later PC, XT, or Portable PC
+               FBh                 Later XT
+               FDh                 PCjr
+               FCh                 AT or XT-286
+               F9h                 PC Convertible
+ 
+    Note that a few machines share IDs. To differentiate the machines, use
+    INT 15h, Service C0h, and look at the sub-model ID.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_026.19.html"> INT 15h, C0h </A></LI>
+<LI><A HREF="asm_006.html"> System ID </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

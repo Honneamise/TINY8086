@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  04h (4)        Read Light-Pen Position</b>
+ 
+    Reports the position and status of the light pen.
+ 
+       <B>On entry:</b>      AH         04h
+ 
+       <B>Returns:</b>       AH         Status (0=not triggered, 1=triggered)
+                      BX         Pixel column number (0-639)
+                      CH         Pixel line number (0-199)
+                      CX         Pixel line number for modes 0Fh-10h (0-nnn)
+                      DH         Character row number (0-24)
+                      DL         Character column number (0-39 or 0-79)
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The position is reported in two forms: the character
+                      position (row in DH, column in DL), and the pixel
+                      location (raster line in CH, column/dot in BX).
+ 
+                      For the PC Convertible, if AH is 0 upon return, the
+                      light pen is not supported.
+ 
+                      The pixel coordinates for the light pen position are
+                      not precise. The y coordinate is always a multiple
+                      of 2, while the x coordinate is a multiple of 4 for
+                      the 320 x 200 graphics mode and a multiple of 8 for
+                      the 640 x 200 graphics mode.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

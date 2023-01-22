@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>File Attributes</b>
+ 
+       <B>             Bit              Hex</b>       <B>Description</b>
+              7 6 5 4 3 2 1 0
+              . . . . . . . 1        01        Read-only
+              . . . . . . 1 .        02        Hidden
+              . . . . . 1 . .        04        System
+              . . . . 1 . . .        08        Volume label
+              . . . 1 . . . .        10        Directory
+              . . 1 . . . . .        20        Archive
+ 
+       Read-only      Files that are marked as read-only can be read, but
+                      not altered.  Attempts to open read-only files for
+                      output, or to create a file with the same name,
+                      result in an error.  Read-only files do appear in
+                      normal directory searches, however.
+ 
+       Hidden         Hidden files do not appear in DOS's directory
+                      listings, nor do they appear in normal file
+                      searches.
+ 
+       System         Marks files that are used by the system, such as
+                      IBMBIO.COM and IBMSYS.COM.  Such files do not appear
+                      in normal file searches.
+ 
+       Volume label   Used for the 11-character volume label on a disk.
+                      All other information in a volume label's directory
+                      entry is ignored.  Volume labels are not files, per
+                      se--they use one entry in the directory, but have no
+                      additional data.
+ 
+       Directory      The directory entry refers to a subdirectory.
+                      Subdirectories are normally excluded from file
+                      searches.
+ 
+       Archive        This bit, when set, indicates that the file has been
+                      changed since the last time it was backed up.  This
+                      bit is set whenever a file is written to and then
+                      closed.
+ 
+       Bits 6, 7      These bits are reserved for future use and must be
+                      set to 0.
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         File searches with the search attribute set to 0
+                      will find all files with no attribute, or files with
+                      the read-only and/or archive attribute set.
+ 
+                      The directory and volume-label bits cannot be
+                      changed using the CHMOD function (43h) DOS call.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>.TYPE            Return Mode and Scope of an Expression         MASM Operator</b>
+ 
+  <B>.TYPE</b> expression
+ 
+    Returns a byte that declares the mode and scope of an expression.
+ 
+       <B>Notes:</b>     Below is the format of the byte that is returned:
+ 
+                    <B>      Bits</b>
+                    7 6 5 4 3 2 1 0
+                    x . . . . . . .  1=External scope; 0=Local or Public scope
+                    . x . . . . . .  Always 0
+                    . . x . . . . .  Defined
+                    . . . x x x . .  Always 0
+                    . . . . . . x .  Data-related
+                    . . . . . . . x  Program-related
+ 
+                  If the expression is not valid, the entire byte is 0.
+ 
+                  This operator is often used with conditional directives,
+                  where the status of a variable is needed for program
+                  control.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

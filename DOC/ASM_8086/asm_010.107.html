@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 5Ch (92)        Lock/Unlock File Access                    ò DOS 3.0</b>
+ 
+    Denies or permits access to a specified region of a file.
+ 
+       <B>On entry:</b>      AH         5Ch
+                      AL         00h      to lock a file
+                                 01h      to unlock a file
+                      BX         File handle
+                      CX         Offset of region (high-order word)
+                      DX         Offset of region (low-order word)
+                      SI         Length of region (high-order word)
+                      DI         Length of region (low-order word)
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+ 
+       <B>Error codes:</b>   1          Invalid function code
+                      6          Invalid handle
+                      33         File-locking violation (specified region is
+                                 already locked)
+ 
+  --------------------------------------------------------------------------
+ 
+    This function is used to lock or unlock a selected portion of a file,
+    preventing or allowing access to that region by other processes in a
+    multitasking or networking environment.
+ 
+       <B>Notes:</b>         CX and DX together make up a 4-byte integer that
+                      specifies the byte offset into the file of the
+                      region to be locked or unlocked; SI and DI make up a
+                      4-byte integer specifying the length of the region.
+ 
+                      Terminating a process that has an open file with a
+                      locked region, or closing a file with a locked
+                      region, has undefined results. If your program can
+                      be aborted via Int 23h or 24h, you should ensure
+                      that the locks are released before terminating the
+                      program.
+ 
+                      The unlocking operation must specify exactly the
+                      same file region as the locking operation.
+ 
+                      A child process (i.e., a process created via the
+                      EXEC system call), does not inherit access to
+                      regions of a file that were locked by its parent.
+ 
+                      Use this function in the following file modes:
+                           Deny read sharing mode
+                           Deny none sharing mode
+                           Deny write sharing mode, and file opened for
+                               read/write
+                           Deny write sharing mode, and file opened for
+                               write only
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.62.html"> 3Dh </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

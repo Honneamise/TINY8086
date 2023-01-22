@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>CMPSB            Compare String Byte                 Flags: O D I T S Z A P C</b>
+                                                            *       * * * * *
+<B>CMPSB</b>
+ 
+          <B>Logic:</b>    CMP (DS:SI), (ES:DI)           ; Sets flags only
+                    if DF = 0
+                        SI  SI + 1
+                        DI  DI + 1
+                    else
+                        SI  SI - 1
+                        DI  DI - 1
+ 
+    This instruction compares two values by subtracting the byte pointed
+    to by ES:DI, from the byte pointed to by DS:SI, and sets the flags
+    according to the results of the comparison. The operands themselves
+    are not altered. After the comparison, SI and DI are incremented (if
+    the direction flag is cleared) or decremented (if the direction flag
+    is set), in preparation for comparing the next element of the string.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        22         2        1     CMPSB
+   (repeat)                9 + 22/rep   2/rep      1     REPE CMPSB
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    The following example compares BUFFER1 against BUFFER2 for the first
+    mismatch.
+ 
+          cld                     ;Scan in the forward direction
+          mov     cx, 100         ;Scanning 100 bytes (CX is used by REPE)
+          lea     si, buffer1     ;Starting address of first buffer
+          lea     di, buffer2     ;Starting address of second buffer
+          repe    cmpsb           ;   ...and compare it.
+          jne     mismatch        ;The Zero Flag will be cleared if there
+                                  ;   is a mismatch
+  match:          .               ;If we get here, buffers match
+                  .
+  mismatch:
+          dec     si              ;If we get here, we found a mismatch.
+          dec     di              ;Back up SI and DI so they point to the
+                  .               ;   first mismatch
+ 
+    Upon exit from the REPE CMPSB loop, the Zero Flag will be cleared if a
+    mismatch was found, and set otherwise. If a mismatch was found, DI and
+    SI will be pointing one byte past the byte that didn't match; the DEC
+    DI and DEC SI instructions backup these registers so they point to the
+    mismatched characters.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.15.html"> CMP </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.18.html"> CMPSW </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

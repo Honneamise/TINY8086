@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  13h (19)       Write Character String                          many</b>
+ 
+    Writes a string of characters with specified attributes to any display
+    page.
+ 
+       <B>On entry:</b>      AH         13h
+                      AL         Subservice (0-3)
+                      BH         Display page number
+                      BL         Attribute (Subservices 0 and 1)
+                      CX         Length of string
+                      DH         Row position where string is to be written
+                      DL         Column position where string is to be written
+                      ES:BP      Pointer to string to write
+ 
+       <B>Returns:</b>       None
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is available only for XTs dated 1/19/86
+                      and later, ATs, EGAs, and PC Convertibles.
+ 
+                      The service has four subservices, as follows:
+ 
+                      AL=00h: Assign all characters the attribute in BL;
+                      do not update cursor
+                      AL=01h: Assign all characters the attribute in BL;
+                      update cursor
+                      AL=02h: Use attributes in string; do not update
+                      cursor
+                      AL=03h: Use attributes in string; update cursor
+ 
+                      In Subservices 0 and 1, all characters in the string
+                      are written to the screen with the same attribute--
+                      the attribute specified in BL.
+ 
+                      In Subservices 2 and 3, the attribute byte for each
+                      character is found in the string itself. The string
+                      itself consists of a character followed by its
+                      attribute, another character followed by its
+                      attribute, and so on. The string is copied directly
+                      to the video buffer as is.
+ 
+                      In Subservices 0 and 2, the cursor position is not
+                      updated after the string is written.
+ 
+                      In Subservices 1 and 3, the cursor is moved to the
+                      first position following the last character in the
+                      string.
+ 
+                      Like Service 0Eh, Service 13h responds appropriately
+                      to ASCII 07h (bell), 08h (backspace), 10h (line
+                      feed), and 0Dh (carriage return). All other
+                      characters are printed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.10.html"> INT 10h, 09h </A></LI>
+<LI><A HREF="asm_023.11.html"> INT 10h, 0Ah </A></LI>
+<LI><A HREF="asm_023.15.html"> INT 10h, 0Eh </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

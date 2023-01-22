@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 1Ah,  09h (9)        Read Clock Alarm Time and Status         Convertible</b>
+ 
+    Reads the alarm time and status from the real-time clock.
+ 
+       <B>On entry:</b>      AH         09h
+ 
+       <B>Returns:</b>       CF         Set if clock operating; else cleared
+                      CH         Hours (BCD)
+                      CL         Minutes (BCD)
+                      DH         Seconds (BCD)
+                      DL         Alarm Status
+                                    00h - Alarm not enabled
+                                    01h - Alarm enabled but will not power-on
+                                          system
+                                    02h - Alarm enabled and will power-on
+                                          system
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         Note that all dates are in Binary Coded Decimal
+                      (BCD). For example, June 1, 1985 will be set as CX =
+                      1985; DX = 0601.
+ 
+                      The real-time clock is the clock that runs even when
+                      the computer is turned off. A CMOS battery is used
+                      so that, even while the computer is off, the date,
+                      time, and alarm time are maintained.
+ 
+                      This service is available only for the PC
+                      Convertible. ATs and XT-286s will set the Carry
+                      Flag, thus reporting an error state. Previous
+                      machines will report unpredictable results
+                      (including the state of the Carry Flag).
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_029.7.html"> INT 1Ah, 06h </A></LI>
+<LI><A HREF="asm_029.8.html"> INT 1Ah, 07h </A></LI>
+<LI><A HREF="asm_029.9.html"> INT 1Ah, 08h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

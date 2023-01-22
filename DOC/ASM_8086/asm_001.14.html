@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 1Ch (28)             User Timer Tick</b>
+ 
+    Called at every timer tick (18.2 times per second, or every 55 ms) by
+    INT 08h (System Timer).
+ 
+  --------------------------------------------------------------------------
+ 
+    By default, the interrupt handler for this interrupt IRETs back to the
+    caller. The user can supply his own handler so he can attain control
+    at every timer tick.
+ 
+       <B>Notes:</b>         Note that this interrupt is called by the hardware
+                      timer interrupt (INT 08h), which has not signaled
+                      the end of the interrupt back to the interrupt
+                      controller. Therefore, this routine is limited in
+                      the actions it can take, since all interrupts will
+                      be disabled. A better approach to this problem is to
+                      intercept INT 08h. The new INT 08h handler will
+                      first call the standard INT 08h, which will handle
+                      the interrupt controller completion signals
+                      mentioned above. Then after the standard INT 08h is
+                      completed, the new handler can do whatever it has to
+                      do at every timer tick.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_001.7.html"> INT 08h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

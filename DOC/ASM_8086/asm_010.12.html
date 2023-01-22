@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 0Bh (11)        Check Standard Input Status</b>
+ 
+    Checks to see if a character is available from the standard input
+    device. Checks for Ctrl-Break and Ctrl-C.
+ 
+       <B>On entry:</b>      AH         0Bh
+ 
+       <B>Returns:</b>       AL         FFh       If a character is available
+                                 00h       If no character is available
+ 
+  --------------------------------------------------------------------------
+ 
+    This function can be used to see if a character is available at the
+    standard input device (usually the keyboard), before transferring
+    control to one of the waiting keyboard input services (Function 01h,
+    Function 07h, and Function 08h).
+ 
+       <B>Notes:</b>         The function returns FFh if a character is available
+                      and 00h if none is available.
+ 
+                      If DOS encounters a Ctrl-Break or Ctrl-C, it
+                      executes an INT 23h.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.7.html"> 06h </A></LI>
+<LI><A HREF="asm_010.2.html"> 01h </A></LI>
+<LI><A HREF="asm_010.8.html"> 07h </A></LI>
+<LI><A HREF="asm_010.9.html"> 08h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

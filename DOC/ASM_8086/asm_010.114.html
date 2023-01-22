@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 5F04h (95-4)    Cancel Redirection                         ò DOS 3.1</b>
+ 
+    Cancels a previously established network redirection.
+ 
+       <B>On entry:</b>      AH         5Fh
+                      AL         04h
+                      DS:SI      Pointer to an ASCIIZ string specifying either
+                                 the local device to cancel or its associated
+                                 network name.
+ 
+       <B>Returns:</b>       AX         Error code   If CF is set
+ 
+  --------------------------------------------------------------------------
+ 
+    This function undoes a previously established network redirection
+    link. DS:SI points to the name of the link to cancel, and it may
+    contain a printer name (PRN, LPT1, LPT2, or LPT3), a drive designator,
+    or the network name (in the last case, the ASCIIZ string should be
+    followed by a second ASCIIZ string giving the password associated with
+    the link).
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.112.html"> 5F02h </A></LI>
+<LI><A HREF="asm_010.113.html"> 5F03h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

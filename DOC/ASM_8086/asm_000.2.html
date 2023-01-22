@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>AAA              ASCII Adjust after Addition         Flags: O D I T S Z A P C</b>
+                                                            ?       ? ? * ? *
+<B>AAA</b>
+ 
+          <B>Logic:</b>    If (AL & 0Fh) &gt; 9 or (AF = 1) then
+                        AL  AL + 6
+                        AH  AH + 1
+                        AF  1;  CF  1
+                    else
+                        AF  0;  CF  0
+                    AL  AL & 0Fh
+ 
+    Converts the number in the lower 4 bits (nibble) of AL to an unpacked
+    BCD number (high-order nibble of AL is zeroed).
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   no operands                 4          -        1     AAA
+  --------------------------------------------------------------------------
+ 
+    If the lower 4 bits of the number in AL is greater than 9, or the
+    auxiliary carry flag is set, this instruction converts AL to its
+    unpacked BCD form by adding 6 (subtracting 10) to AL; adding 1 to AH;
+    and setting the auxiliary flag and carry flags. This instruction will
+    always leave 0 in the upper nibble of AL.
+ 
+       <B>Note:</b>          Unpacked BCD stores one digit per byte; AH contains
+                      the most-significant digit and AL the least-
+                      significant digit.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.3.html"> AAD </A></LI>
+<LI><A HREF="asm_000.5.html"> AAS </A></LI>
+<LI><A HREF="asm_000.4.html"> AAM </A></LI>
+<LI><A HREF="asm_000.6.html"> ADC </A></LI>
+<LI><A HREF="asm_000.20.html"> DAA </A></LI>
+<LI><A HREF="asm_003.html"> Flags </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

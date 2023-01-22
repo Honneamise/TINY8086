@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 5F02h (95-2)    Get Redirection List Entry                 ò DOS 3.1</b>
+ 
+    Returns information on one entry in the network redirection list.
+ 
+       <B>On entry:</b>      AH         5Fh
+                      AL         02h
+                      BX         Index into redirection list
+                      DS:SI      Pointer to a 128-byte buffer for local device
+                                 name
+                      ES:DI      Pointer to a 128-byte buffer for network name
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+                      BH         Device status flag
+                                     Bit  0 = 0 if device valid
+                                              1 if device invalid
+                      BL         Device type (3=printer, 4=disk drive)
+                      CX         Parameter saved via Function 5F03
+ 
+       <B>Destroys:</b>      DX and BP are both changed
+ 
+       <B>Error codes:</b>   1          Network not loaded
+                      18         No more files
+ 
+  --------------------------------------------------------------------------
+ 
+    Subfunction 02 of Function 5Fh returns an entry in the network
+    redirection list. The list itself is created via Subfunction 03.
+ 
+    To call Subfunction 02, place the index value you wish to inspect in
+    BX. The local device name will be returned in a 16-byte area pointed
+    to by DS:SI, and its network name will be returned in a 128-byte area
+    pointed to by ES:DI. BL returns a device-type code (3 for a printer, 4
+    for a disk drive), and CX returns a parameter (specified by means of
+    Subfunction 03) associated with the device.
+ 
+    To list all devices on the network, execute this function repeatedly,
+    starting with an index (BX) value of 00h, incrementing BX by 1 until
+    AX reports an error code of 18.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.113.html"> 5F03h </A></LI>
+<LI><A HREF="asm_010.114.html"> 5F04h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

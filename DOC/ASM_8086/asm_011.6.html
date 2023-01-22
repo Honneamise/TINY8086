@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 25h (37)             Absolute Disk Read</b>
+ 
+    Reads one or more sectors on a specified logical disk.
+ 
+       <B>On entry:</b>      AL         Drive number (0=A, 1=B)
+                      CX         Number of sectors to read
+                      DX         Starting sector number
+                      DS:DX      Buffer to store sector read
+ 
+       <B>Returns:</b>       AX         Error code (if CF is set; see below)
+                      Flags      DOS leaves the flags on the stack
+ 
+  --------------------------------------------------------------------------
+ 
+    This DOS service (and its write counterpart, Interrupt 26h) is
+    comparable to service provided by the ROM-BIOS in Interrupt 13h,
+    except for these two differences:
+ 
+     1.  DOS numbers disk sectors sequentially, starting at cylinder 0,
+         head 0, sector 1. The BIOS service identifies sectors by three
+         separate coordinates--cylinder, head, and sector). The following
+         formula converts BIOS-numbered sectors to the DOS format:
+ 
+      DOS.Sector.Number = (BIOS.Sector-1) + BIOS.Head * Sectors.per.Head +
+                          BIOS.Cylinder * Sectors.per.Head * Heads.per.Disk
+ 
+     2.  DOS works with logical drives, while the BIOS works with physical
+         drives only. That means that the DOS interrupt can be used to
+         read a phantom drive B, a RAM drive, or a logical drive that has
+         been mapped to a nondefault physical drive via the ASSIGN
+         command.
+ 
+    Error information is reported in AX as follows:
+ 
+              <B>Error code in AH:</b>
+ 
+                01h       Invalid command
+                02h       Address mark not found
+                03h       Attempt to write on write-protected diskette
+                04h       Sector not found
+                05h       Reset failure
+                07h       Drive parameter activity failure
+                08h       DMA overrun
+                09h       DMA boundary error
+                10h       CRC or ECC data error
+ 
+                11h       Possible error corrected by ECC (AL contains
+                          burst length)
+                20h       Controller failure
+                40h       Bad seek
+                80h       Drive timeout
+                BBh       Undefined error
+                FFh       Sense operation failure
+ 
+              <B>Error code in AL:</b>
+ 
+                00h       Write-protect error
+                01h       Invalid drive number
+                02h       Drive not ready
+                03h       Invalid command
+                04h       CRC error
+                05h       Bad request structure length
+                06h       Seek error
+                07h       Unknown medium; disk format not recognized
+                08h       Sector not found
+                09h       Printer out of paper
+                0Ah       Write error
+                0Bh       Read error
+                0Ch       General, nonspecific error
+ 
+    Note that the AH error information is the same as that returned in AH
+    by Interrupt 13h, Service 2, and the AL error information is the same
+    returned in DL in response to a critical error (Interrupt 24h).
+ 
+    Following a call to Interrupt 25h, DOS leaves one word (the flag
+    contents at the time the interrupt was invoked) on the stack. You
+    should POP this word to prevent stack growth.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_011.7.html"> INT 26h </A></LI>
+<LI><A HREF="asm_024.3.html"> INT 13h, 02h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 4Dh (77)        Get Return Code of a Subprocess (WAIT)</b>
+ 
+    Gets the return code from a terminated subprocess.
+ 
+       <B>On entry:</b>      AH         4Dh
+ 
+       <B>Returns:</b>       AX         Return code
+ 
+  --------------------------------------------------------------------------
+ 
+    This function retrieves the return code from a process that has been
+    terminated via Function 4Ch (EXIT) or Function 31h (Terminate and Stay
+    Resident). There are two parts to the information returned: AL reports
+    the return code issued by the terminating program itself; AH reports
+    the manner in which it was terminated. The possible values in AH are:
+ 
+         00h        normal termination
+         01h        terminated via Ctrl-Break or Ctrl-C
+         02h        terminated by DOS because of critical device error
+         03h        terminated via Function 31h, Terminate and Stay Resident
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.50.html"> 31h </A></LI>
+<LI><A HREF="asm_010.92.html"> 4Ch </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>0:496h                   Keyboard Status and Type Flags</b>
+ 
+ <B>Length: 1 byte</b>
+ 
+    This byte holds keyboard status information.
+ 
+<B>                      Keyboard Status Information</b>
+ 
+            7 6 5 4 3 2 1 0
+            x . . . . . . .       Read ID in progress
+            . x . . . . . .       Last character was first ID character
+            . . x . . . . .       Force Num Lock if read ID and KBX
+            . . . x . . . .       101/102-key keyboard installed
+            . . . . x . . .       Right Alt key is pressed
+            . . . . . x . .       Right Ctrl key is pressed
+            . . . . . . x .       Last code was E0 Hidden Code
+            . . . . . . . x       last code was E1 Hidden Code
+ 
+    Use INT 16h, Service 12h, to obtain some of this information.
+ 
+    Addresses 0:417h and 0:418h also contain keyboard status information.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_027.9.html"> INT 16h, 12h </A></LI>
+<LI><A HREF="asm_002.7.html"> 0:417h </A></LI>
+<LI><A HREF="asm_002.8.html"> 0:418h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>0:4A8h                   Double-Word Pointer to Video Parameters for the EGA</b>
+ 
+ <B>Length: 4 bytes</b>
+ 
+    This double-word pointer points to a list of pointers that contain
+    various parameters and overrides for the Enhanced Graphics Adapter
+    (EGA).
+ 
+  --------------------------------------------------------------------------
+<B>  Table Pointed to by Double-Word at 0:4A8h</b>
+ 
+<B>     Offset  Size (bytes)  Description</b>
+      00h         4        Video Parameter Table Pointer
+      04h         4        Dynamic Save Area Pointer
+      08h         4        Alpha Mode Auxiliary Character Generator Pointer
+      0Ch         4        Graphics Mode Auxiliary Character Generator Pointer
+      10h         4        Reserved (always 00:00h)
+      14h         4        Reserved (always 00:00h)
+      18h         4        Reserved (always 00:00h)
+ 
+  --------------------------------------------------------------------------
+<B>  Video Parameter Table Pointer (Double-Word)</b>
+ 
+    This double-word pointer is initialized to point to the BIOS video
+    parameter table.
+ 
+  --------------------------------------------------------------------------
+<B>  Dynamic Save Area Pointer (Double-Word)</b>
+ 
+    This double-word pointer is optional, hence it is initialized to
+    00:00h. When used, this pointer points to a RAM table where specific
+    dynamic values are saved. Currently the values are defined as follows:
+ 
+<B>          Offset      Size (bytes)      Description</b>
+            00h           16            16 EGA palette register values
+            10h            1            Overscan value
+            11h          239            Reserved
+ 
+  --------------------------------------------------------------------------
+<B>  Alpha Mode Auxiliary Character Generator Pointer (Double-Word)</b>
+ 
+    This double-word pointer is optional; hence it is initialized to
+    00:00h. When used, this pointer points to a table as defined below:
+ 
+<B>          Offset      Size (bytes)      Description</b>
+            00h            1            Bytes per character
+            01h            1            Block to load (0=normal operation)
+            02h            2            Count to store (256=normal operation)
+            04h            2            Character offset (0=normal operation)
+            06h            4            Double-word pointer to Font Table
+            0Ah            1            Maximum displayable rows (If FFh,
+                                        maximum rows calculated)
+            0Bh            n            'n' bytes consisting of different
+                                        mode values for this font.
+                                        (0FFh is terminator)
+ 
+  --------------------------------------------------------------------------
+<B>  Graphics Mode Auxiliary Character Generator Pointer (double-word)</b>
+ 
+    This double-word pointer is optional; hence it is initialized to
+    00:00h. When used, this pointer points to a table as defined below:
+ 
+<B>          Offset      Size (bytes)      Description</b>
+            00h            1            Displayable rows
+            01h            2            Bytes per character
+            03h            4            Double-word pointer to Font Table
+            07h            n            'n' bytes consisting of different
+                                        mode values for this font.
+                                        (0FFh is terminator)
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

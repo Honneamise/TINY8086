@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 4Bh (75)        Load or Execute a Program (EXEC)</b>
+ 
+    Loads a subprogram into memory and (optionally) executes it.
+ 
+       <B>On entry:</b>      AH         4Bh
+                      AL         00h          to load and run
+                                 03h          to load but not run
+                      DS:DX      Pointer to an ASCIIZ string specifying
+                                 pathname of subprogram
+                      ES:BX      Pointer to a parameter block
+ 
+       <B>Returns:</b>       AX         Error code   If CF is set
+ 
+       <B>Error codes:</b>   1          Invalid function number
+                      2          File not found
+                      3          Path not found
+                      5          Access denied
+                      8          Insufficient memory
+                      10         Invalid environment
+                      11         Invalid format
+ 
+  --------------------------------------------------------------------------
+ 
+    Function 4Bh (EXEC) allows a program to load a subprogram into memory
+    and, optionally, execute it.
+ 
+    If AL is 00h, the subprogram is loaded, a PSP is created, and the
+    program is executed. The terminate and Ctrl-Break vectors are set to
+    the instruction following the EXEC call, so that control returns to
+    the calling program as soon as the subprogram ends.
+ 
+    If AL is 03h, the subprogram is loaded, no PSP is created, and the
+    subprogram is not automatically executed, although your program can
+    jump to it.
+ 
+    Load the DS:DX register pair with a pointer to an ASCIIZ string
+    containing the drive, path, and filename of the file to be brought
+    into memory. And load the ES:BX pair with a pointer to a parameter
+    block to be passed to the incoming subprogram. The parameter block
+    layout is as follows:
+ 
+<B>  For subfunction 00h (load and run)</b>
+ 
+<B>       Offset    Size (bytes)   Description</b>
+        00h           2         Segment address of environment strings
+        02h           4         Segment and offset of command line
+        06h           4         Segment and offset of first default FCB
+        0Ah           4         Segment and offset of second default FCB
+ 
+<B>  For subfunction 03h (load but don't run)</b>
+ 
+<B>       Offset    Size (bytes)   Description</b>
+        00h           2         Segment address where file is to be loaded
+        02h           2         Relocation factor for program (applies only
+                                to EXE-format programs)
+  --------------------------------------------------------------------------
+ 
+       <B>Environment:</b>   The environment strings, which must be paragraph-
+                      aligned, consists of a sequence of ASCIIZ strings
+                      followed by a byte of 00h after all the strings.
+                      Each ASCIIZ string typically takes the form of
+                      parameter=value. The total environment string must
+                      be less than 32K in length. If the segment for the
+                      environment strings is set to 00h, the subprogram
+                      inherits the environment of the calling program.
+ 
+                      Note that the subprogram always recieves a <B>copy</b> of
+                      the environment string, so that any changes made to
+                      the subprogram's environment won't be reflected in
+                      calling program's environment.
+ 
+       <B>Files:</b>         When a subprogram is loaded and executed, all open
+                      file handles are available to the subprogram. That
+                      means, among other things, that the calling program
+                      can redirect standard input and output for the
+                      subprogram. The only file handles that are not
+                      available to the subprogram are those that were
+                      opened with the inheritance bit set to 1 (see
+                      Function 3Dh).
+ 
+       <B>Memory:</b>        Before using Function 4Bh, you must release enough
+                      memory to load the subprogram (using function 4Ah).
+ 
+       <B>Warning:</b>       This function changes all registers, including the
+                      stack registers. Therefore, before calling a
+                      subprogram, save SS and SP in variables inside your
+                      program code.
+ 
+       <B>Note:</b>          The EXEC function call uses the loader in
+                      COMMAND.COM to load programs.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.62.html"> 3Dh </A></LI>
+<LI><A HREF="asm_010.90.html"> 4Ah </A></LI>
+<LI><A HREF="asm_010.93.html"> 4Dh </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+<LI><A HREF="asm_015.html"> PSP </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

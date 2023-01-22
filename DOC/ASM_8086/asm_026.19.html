@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 15h,  C0h (192)      Return System Configuration                     many</b>
+ 
+    Reports the machine model number, sub-model number, BIOS revision
+    level, and other hardware-specific attributes.
+ 
+       <B>On entry:</b>      AH         C0h
+ 
+       <B>Returns:</b>       Carry      Set if error, else cleared
+                      AH         0
+                      ES:BX      Pointer to a System Descriptor Table
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is not available for the PC, PCjr, XT
+                      dated 11/08/82, and the AT dated 1/10/84. Use the
+                      return state of AH to determine if the service is
+                      returning valid information.
+ 
+<B>  </b><B>System Descriptor Table</b>
+ 
+          <B>Description              Length (byte)      Value</b>
+          Table length                   1              8
+          System model number            1              ?
+          Sub-model number               1              ?
+          Bios Revision level            1              ?
+          Feature Information            1              ?
+          Reserved                       4              0
+ 
+ 
+<B>  Feature Information</b>
+ 
+          7 6 5 4 3 2 1 0
+          x . . . . . . .     Fixed Disk BIOS uses DMA channel 3
+          . x . . . . . .     2nd interrupt chip present
+          . . x . . . . .     Real-time clock present
+          . . . x . . . .     Keyboard intercept called in INT 09h
+          . . . . x . . .     Wait for external event supported
+          . . . . . x . .     Reserved
+          . . . . . . x .     Reserved
+          . . . . . . . x     Reserved
+ 
+ 
+       <B>Notes:</b>         The XT dated 1/10/86 has a bug in its Feature
+                      Information. It incorrectly states that the second
+                      interrupt chip is present (bit 6 is set) and that
+                      the fixed disk BIOS doesn't use DMA channel 3 (bit 7
+                      is clear). Both of these are incorrect. To test for
+                      this condition, if the model number is FBh and the
+                      BIOS level is 1, then ASSUME that the Fixed disk
+                      BIOS does use DMA channel 3 and the second interrupt
+                      chip is not present.
+ 
+                      Programs using the DMA channel 3 presence must also
+                      be aware that other adapters may be using this
+                      channel, such as the IBM Network Adapter, which will
+                      not be reflected in the Feature Information byte.
+ 
+                      See INT 15h, Service 4Fh, for more information on
+                      Keyboard intercept (bit 4 of the Feature Information
+                      byte) and see INT 09h for more information of the
+                      hardware keyboard interrupt.
+ 
+                      See INT 15h, Service 41h, for more information on
+                      the Wait for External Event (bit 3 of the Feature
+                      Information byte).
+ 
+ 
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_026.6.html"> INT 15h, 4Fh </A></LI>
+<LI><A HREF="asm_001.8.html"> INT 09h </A></LI>
+<LI><A HREF="asm_026.2.html"> INT 15h, 41h </A></LI>
+<LI><A HREF="asm_006.html"> System ID </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

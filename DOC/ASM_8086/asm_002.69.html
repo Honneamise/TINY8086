@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>F000:FFF0h               FAR JMP to Beginning of Power-On Self Test (POST)</b>
+ 
+ <B>Length: 5 bytes</b>
+ 
+    Located at this address is a far jump to the beginning of the Power-On
+    Self Test (POST).
+ 
+  --------------------------------------------------------------------------
+ 
+    See POST for more details on what it does. The reason this address is
+    used for this purpose is that when the 8086 family of microprocessors
+    receive power, the CS register is set to FFFFh and the IP register to
+    0, which is exactly the same address as this address F000:FFF0h.
+ 
+    If you wish to reboot (either warm or cold) a system, perform a far
+    jump to this address. This will force the POST to take control, which
+    will reboot the system. The POST looks at the word at address 0:472h
+    to determine whether a warm boot or a cold boot should be performed.
+    If the value at 0:472h is 1234h, then a warm boot is performed;
+    otherwise the boot is cold.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_002.32.html"> 0:472h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>MOVSW            Move String Word                    Flags: not altered</b>
+ 
+<B>MOVSW</b>
+ 
+          <B>Logic:</b>    (ES:DI)  (DS:SI)
+                    if DF = 0
+                        SI  SI + 2
+                        DI  DI + 2
+                    else
+                        SI  SI - 2
+                        DI  DI - 2
+ 
+    This instruction copies the word pointed to by DS:SI to the location
+    pointed to by ES:DI. After the move, SI and DI are incremented (if the
+    direction flag is cleared) or decremented (if the direction flag is
+    set), to point to the next word.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        26         2        1     MOVSW
+   (repeat)                 9+25/rep    2/rep      1     REP MOVSW
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    Assuming BUFFER1 as been defined somewhere as:
+ 
+          BUFFFER1        DB      100 DUP (?)
+ 
+    the following example moves 50 words (100 bytes) from BUFFER1 to
+    BUFFER2:
+ 
+          CLD                     ;Move in the forward direction
+          LEA     SI, BUFFER1     ;Source address to SI
+          LEA     DI, BUFFER2     ;Destination address to DI
+          MOV     CX,50           ;Used by REP; moving 50 words
+  REP     MOVSW                   ;    ...and move it.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.78.html"> MOV </A></LI>
+<LI><A HREF="asm_000.79.html"> MOVS </A></LI>
+<LI><A HREF="asm_000.80.html"> MOVSB </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.70.html"> LODS </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.114.html"> STOS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

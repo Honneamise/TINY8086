@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 59h (89)        Get Extended Error Information             ò DOS 3.0</b>
+ 
+    Returns diagnostic information following an unsuccessful DOS function
+    call or Interrupt 24h.
+ 
+       <B>On entry:</b>      AH         59h
+                      BX         0000h for DOS 3.0 and above
+ 
+       <B>Returns:</b>       AX         Extended error code
+                      BH         Error class
+                      BL         Suggested action
+                      CH         Locus (Source of error)
+ 
+       <B>Destroys:</b>      CL, DX, SI, DI, ES, and DS are all changed
+ 
+  --------------------------------------------------------------------------
+ 
+    This function returns detailed diagnostic information about an error
+    condition. It can be used from inside a critical-error (Interrupt 24h)
+    handler; after a DOS function call that reports an error by setting
+    the Carry Flag; and after an FCB file operation that reports a return
+    code of FFh.
+ 
+    <B>Values returned in AX (extended error code):</b>
+ 
+<B>        AX    Extended error code              AX    Extended error code</b>
+        01h   Invalid function number          14h   Unknown unit
+        02h   File not found                   15h   Drive not ready
+        03h   Path not found                   16h   Unknown command
+        04h   Too many open files              17h   Data error (CRC)
+        05h   Access denied                    18h   Bad request structure
+        06h   Invalid handle                         length
+        07h   Memory control blocks            19h   Seek error
+              destroyed                        1Ah   Unknown medium type
+        08h   Insufficient memory              1Bh   Sector not found
+        09h   Invalid memory block address     1Ch   Printer out of paper
+        0Ah   Invalid environment              1Dh   Write fault
+        0Bh   Invalid format                   1Eh   Read fault
+        0Ch   Invalid access code              1Fh   General failure
+        0Dh   Invalid data                     20h   Sharing violation
+        0Fh   Invalid disk drive               21h   Lock violation
+        10h   Attempt to remove current        22h   Invalid disk change
+              directory                        23h   FCB unavailable
+        11h   Not the same device              50h   File already exists
+        12h   No more files                    52h   Cannot make directory
+        13h   Disk is write-protected          53h   Critical error
+ 
+    <B>Values returned in BH (error class):</b>
+ 
+<B>           BX    Error class</b>
+           01h   Out of resource
+           02h   Temporary problem that can be expected to go away
+           03h   Authorization (permission) problem
+           04h   Internal error (i.e., a system software bug)
+           05h   Hardware problem (not the fault of your program)
+           06h   System software failure (e.g. bad or missing CONFIG.SYS)
+           07h   Application program error
+           08h   File or other item not found
+           09h   File or other item of invalid or unsuitable format or type
+           0Ah   File or other item interlocked
+           0Bh   Media problem (e.g. CRC error, wrong disk in drive)
+           0Ch   Collision with existing item
+           0Dh   Other (unclassified)
+ 
+    <B>Values returned in BL (suggested action):</b>
+ 
+<B>           BL    Suggested action</b>
+           01h   Retry a few times
+           02h   Pause, then retry
+           03h   Ask user to resupply input
+           04h   Abort with cleanup (orderly shutdown)
+           05h   Immediate abort (do not pass GO)
+           06h   Ignore
+           07h   Ask user for remedial action (e.g. insertion of
+                 diskette), then retry
+ 
+    <B>Values returned in CH (source of error):</b>
+ 
+<B>           CH    Source of error</b>
+           01h   Unknown
+           02h   Block device (disk)
+           03h   Network
+           04h   Serial device
+           05h   Memory
+ 
+       <B>Notes:</b>         Since new error codes may be added from time to
+                      time, your program should be able to gracefully
+                      handle unrecognized error codes.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_011.5.html"> INT 24h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

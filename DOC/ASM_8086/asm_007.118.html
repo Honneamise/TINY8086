@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>STRUC            Define Structure Type                         MASM Directive</b>
+ 
+  name      <B>STRUC</b>
+  fieldDefinitions
+  name      ENDS
+ 
+    Initiates the definition of a structure type.
+ 
+       <B>Notes:</b>     The structure may have any number of fields.  Each field
+                  definition must be of the following form:
+ 
+                       [name]   DB | DW | DD | DQ | DT   initialValue,,,
+ 
+                  The optional parameter name specifies the name of the
+                  field. The DB, DW, DD, DQ, or DT specifies the size of
+                  the field.  InitialValue assigns a default value to be
+                  used if no value is included when the structure is
+                  declared. See DB, DW, DD, DQ, and DT for a more
+                  comprehensive discussion of how to use these directives.
+ 
+                  The STRUC directive by itself does not create data. It
+                  merely creates a data type. To create data of this type,
+                  use the syntax:
+ 
+                       [name]      structureName      &lt;[initialValue,,,]&gt;
+ 
+                  where name is the name of a variable and structureName
+                  is the name of a structure type previously defined with
+                  the STRUC directive. One initialValue may be declared
+                  for each field in the structure, using commas to
+                  separate the initial values for each field. For example,
+                  &lt;,,3&gt; will initialize the 3rd field of a structure.
+ 
+                  Structure definitions can contain only comments and
+                  field definitions, therefore nested structures are not
+                  allowed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_007.8.html"> . </A></LI>
+<LI><A HREF="asm_007.107.html"> RECORD </A></LI>
+<LI><A HREF="asm_007.41.html"> ENDS </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

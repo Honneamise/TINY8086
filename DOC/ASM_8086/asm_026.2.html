@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 15h,  41h (65)       Wait for External Event                  Convertible</b>
+ 
+    This service waits for a specified status change after an external
+    event. The external event can be an interrupt or the DMA controller.
+    While waiting for the specific status, the system clocks are stopped
+    in order to conserve battery power. This service is available only for
+    the PC Convertible.
+ 
+       <B>On entry:</b>      AH         41h
+                      AL         Event Type code (see below)
+                      BH         Condition compare or mask value
+                      BL         Time-out (in units of 55 ms); 0 means no
+                                 time-out
+                      ES:DI      Pointer to user byte for event determination
+                                 (if AL is 01h-04h)
+                      DX         I/O Port Address for event determination (if
+                                 AL is 11h-14h)
+ 
+       <B>Returns:</b>       Carry      0 - external event occurred
+                                 1 - time-out
+ 
+  --------------------------------------------------------------------------
+ 
+<B>  AL -- Event Type Code (AL)</b>
+ 
+       00h            Return after any event has occurred
+       01h            Compare value; return if equal
+       02h            Compare value; return if not equal
+       03h            Test bit; return if non-0
+       04h            Test bit; return if 0
+ 
+    Event Type Codes 11h-14h are the same as 01h-04h, except the event
+    determination is coming from the I/O Port Address in DX, instead of
+    the user byte specified by ES:DI.
+ 
+    If the event type is 01h-02h or 11h-12h, then the byte signaling the
+    event determination is compared (using the CMP instruction) against
+    BH. If the event type is 03h-04h or 13h-14h, then the byte signaling
+    the event determination is tested (using the TEST instruction) against
+    BH.
+ 
+       <B>Notes:</b>         This service is available only for the PC
+                      Convertible.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

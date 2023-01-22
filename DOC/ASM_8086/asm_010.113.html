@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 5F03h (95-3)    Redirect Device                            ò DOS 3.1</b>
+ 
+    Redirects I/O from a local printer or disk drive to a device on the
+    network.
+ 
+       <B>On entry:</b>      AH         5Fh
+                      AL         03h
+                      BL         Device type (3=printer, 4=disk drive)
+                      CX         Saved parameter (all values but 0 are
+                                 reserved)
+                      DS:SI      Pointer to an ASCIIZ string containing local
+                                 device name
+                      ES:DI      Pointer to an ASCIIZ string containing
+                                 network path followed by an ASCIIZ string
+                                 containing a password
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+ 
+       <B>Error codes:</b>   1          Network not loaded
+                      3          Path not found
+                      5          Access denied
+                      8          Insufficient memory
+ 
+  --------------------------------------------------------------------------
+ 
+    This function allows you to redirect I/O from a local printer or disk
+    drive to a network device.  You can also control access to the network
+    device by means of a password.
+ 
+       <B>Notes:</b>         Call this function with a device type code in BL (3
+                      for a printer or 4 for a disk drive), and a 0 in CX.
+                      DS:SI should point to the name of the device you
+                      wish to redirect, and ES:DI should point to an
+                      ASCIIZ string giving the name of the destination
+                      network. The network name must be followed by a
+                      second ASCIIZ string specifying a password. The
+                      password may be 0 to 8 characters in length; to
+                      specify no password, provide a null ASCIIZ string (a
+                      0 byte).
+ 
+                      If the redirected device is a printer, acceptable
+                      names are PRN, LPT1, LPT2, and LPT3. If the
+                      redirected device is a disk drive, the source ASCIIZ
+                      string should consist of a drive letter followed by
+                      a colon.
+ 
+                      The source ASCIIZ string may also be null; in this
+                      case, DOS attempts to provide access to the network
+                      name with the specified password.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.112.html"> 5F02h </A></LI>
+<LI><A HREF="asm_010.114.html"> 5F04h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

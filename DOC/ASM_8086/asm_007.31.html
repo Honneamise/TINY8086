@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>DQ               Define Quadword                               MASM Directive</b>
+ 
+  [name]    <B>DQ</b>        initialvalue,,,
+ 
+    Allocates and initializes one or more quadwords (8 bytes) of storage.
+ 
+       <B>Notes:</b>     The optional name argument causes the assembler to
+                  create a variable whose offset value is equal to the
+                  current location counter value.  The variable will be of
+                  type QWORD.
+ 
+    The initialvalue argument may be any of the following:
+ 
+              *     integer (i.e.  1234)
+              *     real number (i.e. 2.3)
+              *     1 or 2 character string constant (i.e. 'gh')
+              *     encoded real number (i.e. 2F0000000000000r)
+              *     constant expression (i.e.  2 * 12)
+              *     DUP operator (i.e. 10 DUP (?))
+              *     question mark (?) (i.e. 0,1,?,2)
+ 
+                  The ? causes the assembler to leave the initial value
+                  undefined.  To specify more than 1 initial value,
+                  separate them with commas.
+ 
+                  String variables of type QWORD must not consist of more
+                  than 2 characters.  The last character is placed in the
+                  low-order byte of the word, and the first character (if
+                  there are 2 characters) or 0 (if only 1 character) is
+                  placed in the next byte.  Zeros pad the rest of the
+                  bytes.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_007.29.html"> DB </A></LI>
+<LI><A HREF="asm_007.33.html"> DW </A></LI>
+<LI><A HREF="asm_007.30.html"> DD </A></LI>
+<LI><A HREF="asm_007.32.html"> DT </A></LI>
+<LI><A HREF="asm_007.35.html"> DUP </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

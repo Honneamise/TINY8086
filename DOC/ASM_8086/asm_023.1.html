@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  00h (0)        Set Video Mode</b>
+ 
+    Sets the video mode.
+ 
+       <B>On entry:</b>      AH         00h
+                      AL         Video mode
+ 
+       <B>Returns:</b>       None
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+<B>                         </b><B>Table of Video Modes</b>
+<B>                                                                    Buffer</b>
+<B>  Mode</b><B>     </b><B>Type</b><B>        </b><B>Resolution      Adapter(s)</b><B>      </b><B>Colors</b><B>       </b><B>Address</b>
+  00h     Text          40 x 25      All but MDA       16 gray       B8000
+  01h     Text          40 x 25      All but MDA   16 fore/8 back    B8000
+  02h     Text          80 x 25      All but MDA       16 gray       B8000
+  03h     Text          80 x 25      All but MDA   16 fore/8 back    B8000
+  04h   Graphics       320 x 200     All but MDA         4           B8000
+  05h   Graphics       320 x 200     All but MDA       4 gray        B8000
+  06h   Graphics       640 x 200     All but MDA         2           B8000
+  07h     Text          80 x 25        MDA,EGA          b/w          B0000
+  08h   Graphics       160 x 200        PCjr            16           B0000
+  09h   Graphics       320 x 200        PCjr            16           B0000
+  0Ah   Graphics       640 x 200        PCjr             4           B0000
+  0Bh   Reserved    (internal to EGA)
+  0Ch   Reserved    (internal to EGA)
+  0Dh   Graphics       320 x 200        EGA             16           A0000
+  0Eh   Graphics       640 x 200        EGA             16           A0000
+  0Fh   Graphics       640 x 350        EGA             b/w          A0000
+  10h   Graphics       640 x 350        EGA             16           A0000
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         When the mode is changed, the screen is cleared.
+                      However, do not use this service as a "clear-screen"
+                      service, since this can take a little longer than
+                      the normal screen-clearing routines (Service 06h or
+                      07h).
+ 
+                      To avoid screen clearing (PCjr, EGA, and PC
+                      Convertible only), call with the high bit in AL set.
+ 
+                      The cursor is not displayed in graphics mode.
+ 
+                      Changing the video mode also changes the cursor
+                      size.
+ 
+                      For the PCjr, CGA, and EGA, modes 0, 2, and 5 are
+                      identical to modes 1, 3 and 4 except color burst is
+                      not enabled. ("Color burst" controls the display of
+                      color on composite monitors: When color burst is on,
+                      color is displayed; when it's off, color is not
+                      displayed. RGB displays are not affected by the
+                      color burst status.)
+ 
+                      Use INT 10h, Service 0Fh to get the current video
+                      mode.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.7.html"> INT 10h, 06h </A></LI>
+<LI><A HREF="asm_023.8.html"> INT 10h, 07h </A></LI>
+<LI><A HREF="asm_023.16.html"> INT 10h, 0Fh </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

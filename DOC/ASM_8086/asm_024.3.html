@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  02h (2)        Read Sectors into Memory                         all</b>
+ 
+    Reads one or more sectors from a fixed or floppy disk into memory.
+ 
+       <B>On entry:</b>      AH         02h
+                      AL         Number of sectors to read
+                      CH         Cylinder number (10 bit value; upper 2 bits
+                                 in CL)
+                      CL         Starting sector number
+                      DH         Head number
+                      DL         Drive number
+                      ES:BX      Address of memory buffer
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      AL         Number of sectors read
+                      CF         Set if error, else cleared
+ 
+  --------------------------------------------------------------------------
+ 
+    Reads the specified number of sectors starting at the specified
+    location (head, cylinder, and track) from a disk into a buffer
+    starting at ES:BX.
+ 
+       <B>Notes:</b>         Values in DL less than 80h specify floppy disks;
+                      values greater than 80h specify fixed disks. For
+                      example, 0 means the first floppy diskette, while
+                      80h means the first fixed disk.
+ 
+                      The cylinder number is a ten-bit quantity (0 through
+                      1023). Its most significant two bits are in bits 7
+                      and 6 of CL; the remaining eight bits are in CH. The
+                      starting sector number fits in the low-order portion
+                      (lower 6 bits) of CL.
+ 
+                      The value returned in AL (number of sectors read)
+                      may not give the correct number of sectors, even
+                      though no error has occurred. Use the results of the
+                      Carry flag and AH (status flag) to determine the
+                      status of the operation.
+ 
+                      The sectors read must all be on the same cylinder
+                      and same side for diskettes, while a hard disk can
+                      read at most 128 sectors at one time.
+ 
+                      If an error is encountered reading a sector, use
+                      Service 0 to reset the drive and retry the
+                      operation. It is recommended that at least 3 retries
+                      be attempted before an error is signalled, since the
+                      error may have resulted from the diskette motor not
+                      being up to speed.
+ 
+                      Because of the architecture of the DMA channel, an
+                      error will occur if the buffer in memory for the
+                      sectors overlaps a 64K page boundary. A 64K page
+                      boundary is a memory location which is one of the
+                      following (10000h, 20000h, 30000h, etc.). Ensure
+                      that no part of your buffer falls on such a
+                      boundary. If it does, create a new buffer or start
+                      the buffer just after the boundary.
+ 
+                      If an error 11h is returned, the data is good, but
+                      the BIOS reports that it was corrected using the ECC
+                      error-correcting algorithm. The error may not occur
+                      again if the information is written back out.
+ 
+                      This service differs from the DOS INT 25h (Read
+                      absolute sector) in that the DOS INT 25h works with
+                      logical devices (RAM disks, Bernoulli drives, etc.).
+                      It is much more flexible. Also INT 25h works with a
+                      linear address, whereas this service works with 3
+                      coordinates to address a disk location. INT 25h
+                      doesn't have the DMA problem mentioned above, and
+                      there is no limit on the number of sectors that can
+                      be read in one operation. In addition, INT 25h will
+                      do all the error-retry attempts itself. INT 25h
+                      should be used instead of this service for obtaining
+                      absolute sector control. Programs that may need to
+                      use this service rather than INT 25h include
+                      partition manipulators, system software, and disk
+                      cache software.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion. Also diskette operations that require
+                      the diskette motor to be on will call INT 15h,
+                      Service 90 (Device Busy), with the type equal to
+                      "Diskette Drive Motor Start" (Type = FDh). This
+                      allows the system to perform another task while the
+                      drive motor is waiting to get up to speed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+<LI><A HREF="asm_011.6.html"> INT 25h </A></LI>
+<LI><A HREF="asm_024.11.html"> INT 13h, 0Ah </A></LI>
+<LI><A HREF="asm_024.4.html"> INT 13h, 03h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

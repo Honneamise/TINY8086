@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 31h (49)        Terminate and Stay Resident</b>
+ 
+    Terminates a process, but keeps a specified portion resident in
+    memory.
+ 
+       <B>On entry:</b>      AH         31h
+                      AL         Return code
+                      DX         Size of resident portion, in paragraphs
+ 
+  --------------------------------------------------------------------------
+ 
+    Function 31h is an enhanced version of DOS Interrupt 27h, Terminate
+    and Stay Resident, that offers two extra features: It allows more than
+    64K of memory to remain resident, and allows the terminating process
+    to report a return code.
+ 
+       <B>Notes:</b>         This function does not release any memory that was
+                      allocated by the terminating process via Function
+                      48h (Allocate Memory).
+ 
+                      The return code may be retrieved by a parent process
+                      via Function 4Dh, or tested by means of the
+                      ERRORLEVEL feature of DOS batch processing.
+ 
+                      Open files are not closed by this function.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_011.8.html"> INT 27h </A></LI>
+<LI><A HREF="asm_010.93.html"> 4Dh </A></LI>
+<LI><A HREF="asm_010.1.html"> 00h </A></LI>
+<LI><A HREF="asm_011.1.html"> INT 20h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

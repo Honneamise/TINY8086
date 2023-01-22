@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 26h (38)        Create Program Segment</b>
+ 
+    Creates a new Program Segment Prefix (PSP).
+ 
+       <B>On entry:</b>      AH         26h
+                      DX         Segment address of new PSP
+                      CS:0       PSP to copy information from
+ 
+       <B>Returns:</b>       Nothing
+ 
+  --------------------------------------------------------------------------
+ 
+    This function creates a new Program Segment Prefix (PSP), in order to
+    prepare a separately loaded subprogram (i.e., overlay), for execution.
+    The PSP at the start of the current program's code segment is copied
+    into the first 256 bytes of the new segment specified in DX. The new
+    PSP is updated with the current Int 22h, Int 23h, and Int 24 interrupt
+    handlers. Memory size information at location 06h of the new PSP is
+    updated to reflect available memory.
+ 
+       <B>Notes:</b>         This function has been superseded by the EXEC
+                      function (Function 4Bh) in versions 2.0 and later of
+                      DOS; this function should not be used.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.91.html"> 4Bh </A></LI>
+<LI><A HREF="asm_015.html"> PSP </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

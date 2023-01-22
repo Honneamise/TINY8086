@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>REPNE            Repeat While not Equal              Flags: not altered</b>
+ 
+<B>REPNE  string-instruction</b>
+ 
+          <B>Logic:</b>    while CX &lt;&gt; 0                    ;for MOVS, LODS or STOS
+                        execute string instruction
+                        CX  CX - 1
+                   ------------------------------------------
+                    while CX &lt;&gt; 0                    ;for CMPS or SCAS
+                        execute string instruction
+                        CX  CX - 1
+                        if ZF &lt;&gt; 0 terminate loop    ;This is only difference
+                                                     ;between REP and REPNE
+ 
+    REPNE is a prefix that may be specified before any string instruction
+    (CMPS, LODS, MOVS, SCAS, and STOS). REPNE causes the string
+    instruction following it to be repeated, as long as CX does not equal
+    0; CX is decremented after each execution of the string instruction.
+    (For CMPS and SCAS, REP will also terminate the loop if the Zero Flag
+    is set after the string instruction executes. Compare this to REP,
+    which will terminate if the Zero Flag is clear.)
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        2          -        1     REPNE SCASB
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         If CX is initially 0, the REPeated instruction is
+                      skipped entirely.
+ 
+                      The test for CX equal to 0 is performed before the
+                      instruction is executed.  The test for the Zero Flag
+                      set--done only for CMPS and SCAS--is performed after
+                      the instruction is executed.
+ 
+                      REPNE and REPNZ are synonyms for the same
+                      instruction.
+ 
+                      You do not need to initialize ZF before using
+                      repeated string instructions.
+ 
+                      A repeated instruction that is interrupted between
+                      repeats will correctly resume processing upon return
+                      from the interrupt. However, if other prefixes are
+                      used on a single instruction (for example, segment
+                      override or LOCK) in addition to the REP, all
+                      prefixes except the one that immediately preceded
+                      the string instruction will be lost. Therefore, if
+                      you must use more than one prefix on a single
+                      instruction, you should disable interrupts before
+                      the instruction, and enable them afterwards. Note
+                      that even this precaution will not prevent a non-
+                      maskable interrupt, and that lengthy string
+                      operations may cause large delays in interrupt
+                      processing.
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+    The following example will find the first byte equal to 'A' in the
+    100-byte buffer at STRING.
+ 
+          CLD                     ;Scan string in forward direction
+          MOV     AL,'A'          ;Scan for 'A'
+          LEA     DI, STRING      ;Address to start scanning at
+          MOV     CX,100          ;Scanning 100 bytes
+  REPNE   SCASB                   ;   ...and scan it
+          DEC     DI              ;Back up DI to point to the 'A'
+ 
+    Upon termination of the repeated SCASB instruction, CX will be equal
+    to zero if a byte value of 'A' was not found in STRING, and non-zero
+    if it was.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.79.html"> MOVS </A></LI>
+<LI><A HREF="asm_000.114.html"> STOS </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.70.html"> LODS </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

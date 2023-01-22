@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 38h (56)        Get or Set Country-Dependent Information</b>
+ 
+    DOS 2.x: Returns country-dependent information for the current
+    country.
+ 
+    DOS 3.x: Returns country-dependent information for the current country
+    or a specified country, or sets the current country.
+ 
+       <B>  Note:</b>        The country-dependent information returned by DOS
+                      2.x is different from that returned by DOS 3.x.
+ 
+  --------------------------------------------------------------------------
+<B>  DOS 3</b>
+ 
+     1.  To get country-dependent information for the current country or a
+         specified country:
+ 
+       <B>  On entry:</b>    AH         38h
+                      AL         Country code (00h = current country)
+                      BX         16-bit country code (if AL=FFh)
+                      DS:DX      Pointer to a 34-byte memory buffer
+ 
+       <B>  Returns:</b>     AX         Error code, if CF (Carry Flag) is set
+                      BX         Country code
+                      DS:DX      Country-dependent information
+ 
+    To get country-dependent information for the current country, call
+    this Function with 00h in AL. To get information for another country,
+    specify the appropriate country code in AL. For country codes larger
+    than 254 (FDh), enter FFh in AL and the country code in BX.
+ 
+    The return information in DS:DX is structured as follows:
+ 
+           <B>Bytes        Content</b>
+             2          Date format (see below)
+             5          Currency symbol (ASCIIZ string)
+             2          Thousands separator (ASCIIZ string)
+             2          Decimal separator (ASCIIZ string)
+             2          Date separator (ASCIIZ string)
+             2          Time separator (ASCIIZ string)
+             1          Currency format (see below)
+             1          Number of significant decimal digits in currency
+             1          Time format:
+                            Bit 0 = 0 for 12-hour format;
+                            Bit 0 = 1 for 24-hour format
+             4          Pointer to a FAR procedure that performs case mapping
+                        for the specified country
+             2          Data list separator (ASCIIZ string)
+            10          Reserved
+ 
+    The possible date format values are as follows:
+ 
+            00h         USA:         m d y
+            01h         Europe:      d m y
+            02h         Japan:       y m d
+ 
+    Currency Format Field Values:
+ 
+            00h         Currency symbol precedes value; no spaces between
+                        symbol and  value
+            01h         Currency symbol follows value; no spaces between
+                        symbol and value
+            02h         Currency symbol precedes value; one space between
+                        symbol and value
+            03h         Currency symbol follows value; one space between
+                        symbol and value
+            04h         Currency symbol replaces decimal separator (DOS 3.2
+                        and above only)
+ 
+     2.  To set the current country (DOS 3.0 and above only)
+ 
+       <B>  On entry:</b>    AH         38h
+                      AL         Country code
+                      BX         16-bit country code (if AL=FFh)
+                      DX         FFFFh
+ 
+       <B>  Returns:</b>     AH         Error code, if CF is set
+ 
+    To specify a country code larger than 254 (FDh), place FFh in AL and
+    the 16-bit country code in BX.
+ 
+       <B>  Notes:</b>       The DOS case-mapping routine whose address (as
+                      segment:offset) is returned with the country
+                      dependent information will map character values from
+                      80h to FFh to their uppercase equivalents. To use
+                      this routine, first place the character to be mapped
+                      to uppercase in the AL register. Then make a FAR
+                      CALL to this routine.  The uppercased character will
+                      be returned in the AL register.
+ 
+   -------------------------------------------------------------------------
+<B>   DOS 2.10</b>
+ 
+       <B>On entry:</b>      AH         38h
+                      AL         00h
+                      DS:DX      Pointer to a 32-byte memory area
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+                      DS:DX      Country-dependent information
+ 
+    The return information at DS:DX is structured as follows:
+ 
+         <B>Bytes        Contents</b>
+           2          Date/time format (see below)
+           2          Currency symbol (ASCIIZ string)
+           2          Thousands separator (ASCIIZ string)
+           2          Decimal separator (ASCIIZ string)
+          24          Reserved
+ 
+    The possible date/time format values are as follows:
+ 
+          00h         USA standard         h:m:s   m/d/y
+          01h         Europe standard      h:m:s   d/m/y
+          02h         Japan standard       h:m:s   y:m:d
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

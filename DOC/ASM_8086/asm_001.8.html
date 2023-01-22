@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 09h (9)              Keyboard</b>
+ 
+    The keyboard generates an INT 9 every time a key is pushed or
+    released.
+ 
+       <B>Notes:</b>         This is a hardware interrupt (IRQ 1) activated by
+                      the make or break of every keystroke.
+ 
+    The default INT 9 handler in the ROM reads the make and break scan
+    codes from the keyboard and converts them into actions or key codes as
+    follows:
+ 
+         þ   For ASCII keys, when a make code is encountered, the ASCII code
+             and the scan code for the key are placed in the 32-byte keyboard
+             buffer, which is located at 0:41Eh. The ASCII code and scan code
+             are placed in the buffer at the location addressed by the
+             Keyboard Buffer Tail Pointer (0:041Ch). The Keyboard Buffer Tail
+             Pointer is then incremented by 2, and if it points past the end
+             of the buffer, it is adjusted so that it points to the beginning
+             of the buffer.
+ 
+         þ   If Ctrl, Alt, or Shift has been pressed, the Shift Status
+             (0:0417h) and Extended Shift Status (0:0418h) bytes are updated.
+ 
+         þ   If the Ctrl-Alt-Del combination has been pressed, the Reset
+             Flag (0:0472h) is set to 1234h and control is given to the
+             power-on self test (POST). Because the Reset Flag is 1234h, the
+             POST routine bypasses the memory test.
+ 
+         þ   If the Pause key sequence has been entered, this interrupt
+             enters an indefinite loop. The loop is broken as soon as a valid
+             ASCII keystroke is entered. (The PC Convertible issues an INT
+             15h, Service 41h (Wait on External Event), to execute its pause
+             loop.)
+ 
+         þ   If the Print Screen key sequence is entered, an INT 05h (Print
+             Screen) is executed.
+ 
+         þ   If the Control-Break key sequence is entered, an INT 1Bh
+             (Control-Break) is executed.
+ 
+         þ   For XTs dated 1/10/86 and after, ATs, XT-286s, and PC
+             Convertibles, the INT 9h handler generates an INT 15h, function
+             91h (Interrupt Complete) to signal that a keystroke is
+             available. Also, on these machines, a make or break of the Sys
+             Req key generates an INT 15h, function 85h (System Request Key
+             Pressed).
+ 
+         þ   For ATs dated 6/10/85 and after, XT-286s, and PC Convertibles,
+             an INT 15h, function 4Fh (Keyboard Intercept) is executed after
+             the scan code has been read from the keyboard port (60h). This
+             allows the user to redefine or remove a keystroke.
+ 
+    INT 16 provides a standard way to read characters from the keyboard
+    buffer that have been placed there by the INT 9 handler in ROM.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_027.1.html"> INT 16h, 00h </A></LI>
+<LI><A HREF="asm_001.13.html"> INT 1Bh </A></LI>
+<LI><A HREF="asm_002.7.html"> 0:417h </A></LI>
+<LI><A HREF="asm_002.12.html"> 0:41Eh </A></LI>
+<LI><A HREF="asm_021.html"> Scan Codes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

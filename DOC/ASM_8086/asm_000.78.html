@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>MOV              Move (Byte or Word)                 Flags: not altered</b>
+ 
+<B>MOV destination,source</b>
+ 
+          <B>Logic:</b>    destination  source
+ 
+    MOV copies a byte or word from the source into the destination.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   <B>                        byte(word)</b>
+   register, register          2          -        2     MOV BX,CX
+   memory, accumulator       10(14)       1        3     MOV MEM_DEST,AL
+   accumulator, memory       10(14)       1        3     MOV AX,MEM_SOURCE
+   memory, register        9(13) + EA     1       2-4    MOV MEM_DEST,BX
+   register, memory        8(12) + EA     1       2-4    MOV BX,MEM_SOURCE
+   register, immediate         4          -       2-3    MOV BX,0F6CDh
+   memory, immediate      10(14) + EA     1       3-6    MOV MASK,0F6CDh
+   seg-reg, reg16              2          -        2     MOV DS,BX
+   seg-reg, mem16          8(12) + EA     1       2-4    MOV DS,SEGMENT_VAL
+   reg16, seg-reg              2          -        2     MOV BP,SS
+   memory, seg-reg         9(13) + EA     1       2-4    MOV CODE_VAR,CS
+  --------------------------------------------------------------------------
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.79.html"> MOVS </A></LI>
+<LI><A HREF="asm_000.90.html"> PUSH </A></LI>
+<LI><A HREF="asm_000.88.html"> POP </A></LI>
+<LI><A HREF="asm_000.120.html"> XCHG </A></LI>
+<LI><A HREF="asm_000.121.html"> XLAT </A></LI>
+<LI><A HREF="asm_005.html"> EA </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

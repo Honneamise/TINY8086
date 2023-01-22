@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 22h (34)        Random Write, Using FCBs</b>
+ 
+    Writes the specified record in the current DTA to a file.
+ 
+       <B>On entry:</b>      AH         22h
+                      DX:DS      Pointer to an opened FCB
+ 
+       <B>Returns:</b>       AL         00h       If write was successful
+                                 01h       If disk full
+                                 02h       If DTA too small (segment wrap)
+ 
+       <B>Network:</b>       Requires Write access rights
+ 
+  --------------------------------------------------------------------------
+ 
+    This function writes the record specified by the random-record field
+    (offset 21h) and the record-size field (offset 0Eh) of the FCB. The
+    current block and current record fields are set to reflect the random-
+    record field, and the record is written to the file from the current
+    Disk Transfer Address.
+ 
+       <B>Notes:</b>         The random-record field is not updated after this
+                      function. It is your program's responsibility to set
+                      this field each time it calls this function.
+                      Function 28h, which is similar to this function,
+                      will automatically update the random-record field.
+                      (Function 28h can also write multiple records.)
+ 
+                      The data to be written is taken from the current
+                      Disk Transfer Address (DTA). Use Function 1Ah to set
+                      the DTA. If the transfer of data would cause segment
+                      wraparound, an error 2 is generated.
+ 
+                      If the record written doesn't fill an entire sector,
+                      DOS buffers the data for an eventual write when a
+                      sector's worth of data is accumulated.
+ 
+                      If the file specified has the read-only attribute
+                      set, the write is not performed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.22.html"> 15h </A></LI>
+<LI><A HREF="asm_010.27.html"> 1Ah </A></LI>
+<LI><A HREF="asm_010.41.html"> 28h </A></LI>
+<LI><A HREF="asm_010.65.html"> 40h </A></LI>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

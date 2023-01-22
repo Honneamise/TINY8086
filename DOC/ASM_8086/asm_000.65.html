@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>LAHF             Load Register AH from Flags         Flags: not altered</b>
+ 
+          <B>Logic:     AH bits        Flag-reg bits</b>
+                    7 6 4 2 0         S Z A P C
+ 
+    LAHF copies the five 8080/8085 flags (Sign, Zero, Auxiliary Carry,
+    Parity, and Carry) into bits 7, 6, 4, 2, and 0, respectively, of the
+    AH register. The flags themselves are unchanged by this instruction.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   no operands                 4          -        1     LAHF
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This instruction is primarily used to provide upward
+                      compatibility between the 8080/8085 family and the
+                      8086 family.
+ 
+                      After this instruction is executed, bits 1, 3 and 5
+                      of AH are undefined.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.102.html"> SAHF </A></LI>
+<LI><A HREF="asm_000.91.html"> PUSHF </A></LI>
+<LI><A HREF="asm_000.89.html"> POPF </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

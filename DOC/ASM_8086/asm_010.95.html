@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 4Fh (79)        Find Next Matching File (FIND NEXT)</b>
+ 
+    Finds the next matching file (after a previous call to Function 4Eh or
+    4Fh call) and returns information at the current DTA address.
+ 
+       <B>On entry:</b>      AH         4Fh
+ 
+       <B>Returns:</b>       AX         Error code, if CF is set
+ 
+       <B>Error codes:</b>   18         No more files to be found
+ 
+                      Call Function 59h for extended error code information
+                      (DOS 3.0 and above).
+ 
+  --------------------------------------------------------------------------
+ 
+    Function 4Fh continues the file search that was begun by Function 4Eh,
+    returning 43 bytes of information at the current DTA address. The
+    information is formatted as in Function 4Eh:
+ 
+<B>            Offset     Size       Description</b>
+             00h        21        Used by DOS for find-next processing
+             15h         1        Attribute of file found
+             16h         2        Time stamp of file
+             18h         2        Date stamp of file
+             1Ah         4        File size in bytes
+             1Eh        13        Filename and extension, as an ASCIIZ string
+ 
+    The filename and extension are reported in conventional notation, with
+    blanks removed and a period between the filename and the extension. If
+    the file has no extension, the period is suppressed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.27.html"> 1Ah </A></LI>
+<LI><A HREF="asm_010.94.html"> 4Eh </A></LI>
+<LI><A HREF="asm_010.18.html"> 11h </A></LI>
+<LI><A HREF="asm_010.19.html"> 12h </A></LI>
+<LI><A HREF="asm_010.104.html"> 59h </A></LI>
+<LI><A HREF="asm_013.html"> File Attributes </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

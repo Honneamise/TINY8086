@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 15h,  89h (137)      Switch to Protected Mode                  XT-286, AT</b>
+ 
+    Switches into Protected (virtual address) mode. Also transfers control
+    to the code segment in the protected mode specified by the user.
+ 
+       <B>On entry:</b>      AH         89h
+                      BH         Index into Interrupt Descriptor Table (IDT)
+                                 stating start of first 8 hardware interrupts
+                                 (Interrupt Level 1)
+                      BL         Index into Interrupt Descriptor Table (IDT)
+                                 stating start of second 8 hardware interrupts
+                                 (Interrupt Level 2)
+                      ES:SI      Pointer to a Global Descriptor Table (GDT)
+                                 (see below)
+ 
+       <B>Returns:</b>       AH         0 if successful, else nonzero
+ 
+       <B>Registers destroyed:</b>      AX, BP, and all segment registers
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is available only for the AT and XT-
+                      286.
+ 
+                      ES:SI points to a list of eight descriptors. Each
+                      descriptor is 8 bytes long. A descriptor is
+                      formatted as follows:
+ 
+                          <B>Offset    Bytes     Description</b>
+                            00h       2       Word containing segment limit
+                            02h       2       Low word of 24-bit address
+                            04h       1       High byte of 24-bit address
+                            05h       1       Access rights byte
+                            06h       2       Reserved (must be 0)
+ 
+                      The Global Descriptor Table (GDT) pointed to by
+                      ES:SI consists of a list of eight descriptors. The
+                      descriptors are defined below, appearing in the same
+                      order as they appear in memory.
+ 
+                          Offset   Bytes    Description
+                            00h      8      Dummy Descriptor. Initialized by
+                                            user to 0.
+                            08h      8      Descriptor of this GDT as a data
+                                            segment. Initialized by user.
+                            10h      8      Descriptor of Interrupt Descriptor
+                                            Table (IDT).  Initialized by user.
+                            18h      8      Descriptor of Data Segment.
+                                            Initialized by user.
+                            20h      8      Descriptor of Extra Segment.
+                                            Initialized by user.
+                            28h      8      Descriptor of Stack Segment.
+                                            Initialized by user.
+                            30h      8      Descriptor of Code Segment.
+                                            Initialized by user.
+                            38h      8      Descriptor of Temporary BIOS Code
+                                            Segment. Initialized by user to 0.
+ 
+                      The six descriptors that must be initialized by the
+                      user must have the segment limit, base address, and
+                      access rights byte fields initialized.
+ 
+                      The BIOS is not available to the user; thus the user
+                      must perform all I/O.
+ 
+                      The user must initialize an exception handler and
+                      table.
+ 
+                      There can't be any overlap between the Interrupt
+                      Descriptor Table (IDT) and the Real Mode BIOS
+                      Interrupt Descriptor Table (IDT).
+ 
+                      Because of to the 80286's reserved areas, the user
+                      must move the interrupt vector locations.
+ 
+                      Reinitialization of the hardware interrupt
+                      controllers is needed in order to define those
+                      locations that do not exist in the 80286 reserved
+                      areas.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_026.14.html"> INT 15h, 87h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

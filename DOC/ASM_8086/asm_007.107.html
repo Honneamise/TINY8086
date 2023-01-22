@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>RECORD           Define Record Type                            MASM Directive</b>
+ 
+  recordName    <B>RECORD</b>     fieldName:width [=expression],,,
+ 
+    Defines an 8-bit or 16-bit record type with one or more bit fields of
+    a specified width and (optionally) specified initial value.
+ 
+       <B>Notes:</b>     The width parameter specifies a number of bits, from 1
+                  to 16. Any number of fieldName:width parameters may be
+                  included, provided the total number of bits does not
+                  exceed 16. fieldName:width parameters are separated by
+                  commas.
+ 
+                  The optional =expression parameter allows you to declare
+                  an initial value for a field. Expression must yield an
+                  integer and may not include a forward reference. If the
+                  field is at least seven bits in width, expression can be
+                  an ASCII character.
+ 
+                  The first field declared becomes the high-order field of
+                  the record. The last field declared becomes the low-
+                  order field. The low-order field always ends at bit 0.
+                  Thus, for example, if your fields add up to seven bits,
+                  they will occupy bits 6 through 0.
+ 
+                  If the total width of the record is eight bits or less,
+                  the assembler uses one byte. If it is greater than
+                  eight, the assembler uses two bytes. In all cases,
+                  unused bits are initialized to 0 by the assembler.
+ 
+    The RECORD directive by itself does not create data. It merely creates
+    a data type. To create data of this type, use the syntax:
+ 
+           [name]      recordName     &lt;[initialValue,,,]&gt;
+ 
+    where name is the name of a variable and recordName is the name of a
+    record type previously defined with the RECORD directive.  One
+    initialValue may be declared for each field in the record, using
+    commas to separate the initial values for each field. For example,
+    &lt;,,3&gt; will initialize the 3rd field of a structure.
+ 
+  -------------------------------- <B>Example</b> ---------------------------------
+ 
+           equipment      RECORD    disk:2, printer:2=1, RS232:1
+ 
+           PCequipment    equipment      &lt;&gt;
+ 
+    The above 2 lines will create an 8-bit record called PCequipment with
+    the RS232 field occupying bit 0 and initialized to 0, the PRINTER
+    field occupying bits 2-1 and initialized to 1, and the DISK field
+    occupying bits 4-3 and initialized to 0.  Bits 7-5 will be initialized
+    to 0.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_007.118.html"> STRUC </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 15h,  40h (64)       Read/Modify Profiles                     Convertible</b>
+ 
+    Read or modify the system or modem parameters (PC Convertible only).
+ 
+       <B>On entry:</b>      AH         40h
+                      AL         Subservice
+                                 0 - Read system profile
+                                 1 - Modify system profile
+                                          CX - System profile (see below)
+                                          BX - System profile (see below)
+                                 2 - Read internal modem profile
+                                 3 - Modify internal modem profile
+                                          BX - Internal modem profile (see
+                                          below)
+ 
+       <B>Returns:</b>       CF         Set if error, else cleared
+                      AL         0 if successful, else non-0
+                      BX         Modified for Subservices 0 (System Profile)
+                                 and 2 (Modem Profile)
+                      CX         Modified for Subservice 0 (System Profile)
+ 
+  --------------------------------------------------------------------------
+ 
+<B>  System Profile</b>
+ 
+       <B>BX format</b>
+       Bit 15         0  - Set system cold start mode
+                      1* - Set system warm start mode
+ 
+       Bit 14         0  - Disable low battery warning message
+                      1* - Enable low battery warning message
+ 
+       Bits 13,12     Startup video mode
+                                 00  - Reserved
+                                 01  - 40 x 25 monochrome using CGA/LCD
+                                 10* - 80 x 25 monochrome using CGA/LCD
+                                 11  - 80 x 25 monochrome using MONO/LCD
+ 
+       Bits 11,10     LCD bright attribute
+                                 00* - Ignore LCD bright attribute
+                                 01  - Map LCD bright to underscore
+                                 10  - Map LCD bright to reverse video
+                                 11  - Map LCD bright to alternate font
+ 
+       Bit 9          0* - Internal modem not available on battery power
+                      1  - Internal modem available on battery power
+ 
+       Bit 8          0* - RS-232/Parallel available on battery power
+                      1  - RS-232/Parallel available on battery power
+ 
+       Bits 7-0 (BL)  Reserved
+ 
+<B>   CX -- System Profile</b>
+ 
+       Bits 15-8      (CH)       Time before LCD will blank on lack of
+                                 keyboard activity.
+                                 Time is in minutes. A 0 disables this
+                                 feature.
+       Bits 7-0       (CL)       Time before system power off on lack of
+                                 keyboard activity.
+                                 Time is in minutes. A 0 disables this
+                                 feature.
+ 
+<B>   BX -- Modem Profile</b>
+ 
+       Bits 15,14     Reserved
+       Bit  13        0* - Manual Answer
+                      1  - Automatic Answer
+       Bits 12-10     Parity and framing
+                                 000  - Mark, 7-bit data
+                                 001  - Space, 7-bit data
+                                 010  - Odd, 7-bit data
+                                 011* - Even, 7-bit data
+                                 100 - None, 8-bit data
+                                 101 - Reserved
+                                 110 - Reserved
+                                 111 - Reserved
+       Bits 9,8       Modem data rate
+                                 00  - 110 bits per second
+                                 01  - 300 bits per second
+                                 10* - 1200 bits per second
+                                 11 -- 2400 bits per second
+       Bits 7-0       (BL)       Reserved
+ 
+       * signals the default setting after power loss
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         This service is available only for the PC
+                      Convertible.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

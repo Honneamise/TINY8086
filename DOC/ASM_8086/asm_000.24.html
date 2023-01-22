@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>ESC              Escape                              Flags: not altered</b>
+ 
+<B>ESC coprocessor's-opcode,source</b>
+ 
+    ESC is used to pass control from the microprocessor to a coprocessor,
+    such as an 8087 or 80287. In response to ESC, the microprocessor
+    accesses a memory operand--the instruction for the coprocessor--and
+    places it on the bus. The coprocessor watches for ESC commands and
+    executes the instruction placed on the bus, using the effective
+    address of source.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   <B>                        byte(word)</b>
+   immediate, memory       8(12) + EA     1       2-4    ESC 6,ADR[SI]
+   immediate, register         2          -        2     ESC COPROC-CODE,AH
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         In order to synchronize with the math coprocessor,
+                      the programmer must explicitly code the WAIT
+                      instruction preceding all ESC instructions.  The
+                      80286 and 80386 have automatic instruction
+                      synchronization, hence WAITs are not needed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.25.html"> HLT </A></LI>
+<LI><A HREF="asm_000.119.html"> WAIT </A></LI>
+<LI><A HREF="asm_000.69.html"> LOCK </A></LI>
+<LI><A HREF="asm_005.html"> EA </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

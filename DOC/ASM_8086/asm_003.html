@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Flags Register</b>
+ 
+    The flags register contains various bits that control and record the
+    state of the microprocessor, as defined below.
+ 
+ 
+                <B>Bit:</b>    15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+                       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+     <B>Flags register:</b>   |  |  |  |  |OF|DF|IF|TF|SF|ZF|  |AF|  |PF|  |CF|
+                       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ 
+  ---------------------------------- <B>Flags</b> ----------------------------------
+ 
+       <B>O</b>verflow            Set when an arithmetic overflow occurred.  An
+                           arithmetic overflow occurs when the size of a
+                           computation exceeds the size of the
+                           destination.
+ 
+       <B>D</b>irection           Set for auto-decrement with string
+                           instructions, clear for auto-increment.
+ 
+       <B>I</b>nterrupt Enable    Interrupts are enabled as long as this flag is
+                           set.  When this flag is cleared, interrupts
+                           except for nonmaskable interrupts are disabled.
+ 
+       <B>T</b>rap                This flag is used by debuggers to single step
+                           through programs.  When this flag is set, an
+                           INT 3 is generated after every instruction.
+ 
+       <B>S</b>ign                Set when the high-order bit of the result is 1.
+                           In other words, S = 0 for positive numbers and
+                           S = 1 for negative numbers.
+ 
+       <B>Z</b>ero                Set whenever the result is 0.
+ 
+       <B>A</b>uxiliary Carry     Set when the is a carry out of the lower half
+                           of an 8 or 16 bit number, or when there is a
+                           borrow from the upper to the lower half.  This
+                           flag is used mainly by the decimal-arithmetic
+                           instructions.
+ 
+       <B>P</b>arity Flag         Set if there is an even number of 1-bits in the
+                           result.  Cleared if there is an odd number of
+                           1-bits.  Often used by communications programs
+ 
+       <B>C</b>arry Flag          Set if there was a carry out of, or a borrow
+                           into the high-order bit of the result.  This
+                           flag is useful for propagating carries and
+                           borrows for multi-word numbers.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

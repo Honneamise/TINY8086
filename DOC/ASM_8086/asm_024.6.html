@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 13h,  05h (5)        Format Cylinder                                  all</b>
+ 
+    Initializes each sector on a specified cylinder with sector address
+    and size information.
+ 
+       <B>On entry:</b>      AH         05h
+                      AL         Number of sectors to format (diskette) or
+                                 Interleave (XT)
+                      CH         Cylinder number (10-bit value; upper 2 bits
+                                 in CL)
+                      DH         Head number
+                      DL         Drive number
+                      ES:BX      Pointer to address field list (See below)
+ 
+       <B>Returns:</b>       AH         Status of operation (See Service 01h)
+                      CF         Set if error, cleared otherwise
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         Values in DL less than 80h specify floppy disks;
+                      values from 80h to 87h specify fixed disks.
+ 
+                      The cylinder number is a ten-bit quantity (0 through
+                      1023). Its most significant two bits are in bits 7
+                      and 6 of CL; the remaining eight bits are in CH. The
+                      starting sector number fits in the low-order portion
+                      (lower 6 bits) of CL.
+ 
+                      If an error is encountered, use Service 0h to reset
+                      the drive and retry the operation.
+ 
+                      For the AT, XT-286, and PC Convertible, the BIOS
+                      executes INT 15h, Service 90h (Device Busy), for the
+                      diskette (Type = 01h) and the fixed disk (Type =
+                      00h) prior to waiting for the interrupt. INT 15h,
+                      Service 91h (Interrupt Complete), is executed upon
+                      completion. Also diskette operations that require
+                      the diskette motor to be on will call INT 15h,
+                      Service 90 (Device Busy), with the type equal to
+                      "Diskette Drive Motor Start" (Type = FDh). This
+                      allows the system to perform another task while the
+                      drive motor is waiting to get up to speed.
+ 
+       <B>Interleave</b><B>:</b>    "Interleaving" is the process of putting logically
+                      contiguous sectors in physically noncontiguous
+                      locations, in order to to increase disk performance.
+                      Below is outlined the different ways of changing the
+                      interleave factor depending on the type of media
+                      (fixed disk or diskette) and the machine type.
+ 
+                      The pointer to the address field list (ES:BX) varies
+                      depending on what type of machine and type of disk
+                      (fixed or diskette) the formatting process will
+                      occur on. Also the interleave factor is specified
+                      differently for the different machines and disk
+                      types. Below are the formats for the different types
+                      of machines and disks.
+ 
+       <B>Diskette</b><B>:</b>      ES:BX points to a list of address marks for each
+                      sector on the track to be formatted. Each address
+                      mark consists of 4 bytes. Therefore, to format a 9-
+                      sector track, the list MUST consist of 36 bytes (4 *
+                      9). The 4 bytes making up the address mark are
+                      defined as follows:
+ 
+                          Byte 1 - Cylinder number (C)
+                          Byte 2 - Head number (H)
+                          Byte 3 - Sector number (R), or Record number
+                          Byte 4 - Sector Size (N)
+                                      0 - 128 bytes per sector
+                                      1 - 256 bytes per sector
+                                      2 - 512 bytes per sector
+                                      3 - 1024 bytes per sector
+ 
+                      Note that you can change the interleave factor by
+                      specifying byte 3 (sector number) in a non-
+                      sequential order.
+ 
+                      Standard MS-DOS diskettes are formatted with 512
+                      bytes per sector (N=2) and with no interleave. Thus,
+                      the address field list for a standard MS-DOS nine-
+                      sector track would look like this:
+ 
+                             C H R N    C H R N    C H R N ... C H R N
+                             0 1 1 2    0 1 2 2    0 1 3 2     0 1 9 2
+ 
+                      Before formatting a diskette, if there is more than
+                      one type of diskette supported by the drive, you
+                      will need to call Service 17h (Set DASD Type for
+                      Format) or Service 18h (Set Media Type for Format).
+                      If these services are not called, Service 05h will
+                      format the disk using the maximum disk type
+                      supported by the disk drive. Older machines that
+                      don't support Service 17h (Set DASD Type for Format)
+                      or Service 18h (Set Media Type for Format) may have
+                      to directly modify the Diskette Drive Parameter
+                      Table. This table is pointed to by INT 1Eh. If
+                      modifications are made to the Diskette Parameter
+                      Table, make sure the original values are restored.
+ 
+       <B>XT</b>             The XT uses the AL register to specify the
+                      interleave factor. The pointer ES:BX is not needed
+                      for the XT.
+ 
+       <B>AT and XT-286</b>  These machines use an address table (pointed to by
+                      ES:BX), similar to the one used in diskette mode but
+                      with a slight variation. The buffer must be 512
+                      bytes long. The first 2 * (sectors per track) bytes
+                      contain information for each sector on the track.
+                      For each sector, there are 2 bytes in the table.
+                      These 2 bytes are defined as follows:
+ 
+                            Byte 1 - Sector Format state (F)
+                                      00h - Good sector
+                                      80h - Bad sector
+                            Byte 2 - Sector number (N)
+ 
+                      For example, the following table is used to format a
+                      track for a fixed disk with 17 sectors per track and
+                      an interleave factor of 3.
+ 
+           db    00h, 01h, 00h, 07h, 00h, 0Dh, 00h, 02h, 00h, 08h, 00h, 0Eh
+           db    00h, 03h, 00h, 09h, 00h, 0Fh, 00h, 04h, 00h, 0Ah, 00h, 10h
+           db    00h, 05h, 00h, 0Bh, 00h, 11h, 00h, 06h, 00h, 0Ch
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.2.html"> INT 13h, 01h </A></LI>
+<LI><A HREF="asm_024.7.html"> INT 13h, 06h </A></LI>
+<LI><A HREF="asm_024.8.html"> INT 13h, 07h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>STOSB            Store String Byte                   Flags: not altered</b>
+ 
+<B>STOSB</b>
+ 
+          <B>Logic:</b>    (ES:DI)  AL
+                    if DF = 0
+                        DI  DI + 1
+                    else
+                        DI  DI - 1
+ 
+    STOSB copies the value in AL into the location pointed to by ES:DI. DI
+    is then incremented (if the direction flag is cleared) or decremented
+    (if the direction flag is set), in preparation for storing AL in the
+    next location.
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+      -                        11         1        1     STOSB
+   (repeat)                9 + 10/rep   1/rep      1     REP STOSB
+  --------------------------------------------------------------------------
+ 
+    When used in conjunction with the REP prefixes, the Store String
+    instructions are useful for initializing a block of memory. For
+    example, the following code would initialize the 100-byte memory block
+    at BUFFER to 0:
+ 
+          MOV     AL,0            ;The value to initialize BUFFER to
+          LEA     DI,BUFFER       ;Starting location of BUFFER
+          MOV     CX,100          ;Size of BUFFER
+          CLD                     ;Let's move in forward direction
+  REP     STOSB                   ;Compare this line to example for STOS
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.114.html"> STOS </A></LI>
+<LI><A HREF="asm_000.116.html"> STOSW </A></LI>
+<LI><A HREF="asm_000.16.html"> CMPS </A></LI>
+<LI><A HREF="asm_000.70.html"> LODS </A></LI>
+<LI><A HREF="asm_000.79.html"> MOVS </A></LI>
+<LI><A HREF="asm_000.106.html"> SCAS </A></LI>
+<LI><A HREF="asm_000.94.html"> REP </A></LI>
+<LI><A HREF="asm_000.12.html"> CLD </A></LI>
+<LI><A HREF="asm_000.112.html"> STD </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

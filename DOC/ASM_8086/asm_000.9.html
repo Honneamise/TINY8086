@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>CALL             Call Procedure                      Flags: not altered</b>
+ 
+<B>CALL procedure_name</b>
+ 
+          <B>Logic:</b>    if FAR CALL (inter-segment)
+                        PUSH CS
+                        CS  dest_seg
+                    PUSH IP
+                    IP  dest_offset
+ 
+    CALL transfers control to a procedure that can either be within the
+    current segment (a NEAR procedure) or outside it (a FAR procedure).
+    The two types of CALLs result in different machine instructions, and
+    the RET instruction that exits from the procedure must match the type
+    of the CALL instruction (the potential for mismatch exists if the
+    procedure and the CALL are assembled separately).
+ 
+  --------------------------------------------------------------------------
+   <B>Operands                  Clocks   Transfers  Bytes   Example</b>
+   <B>                        byte(word)</b>
+   near-proc                 19(23)       1        3     CALL NEAR_PROC
+   far-proc                  28(36)       2        5     CALL FAR_PROC
+   memptr 16              21(29) + EA     2       2-4    CALL PROC_TABLE[SI]
+   regptr 16                 16(24)       1        2     CALL AX
+   memptr 32              37(57) + EA     4       2-4    CALL [BX].ROUTINE
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:         </b>For an inter-segment procedure (procedure in a
+                      different segment), the processor first pushes the
+                      current value of CS onto the stack, then pushes the
+                      current value of IP (which is pointing to the
+                      instruction following the CALL instruction), then
+                      transfers control to the procedure.
+ 
+                      For an intra-segment procedure (procedure in the
+                      same segment), the processor first pushes the
+                      current value of IP (which is pointing to the
+                      instruction following the CALL instruction) onto the
+                      stack, then transfers control to the procedure.
+ 
+                      CALL can also read the procedure address from a
+                      register or memory location.  This form of CALL is
+                      called an indirect CALL.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_000.99.html"> RET </A></LI>
+<LI><A HREF="asm_000.44.html"> JMP </A></LI>
+<LI><A HREF="asm_007.100.html"> PROC </A></LI>
+<LI><A HREF="asm_007.91.html"> NEAR </A></LI>
+<LI><A HREF="asm_007.58.html"> FAR </A></LI>
+<LI><A HREF="asm_005.html"> EA </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

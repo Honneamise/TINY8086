@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 14h,  03h (3)        Get Serial Port Status</b>
+ 
+    Returns line status and modem status information for a specified
+    serial port.
+ 
+       <B>On entry:</b>      AH         03h
+                      DX         Serial port number (0 - COM1, 1 - COM2, etc.)
+ 
+       <B>Returns:</b>       AX         Line and Modem status (See below)
+ 
+  --------------------------------------------------------------------------
+ 
+    Status information is returned in AX, as follows:
+ 
+            <B> AH (Line status)</b>
+            7 6 5 4 3 2 1 0
+            1 . . . . . . .       Time-out error
+            . 1 . . . . . .       Transfer shift register empty
+            . . 1 . . . . .       Transfer holding register empty
+            . . . 1 . . . .       Break-detect error
+            . . . . 1 . . .       Framing error
+            . . . . . 1 . .       Parity error
+            . . . . . . 1 .       Overrun error
+            . . . . . . . 1       Data ready
+ 
+            <B> AL (Modem status)</b>
+            7 6 5 4 3 2 1 0
+            1 . . . . . . .       Received line signal detect
+            . 1 . . . . . .       Ring indicator
+            . . 1 . . . . .       Data set ready
+            . . . 1 . . . .       Clear to send
+            . . . . 1 . . .       Change in receive line signal detected
+            . . . . . 1 . .       Trailing edge ring detector
+            . . . . . . 1 .       Change in data set ready
+            . . . . . . . 1       Change in clear to send
+ 
+    If bit 7 of the Line status byte (AH) is set, then the rest of the
+    bits in AH and AL are unpredictable.
+ 
+ 
+       <B>Notes:</b>         Early versions of the ROM-BIOS for the original PC
+                      had a programming error that would cause "time-out"
+                      errors to be reported as "transfer shift register
+                      empty" and "break-detect" errors. This has been
+                      corrected in all other versions of the ROM-BIOS.
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

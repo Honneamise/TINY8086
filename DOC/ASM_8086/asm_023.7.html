@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  06h (6)        Scroll Window Up</b>
+ 
+    Scrolls a specified window upward a specified number of lines.
+ 
+       <B>On entry:</b>      AH         06h
+                      AL         Number of lines to scroll (if 0, clear entire
+                                 window)
+                      BH         Display attribute for blank lines
+                      CH         Row number of upper left corner
+                      CL         Column number of upper left corner
+                      DH         Row number of lower right corner
+                      DL         Column number of lower right corner
+ 
+       <B>Returns:</b>       None
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+ 
+    Lines are inserted at the bottom with all lines moving up. The new
+    lines are filled with blank characters of a specified display
+    attribute (value in BH). The lines that disappear at the top of the
+    window are lost.
+ 
+       <B>Notes:</b>         If the number of lines to scroll is specified as 0,
+                      the entire window is filled with blanks.
+ 
+                      Use Service 07h to scroll the window down.
+ 
+                      This service affects only the currently active
+                      display page.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.8.html"> INT 10h, 07h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 10h,  10h (16)       Set Palette Registers                      PCjr, EGA</b>
+ 
+    Sets the palette and overscan (border) registers on the PCjr and EGA.
+ 
+       <B>On entry:</b>      AH         10h
+                      AL         Subservice
+                                 0 - Set palette register
+                                     BL      Palette register
+                                     BH      Value to set
+ 
+                                 1 - Set overscan (border) color register
+                                     BH      Value to set
+ 
+                                 2 - Set palette registers and border register
+                                     ES:DX   Pointer to color list
+ 
+                                 3 - Toggle intensify/blinking bit
+                                     BL      0 - Enable intensify
+                                     BL      1 - Enable blinking
+ 
+       <B>Registers destroyed:</b>      AX, SP, BP, SI, DI
+ 
+  --------------------------------------------------------------------------
+ 
+    There are 16 palette registers on the EGA and PCjr displays and 1
+    overscan (border) register. This service gives the user control over
+    these registers. The four subservices are explained below.
+ 
+<B>  Subservice 0 (Set Palette Register)</b>
+ 
+    Each of the 16 palette registers can take on 1 of 64 values. the value
+    in BH is formatted as follows:
+ 
+          Bit 7 - Reserved
+          Bit 6 - Reserved
+          Bit 5 - Secondary Red
+          Bit 4 - Secondary Green
+          Bit 3 - Secondary Blue
+          Bit 2 - Red
+          Bit 1 - Green
+          Bit 0 - Blue
+ 
+    The secondary colors have an intensity of 1/3, while the normal colors
+    have an intensity of 2/3. For example, BH = 02h will produce green, BH
+    = 10h will produce a dim green, and BH = 12h will produce a bright
+    green.
+ 
+    The default values for the palette registers, which are the same as
+    the Color Graphics Adapter (CGA), are defined below:
+ 
+  --------------------------------------------------------------------------
+<B>                   Palette</b>
+<B>                   </b><B>Register        Color value         Color</b>
+                     00h               00h             Black
+                     01h               01h             Blue
+                     02h               02h             Green
+                     03h               03h             Cyan
+                     04h               04h             Red
+                     05h               05h             Magenta
+                     06h               14h             Brown
+                     07h               07h             White
+                     08h               38h             Dark Gray
+                     09h               39h             Light Blue
+                     0Ah               3Ah             Light Green
+                     0Bh               3Bh             LIght Cyan
+                     0Ch               3Ch             Light Red
+                     0Dh               3Dh             Light Magenta
+                     0Eh               3Eh             Yellow
+                     0Fh               3Fh             Bright White
+  --------------------------------------------------------------------------
+ 
+<B>  Subservice 1 (Set Overscan (Border) Register)</b>
+ 
+    This subservice sets the border color. The Enhanced Color Display
+    supports overscan in 200-line modes only.
+ 
+<B>  Subservice 2 (Set All Palette Registers and Overscan Register)</b>
+ 
+    ES:DX points to a 17-byte color list, in which the first 16 bytes
+    consist of new values for the 16 palette registers and the last byte
+    is the new overscan register value.
+ 
+<B>  Subservice 3 (Toggle intensify/blinking bit)</b>
+ 
+    Normally bit 7 of the attribute byte is used to indicate foreground
+    blinking. With this subservice, bit 7 can indicate foreground blinking
+    (BL=1) or background intensity (BL=0).
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_023.12.html"> INT 10h, 0Bh </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

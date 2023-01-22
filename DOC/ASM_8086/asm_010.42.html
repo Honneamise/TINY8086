@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 29h (41)        Parse Filename</b>
+ 
+    Parses a command-line text string and places it in the various fields
+    of an FCB.
+ 
+       <B>On entry:</b>      AH         29h
+                      AL         Parsing flags (see below)
+                      DS:SI      Pointer to the string to be parsed
+                      ES:DI      Pointer to the FCB
+ 
+       <B>Returns:</b>       AL         FFh      If function fails
+                                 00h      If function succeeds, no wildcards
+                                          encountered
+                                 01h      If function succeeds, and wildcards
+                                          are encountered
+ 
+       <B>Parsing flags:</b>
+ 
+            Bit       Means
+             0        Scan past (ignore) leading separator characters
+             1        Drive ID byte in FCB is modified only if drive is
+                      specified in command line
+             2        Filename in FCB is modified only if filename is
+                      specified in command line
+             3        Filename extension in FCB is modified only if filename
+                      extension is specified in command line
+            4-7       Ignored
+ 
+  --------------------------------------------------------------------------
+ 
+    Function 29h parses a command line for a filespec with the form
+    d:FILENAME.EXT. If a filename is found, an FCB is created; otherwise
+    the function returns FFh in AL. The function enables a program to set
+    up a default drive, filename, and extension, and to allow the user to
+    override these defaults at will.
+ 
+       <B>Notes:</b>         DS:SI points to the location of the filespec to be
+                      parsed. ES:DI points to the location where the FCB
+                      will be created. The low-order four bits of AL
+                      specify parsing parameters, as follows:
+ 
+                      If bit 0 is 1, the function scans past leading
+                      separator characters (blank spaces, for example) to
+                      find the filespec. If bit 0 is 0, the filespec is
+                      expected to be in the first byte of the command
+                      line.
+ 
+                      If bit 1 is 1, the function sets the drive byte in
+                      the FCB only if it is included in the filespec being
+                      parsed. This allows the FCB to have its own default
+                      drive (which the user may override), rather than
+                      using the DOS default drive.
+ 
+                      If bit 2 is 1, the function changes the filename in
+                      the FCB only if a valid filename is found in the
+                      filespec. This allows your program to set up a
+                      default filename, which can be overridden by the
+                      command input.
+ 
+                      If bit 3 is 1, the filename extension in the FCB is
+                      changed only if a valid filename extension is found
+                      in the filespec.
+ 
+                      If the function encounters a '*' wildcard character
+                      in the filename or extension, it fills out the
+                      remainder of the filename or extension with '?'
+                      wildcard characters. Assuming the rest of the
+                      parsing operation is successful, the function in
+                      this case returns 01h in AL, alerting your program
+                      of the need for find-first / find-next processing
+                      (see Function 11h and Function 12h).
+ 
+                      If the parse is unsuccessful, AL returns FFh, and
+                      the second byte of the FCB (ES:DI+1) will be blank.
+ 
+                      Function 29h cannot handle path names.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_016.html"> FCB </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

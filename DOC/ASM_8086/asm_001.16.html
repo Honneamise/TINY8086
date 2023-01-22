@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 70h (112)            Real-Time Clock              XT-286, AT, Convertible</b>
+ 
+    Handles the alarm and periodic interrupts for the real-time clock.
+ 
+  --------------------------------------------------------------------------
+ 
+    This is a hardware interrupt (IRQ 8) activated by the CMOS timer 1024
+    times per second.
+ 
+       <B>Notes:</b>         This interrupt is available only on the AT and XT-
+                      286. The real-time clock on the PC Convertible
+                      generates an INT 02h (Non-Maskable Interrupt) to
+                      handle the periodic and alarm functions.
+ 
+                      This interrupt provides two services. The first is
+                      the periodic interrupt that is generated when a time
+                      delay is specified. See INT 15h, Service 83h (Event
+                      Wait), and Service 86h (Wait), for more information.
+                      The second service is the Alarm Interrupt. When the
+                      CMOS alarm time matches the current CMOS time, then
+                      INT 4Ah (User Alarm) is executed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_026.10.html"> INT 15h, 83h </A></LI>
+<LI><A HREF="asm_026.13.html"> INT 15h, 86h </A></LI>
+<LI><A HREF="asm_001.15.html"> INT 4Ah </A></LI>
+<LI><A HREF="asm_029.7.html"> INT 1Ah, 06h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

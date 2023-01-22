@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 27h (39)             Terminate and Stay Resident</b>
+ 
+    Terminates a program and leaves a specified portion installed in
+    memory.
+ 
+       <B>On entry:</b>      CS         Segment of PSP
+                      DX         Address at which next program may be loaded
+                                 (i.e., highest address to stay resident + 1)
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Note:</b>          Interrupt 27h is the original (i.e. DOS 1.x) method
+                      of creating a TSR program. Unlike its DOS 2.0-and-
+                      later counterpart, Interrupt 21h, Function 31h, it
+                      does not allow you to pass a return code. And the
+                      amount of memory that may kept resident is limited
+                      to 64K.
+ 
+                      Use INT 21h function 31h to keep EXE programs
+                      resident in memory.
+ 
+                      Files are not closed by Interrupt 27h.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.50.html"> 31h </A></LI>
+<LI><A HREF="asm_010.1.html"> 00h </A></LI>
+<LI><A HREF="asm_011.1.html"> INT 20h </A></LI>
+<LI><A HREF="asm_010.92.html"> 4Ch </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

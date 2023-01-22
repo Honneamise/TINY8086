@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>INT 11h (17)             Read Equipment-List</b>
+ 
+    Returns a list of installed equipment on the system.
+ 
+       <B>On entry:</b>      No parameters
+ 
+       <B>Returns:</b>       AX         Equipment code
+ 
+  --------------------------------------------------------------------------
+ 
+<B>                           </b><B>Equipment code (AX)</b>
+ 
+  F E D C B A 9 8  7 6 5 4 3 2 1 0
+  x x . . . . . .  . . . . . . . .  Number of printers installed
+  . . x . . . . .  . . . . . . . .  Internal modem installed
+  . . . x . . . .  . . . . . . . .  Game adapter installed? (always 1 on PCJr)
+  . . . . x x x .  . . . . . . . .  Number of RS-232 ports
+  . . . . . . . x  . . . . . . . .  Reserved
+  . . . . . . . .  x x . . . . . .  Number of diskettes - 1 (i.e. 0=1 disk)
+  . . . . . . . .  . . x x . . . .  Initial video mode (see below)
+  . . . . . . . .  . . . . x . . .  Reserved
+  . . . . . . . .  . . . . . x . .  Reserved
+  . . . . . . . .  . . . . . . x .  Math coprocessor installed?
+  . . . . . . . .  . . . . . . . x  1=diskettes present; 0=no disks present
+ 
+ 
+<B>                         </b><B>Initial video mode</b>
+ 
+<B>                    Value</b><B>                 </b><B>Meaning</b>
+                     00                   Reserved
+                     01                   40 x 25 Color
+                     10                   80 x 25 Color
+                     11                   80 x 25 Monochrome
+ 
+  --------------------------------------------------------------------------
+ 
+       <B>Notes:</b>         The value returned in AX is the same as that stored
+                      at memory location 0:0410h, which is initialized
+                      during the power-up tests.
+ 
+                      For the IBM PC, XT, and PCjr, bits 2 and 3 used to
+                      list the amount of RAM installed on the system board
+                      in increments of 16K. For example, 00 meant 16K,
+                      while 11 meant 64K.
+ 
+                      Bit 0 indicates only whether the system has one or
+                      more diskette drives. Refer to bits 6 and 7 to find
+                      out how many diskettes are actually present. To
+                      determine the number of hard disks installed, use
+                      INT 13h, Service 8.
+ 
+                      If the DIP switches for PCs and XTs are not set
+                      correctly reflecting the presence of a math
+                      coprocessor, then bit 1 (math coprocessor present)
+                      may be incorrect. A better test for the math
+                      coprocessor is to test it directly by executing a
+                      math coprocessor instruction and then checking to
+                      see if the instruction was executed.
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_024.9.html"> INT 13h, 08h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>

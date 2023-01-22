@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+
+
+
+
+
+
+<div id="tb_container" style="background:#DFDCCF; border-bottom:1px solid #393939; position:relative; z-index:999999999!important">
+<style>
+    .adCenterClass{margin:0 auto}
+</style>
+<div id="tb_ad" class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+
+<div id="ad_container" style="display:block!important; float:left; width:728px ">
+</div>
+</div>
+</div>
+<div id="FooterAd" style="background:#DFDCCF; border-top:1px solid #393939; clear:both; display:none; width:100%!important; position:relative; z-index:999999!important; height:90px!important"> 
+<div class="adCenterClass" style="display:block!important; overflow:hidden; width:916px;">
+<div id="footerAd_container" style="display:block!important; float:left; width:728px">
+<iframe id="lycosFooterAdiFrame" style="border:0; display:block; float:left; height:96px; overflow:hidden; padding:0; width:750px"></iframe>
+</div>
+</div>
+</div>
+
+
+<PRE>
+<B>Function 00h (0)         Terminate Program</b>
+ 
+    Terminates a program and returns to DOS
+ 
+       <B>On entry</b>:      AH         00h
+                      CS         Segment address of PSP
+ 
+       <B>Returns:</b>       Nothing
+ 
+  --------------------------------------------------------------------------
+ 
+    DOS terminates the program, flushes the file buffers, and restores the
+    terminate, Ctrl-Break, and critical error exit addresses from the PSP.
+ 
+       <B>Setup:</b>         Close all files first.  Then ensure that CS contains
+                      the segment address of the PSP.
+ 
+       <B>Notes:</b>         This function is an historical remnant offering no
+                      advantages over Function 4Ch. It's better to use
+                      function 4Ch, which returns an error code that other
+                      programs can access (via Function 4Dh or the
+                      ERRORLEVEL statement in batch files); also, CS need
+                      not be set first when using Function 4Ch. (INT 20h
+                      is equivalent to Function 0.)
+<EM><B>
+Seealso:
+</b></EM>
+<UL>
+<LI><A HREF="asm_010.92.html"> 4Ch </A></LI>
+<LI><A HREF="asm_011.1.html"> INT 20h </A></LI>
+<LI><A HREF="asm_010.50.html"> 31h </A></LI>
+<LI><A HREF="asm_011.8.html"> INT 27h </A></LI>
+</UL>
+</PRE>
+<HR>
+<CENTER><FONT SIZE=-2>This page last updated on Fri Nov 30 10:49:50 MSK 2001 </FONT><BR>
+<CENTER><FONT SIZE=-2>Copyright &copy; 1992-2001, Vitaly Filatov, Moscow, Russia<BR>
+<I><A HREF="mailto:vitaly@royint.com">Webmaster</A></I></FONT></CENTER>
+</body>
+</HTML>
