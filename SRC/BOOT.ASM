@@ -5,8 +5,6 @@
 [BITS 16]
 [ORG 7C00h]
 
-        jmp     BOOT                    ;jump to boot section
-
 ;==============================================================================
 ; Const
 ;==============================================================================
@@ -21,11 +19,6 @@ COLS            EQU 80
 
 FG_COLOR        EQU 0Eh
 BG_COLOR        EQU 10h
-
-;==============================================================================
-; Variables section
-;==============================================================================
-DEVICE          db 00h
 
 ;==============================================================================
 ; Bootloader, read disk sectors to memory dest ES:BX
@@ -63,9 +56,8 @@ BOOT:
         mov     ch,00h                  ;starting from cylinder
         mov     cl,02h 					;starting from sector (1st is boot)
         mov     dh,00h                  ;starting from head
-        mov     dl,[DEVICE]
-        int     13h                     ;call interrupt service,
-                                        ;dl is already set and untouched
+        mov     dl,[DEVICE]             ;device to read from
+        int     13h                     ;call interrupt service
 
         jnc    	.boot_ok                ;CF clear ok, continue
 
@@ -96,11 +88,15 @@ BOOT:
 
         jmp     PROG_SEG:PROG_OFF       ;jump to the program location
 
+;==============================================================================
+; Variables section
+;==============================================================================
+DEVICE          db 00h
 
 ;==============================================================================
 ; Loader end
 ;==============================================================================
 TIMES 510-($-$$) DB 00h                 ;fill the remaining space with zeroes
 
-DW 0xAA55                               ;fill the remaining 2 bytes with the m
-                                        ;magic for boot (0xAA55)
+DW 0xAA55                               ;fill the remaining 2 bytes with the
+                                        ;magic number for boot (0xAA55)

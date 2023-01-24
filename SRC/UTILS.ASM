@@ -51,7 +51,7 @@ PRINT_WORD:
 
 ;==============================================================================
 ; Print a number in decimal format, expect in DX the number to print
-; NOTE : we use a stack to "decompose" the number
+; NOTE : we use the stack to "decompose" the number
 ;==============================================================================
 PRINT_NUMBER:
 

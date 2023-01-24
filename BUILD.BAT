@@ -1,3 +1,3 @@
-NASM\nasm.exe -f bin SRC\boot.asm -o BUILD\boot.bin
-NASM\nasm.exe -f bin SRC\program.asm -o BUILD\program.bin
-NASM\nasm.exe -f bin SRC\system.asm -o BUILD\floppy.img
+NASM\nasm.exe -f bin SRC\BOOT.ASM -o BUILD\BOOT.BIN
+NASM\nasm.exe -f bin SRC\ILM.ASM -o BUILD\ILM.BIN
+NASM\nasm.exe -f bin SRC\FLOPPY.ASM -o BUILD\FLOPPY.IMG
