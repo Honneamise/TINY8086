@@ -11,6 +11,9 @@
 ROWS            EQU 25
 COLS            EQU 80
 
+DIRECT			EQU 0
+RUN				EQU 1
+
 ;==============================================================================
 ; MAIN PROGRAM
 ;==============================================================================
@@ -23,35 +26,45 @@ START:
 		call	ILM_INIT				;INITIALIZE
 		call	ILM_NLINE				;WRITE CRLF
 
-CO:     call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
+CO:     
+		mov		[PGP],word PGM			;reset line
+		mov		[CURSOR],word PGM		;reset cursor
+
+		call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
 
 		call	ILM_NLINE				;WRITE CRLF
 
 		call	ILM_TSTL                ;TEST FOR LINE NUMBER
 
-		cmp		al,00h					;compare with 0
+		push	ax						;save line number on stack
+
+		cmp		al,00h					;compare AL with 0
 		jl		CO						;if less we have an error
-		je		XEC						;if equals execute directly
 
 		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
 
-		jmp     CO
+		pop		ax						;was line 0 ?
+		cmp		al,00h
+		je		XEC
+		
+		jmp     CO						;return to collect
 
-XEC:    call	ILM_XINIT             	;INITIALIZE
+XEC:    
+		call	ILM_XINIT             	;INITIALIZE
 
-; S14:    TST     S15,'LIST'    		;LIST COMMAND
-;         DONE
-;         LST
-;         NXT
+STMT:
+
 		
 S14:    
-		mov		dx,LIST_STR
+		mov		dx,LIST_STR				;LIST COMMAND
 		call	ILM_TST
-		xor		dx,dx
-		mov		dl,al
-		call	PRINT_NUMBER
-		
-		jmp		CO
+
+		cmp		al,00h					;no match
+		je		S17						;!!! REPLACE WITH S15
+
+		call	ILM_DONE
+		call	ILM_LST
+		call	ILM_NXT
 
 S17:    call	ILM_ERR	          		;SYNTAX ERROR
 
@@ -63,14 +76,16 @@ END:	cli                             ;disable interrupts
 ;==============================================================================
 ; Vars section
 ;==============================================================================
-INTP_STR 		db "TINY BASIC 8086",00h	;welcome string
-NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
+MODE			db 00h
 
 LBUF 			times COLS db 00h			;the reading buffer
 
 PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
 PGP				dw	0000h					;PGP (line pointer)
-CURSOR			db	00h						;line cursor
+CURSOR			dw	0000h					;Cursor (byte pointer)
+
+INTP_STR 		db "TINY BASIC 8086",00h	;welcome string
+NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 
 LIST_STR		db "LIST",00h				;list of language keywords
 RUN_STR			db "RUN",00h
@@ -79,7 +94,9 @@ CLEAR_STR		db "CLEAR",00h
 SYNTAX_ERROR	db "Syntax error",00h		;list of available errors			
 LINE_ERROR		db "Invalid line number",00h
 
-
+DEBUG_1			db "DEBUG_1",00h		;REMOVE ON RELEASE
+DEBUG_2			db "DEBUG_2",00h		;REMOVE ON RELEASE
+DEBUG_3			db "DEBUG_3",00h		;REMOVE ON RELEASE
 ;==============================================================================
 ; Include section
 ;==============================================================================

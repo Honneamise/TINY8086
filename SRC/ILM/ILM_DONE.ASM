@@ -4,18 +4,21 @@
 ; positioned to road a carriage return.
 ;==============================================================================
 ILM_DONE:
-	.skip_blanks:
-		cmp		[CURSOR],byte 00h		;is EOL ?
-		je		.done				
 
-		cmp		[CURSOR],byte 20h			;is a blank ?
-		jg		.err					;no, check the string
+	.skip_blanks:
+
+		mov		si,[CURSOR]
+
+		cmp		[si],byte 00h				;is EOL ?
+		je		.done						;ok done
+
+		cmp		[si],byte 20h				;is a blank ?
+		jg		.err						;no, error
 		
-		inc		word [CURSOR]				;increase cursor
-		jmp		.skip_blanks			;check next char
+		inc		si							;increase cursor
+		jmp		.skip_blanks				;check next char
 
 	.err:
-
 		mov		dx,SYNTAX_ERROR
 		call	PRINT_STR
 		call	ILM_NLINE

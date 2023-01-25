@@ -3,7 +3,7 @@
 ; Insert line after deleting any line with same line number.
 ;
 ; Expect:
-; AL == line number, 
+; AL == line number
 ; SI == first element after line number
 ;==============================================================================
 ILM_INSERT:

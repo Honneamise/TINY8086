@@ -21,7 +21,7 @@ ILM_LST:
 
 		mov		dx,di					;copy the start of the line
 		call	PRINT_STR				;call print line
-		call	ILM_NLINE					;add a new line
+		call	ILM_NLINE				;add a new line
 
 	.next:
 		add		di,COLS					;move to the next line
