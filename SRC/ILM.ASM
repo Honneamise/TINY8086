@@ -18,7 +18,7 @@ RUN				EQU 1
 ; MAIN PROGRAM
 ;==============================================================================
 
-		mov		dx,INTP_STR				;print welcome string
+		mov		dx,STR_WELCOME				;print welcome string
 		call	PRINT_STR
 
 START:
@@ -43,8 +43,8 @@ CO:
 
 		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
 
-		pop		ax						;was line 0 ?
-		cmp		al,00h
+		pop		ax						;inserted line 0 ?
+		cmp		al,00h					;if yes execute it directly
 		je		XEC
 		
 		jmp     CO						;return to collect
@@ -54,9 +54,33 @@ XEC:
 
 STMT:
 
+S3:     
+		mov		dx,STR_PRINT
+		call	ILM_TST
+		cmp		al,00h
+		je		S14						;!!! REPLACE WITH S8
 		
+S4:     
+		mov		dx,STR_QUOTE
+		call	ILM_TST
+		cmp		al,00h
+		je		S17       				;!!! REPLACE WITH S7
+        call	ILM_PRS                 ;PRINT STRING
+		
+		call	ILM_DONE
+		call	ILM_NXT
+
+; S5:     
+; 		TST     S6,','        			;IS THERE MORE?
+;         SPC                   			;SPACE TO NEXT ZONE
+;         JMP     S4            			;YES JUMP BACK
+; S6:     
+; 		DONE                  			;ERROR IF CR NOT NEXT
+;         NLINE
+;         NXT
+
 S14:    
-		mov		dx,LIST_STR				;LIST COMMAND
+		mov		dx,STR_LIST				;LIST COMMAND
 		call	ILM_TST
 
 		cmp		al,00h					;no match
@@ -65,6 +89,24 @@ S14:
 		call	ILM_DONE
 		call	ILM_LST
 		call	ILM_NXT
+
+S15:    
+		mov		dx,STR_RUN				;RUN COMMAND
+		call	ILM_TST
+        
+		cmp		al,00h
+		je		S16
+		
+		call	ILM_DONE
+
+		mov		ax,PGM+COLS
+		mov		[PGP],ax				;select first line
+		mov		[CURSOR],ax
+
+		jmp		XEC						;start execution
+
+S16:
+		;to do
 
 S17:    call	ILM_ERR	          		;SYNTAX ERROR
 
@@ -76,27 +118,27 @@ END:	cli                             ;disable interrupts
 ;==============================================================================
 ; Vars section
 ;==============================================================================
-MODE			db 00h
-
 LBUF 			times COLS db 00h			;the reading buffer
 
 PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
 PGP				dw	0000h					;PGP (line pointer)
 CURSOR			dw	0000h					;Cursor (byte pointer)
 
-INTP_STR 		db "TINY BASIC 8086",00h	;welcome string
+STR_WELCOME		db "TINY BASIC 8086",00h	;welcome string
 NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 
-LIST_STR		db "LIST",00h				;list of language keywords
-RUN_STR			db "RUN",00h
-CLEAR_STR		db "CLEAR",00h
+;list of language keywords
+STR_PRINT		db "PRINT",00h				
+STR_QUOTE		db 22h,00h
+STR_LIST		db "LIST",00h				
+STR_RUN			db "RUN",00h
+STR_CLEAR		db "CLEAR",00h
 
-SYNTAX_ERROR	db "Syntax error",00h		;list of available errors			
-LINE_ERROR		db "Invalid line number",00h
+;list of available errors
+ERROR_SYNTAX		db "Syntax error",00h					
+ERROR_LINE			db "Invalid line number",00h
+ERORR_PGP_OVERFLOW 	db "PGP overflow",00h
 
-DEBUG_1			db "DEBUG_1",00h		;REMOVE ON RELEASE
-DEBUG_2			db "DEBUG_2",00h		;REMOVE ON RELEASE
-DEBUG_3			db "DEBUG_3",00h		;REMOVE ON RELEASE
 ;==============================================================================
 ; Include section
 ;==============================================================================

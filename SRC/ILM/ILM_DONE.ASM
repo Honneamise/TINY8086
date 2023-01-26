@@ -19,7 +19,7 @@ ILM_DONE:
 		jmp		.skip_blanks				;check next char
 
 	.err:
-		mov		dx,SYNTAX_ERROR
+		mov		dx,ERROR_SYNTAX
 		call	PRINT_STR
 		call	ILM_NLINE
 		ret

@@ -57,7 +57,7 @@ ILM_TSTL:
 		ret
 
 	.err:
-		mov		dx,LINE_ERROR			;select error string
+		mov		dx,ERROR_LINE			;select error string
 		call	PRINT_STR				;print error string
 		call	ILM_NLINE				;print new line
 		mov		al,-1					;we return -1 in AL for errors

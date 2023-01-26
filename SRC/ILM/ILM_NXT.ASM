@@ -6,17 +6,30 @@
 ;==============================================================================
 ILM_NXT:
         
-        cmp		[MODE],byte DIRECT		;is direct ?
-		jge		.collection				;return to collect 
+        cmp		[PGP],word PGM			;is direct ?
+		je		.collection				;return to collect 
 
-		mov		ax,[PGP]				;caluclate in AX next line
-		add		ax,COLS
+		mov		bx,[PGP]				;get the PGP
+	
+	.cycle:
+		add		bx,COLS
 
-		mov		[PGP],ax				;next line
-		mov		[CURSOR],ax				;set cursor to beginning of the line
+		cmp		bx,PGM+256*80			;is this the last line ?
+		jge		.err					;err, we are outside of program
+
+		cmp		[bx],byte 00h			;is empty line ?
+		je		.cycle
+
+	.done:	
+		mov		[PGP],bx				;next line
+		mov		[CURSOR],bx				;set cursor to beginning of the line
 		jmp		STMT					;jump to statement executor
 
 	.collection:
 		jmp		CO						;jump to collection routine
 
-        
+    .err:
+		mov		dx,ERORR_PGP_OVERFLOW
+		call	PRINT_STR
+		call	ILM_NLINE
+		jmp		CO

@@ -5,8 +5,9 @@
 LST_COUNTER		db 00h					;line counter
 ;------------------------------------------------------------------------------
 ILM_LST:
-		mov		[LST_COUNTER],byte 00h	;reset counter variable
+		mov		[LST_COUNTER],byte 01h	;reset counter variable
 		mov		di,PGM					;init DI as base pointer to PGM
+		add		di,COLS					;start from line 1
 
 	.cycle:
 		cmp		di,PGM+256*80			;is this the last line ?
