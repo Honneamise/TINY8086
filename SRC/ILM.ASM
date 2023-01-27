@@ -36,18 +36,17 @@ CO:
 
 		call	ILM_TSTL                ;TEST FOR LINE NUMBER
 
-		push	ax						;save line number on stack
-
-		cmp		al,00h					;compare AL with 0
-		jl		CO						;if less we have an error
+		cmp		al,00h					;if line 0 direct mode
+		je		_XEC
 
 		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
-
-		pop		ax						;inserted line 0 ?
-		cmp		al,00h					;if yes execute it directly
-		je		XEC
-		
 		jmp     CO						;return to collect
+
+_XEC:
+		call	ILM_INSERT				;insert for line 0
+		mov		bx,[PGP]
+		cmp		[bx],byte 00h				;if empty line skip
+		je		CO
 
 XEC:    
 		call	ILM_XINIT             	;INITIALIZE
@@ -84,7 +83,7 @@ S14:
 		call	ILM_TST
 
 		cmp		al,00h					;no match
-		je		S17						;!!! REPLACE WITH S15
+		je		S15						;!!! REPLACE WITH S15
 
 		call	ILM_DONE
 		call	ILM_LST
@@ -96,14 +95,15 @@ S15:
         
 		cmp		al,00h
 		je		S16
-		
+
 		call	ILM_DONE
 
 		mov		ax,PGM+COLS
 		mov		[PGP],ax				;select first line
 		mov		[CURSOR],ax
 
-		jmp		XEC						;start execution
+		jmp		XEC
+		
 
 S16:
 		;to do
@@ -114,6 +114,31 @@ END:	cli                             ;disable interrupts
         hlt                             ;halt system
 
 
+ERROR:									
+		call	ILM_NLINE				;new line
+		
+		mov		ax,[PGP]				;get line address
+		cmp		ax,PGM					;line 0 ?
+		je		.str					;dont print line number
+
+		sub		ax,PGM					;calculate line number
+		mov		bx,COLS
+		div		bx
+
+	.num:								;print line number
+		mov		dx,ax
+		call	PRINT_NUMBER
+
+		mov     ah,0Eh                  ;teletype print interupt
+        mov 	al,3Ah                 	;column
+        mov     bh,00h                  ;page
+        int     10h                     ;call interrupt
+		
+	.str:								;print error string
+		mov		dx,[ERROR_STR]				
+		call	PRINT_STR
+		call	ILM_NLINE
+		jmp		CO						;back to collection routine
 
 ;==============================================================================
 ; Vars section
@@ -134,11 +159,18 @@ STR_LIST		db "LIST",00h
 STR_RUN			db "RUN",00h
 STR_CLEAR		db "CLEAR",00h
 
-;list of available errors
-ERROR_SYNTAX		db "Syntax error",00h					
-ERROR_LINE			db "Invalid line number",00h
-ERORR_PGP_OVERFLOW 	db "PGP overflow",00h
+;error flag and list of available errors
+ERROR_STR				dw 0000h
 
+ERROR_SYNTAX	db "Syntax error",00h					
+ERROR_LINE		db "Invalid line number",00h
+ERROR_PGP 		db "PGP out of range",00h
+ERROR_QUOTES	db "Missing quotes",00h
+
+;debug remove on release
+DEBUG_1			db "Debug 1",00h
+DEBUG_2			db "Debug 2",00h
+DEBUG_3			db "Debug 3",00h
 ;==============================================================================
 ; Include section
 ;==============================================================================

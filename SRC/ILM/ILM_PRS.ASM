@@ -25,7 +25,8 @@ ILM_PRS:
 		jmp		.cycle
 
 	.err:
-		jmp		CO						;FIX, print error and return to collect
+		mov		[ERROR_STR],word ERROR_QUOTES
+		jmp		ERROR
 
 	.done:
 		inc		si						;move one pos after double quotes

@@ -23,13 +23,11 @@ ILM_NXT:
 	.done:	
 		mov		[PGP],bx				;next line
 		mov		[CURSOR],bx				;set cursor to beginning of the line
-		jmp		STMT					;jump to statement executor
+		jmp		XEC						;jump to executor
 
 	.collection:
 		jmp		CO						;jump to collection routine
 
     .err:
-		mov		dx,ERORR_PGP_OVERFLOW
-		call	PRINT_STR
-		call	ILM_NLINE
-		jmp		CO
+		mov		[ERROR_STR],word ERROR_PGP
+		jmp		ERROR

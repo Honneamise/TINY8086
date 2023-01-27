@@ -129,6 +129,7 @@ This is a slighlty modified version of the original statements executor :
             RSTR                  ;RESTORE LINE NUMBER OF CALL
             NXT                   ;SEQUENCE TO NEXT STATEMENT
     S13:    TST     S14,'END'
+            DONE
             FIN
     S14:    TST     S15,'LIST'    ;LIST COMMAND
             DONE
@@ -203,6 +204,12 @@ This is a slighlty modified version of the original statements executor :
 ```
 
 # TODO
-- handle errors
-- fix mode for RUN command
-- fix error in ILM_PRS
+- handle errors :
+  - DONE ✅
+  - PRS ✅
+  - XFER ❌
+  - SAV ❌
+  - RSTR ❌
+  - ERR ✅
+  - TSTL ❌
+- fix RUN command
