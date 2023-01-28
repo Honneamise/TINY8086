@@ -22,117 +22,231 @@ RUN				EQU 1
 		call	PRINT_STR
 
 START:
-
 		call	ILM_INIT				;INITIALIZE
 		call	ILM_NLINE				;WRITE CRLF
 
 CO:     
-		mov		[PGP],word PGM			;reset line
-		mov		[CURSOR],word PGM		;reset cursor
+		mov		ax,PGM
+		mov		[PGP],ax
+		mov		[CURSOR],ax
+		mov		[MODE],byte 00h
 
 		call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
-
 		call	ILM_NLINE				;WRITE CRLF
+
+		cmp		[LBUF],byte 00h			;LBUB empty ?
+		je		CO
 
 		call	ILM_TSTL                ;TEST FOR LINE NUMBER
 
-		cmp		al,00h					;if line 0 direct mode
-		je		_XEC
+		push	ax						;save line number
 
 		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
-		jmp     CO						;return to collect
 
-_XEC:
-		call	ILM_INSERT				;insert for line 0
-		mov		bx,[PGP]
-		cmp		[bx],byte 00h				;if empty line skip
-		je		CO
+		pop		ax						;retrieve line from stack
+		cmp		al,00h					;is direct ?
+		jne		CO						;no, back to collection
 
 XEC:    
 		call	ILM_XINIT             	;INITIALIZE
 
-STMT:
-
+STMT:   
+		; TST     S1,'LET'      ;IS STATEMENT A LET
+        ; TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
+        ; TST     S17,'='       ;ASSIGNEMENT
+        ; CALL    EXPR          ;PLACE EXPR VALUE ON AESTK
+        ; DONE                  ;REPORT ERROR IF NOT NEXT
+        ; STORE                 ;STORE RESULT
+        ; NXT                   ;AND SEQUENCE TO NEXT
+S1:     
+		; TST     S2,'GOTO'     ;GOTO OT GOSUB?
+        ; CALL    EXPR          ;GET LABEL
+        ; DONE                  ;ERROR IF CR NOT NEXT
+        ; XPER                  ;SET UP AND JUMP
+S2:     
+		; TST     S3,'GOSUB'    ;ERROR IF NO MATCH
+        ; CALL    EXPR          ;GET DESTINATION
+        ; DONE                  ;ERROR IF CR NOT NEXT
+        ; SAV                   ;SAVE RETURN LINE
+        ; XPER                  ;AND JUMP
 S3:     
 		mov		dx,STR_PRINT
 		call	ILM_TST
 		cmp		al,00h
-		je		S14						;!!! REPLACE WITH S8
-		
+		je		S8
 S4:     
 		mov		dx,STR_QUOTE
 		call	ILM_TST
 		cmp		al,00h
-		je		S17       				;!!! REPLACE WITH S7
-        call	ILM_PRS                 ;PRINT STRING
-		
-		call	ILM_DONE
-		call	ILM_NXT
-
-; S5:     
-; 		TST     S6,','        			;IS THERE MORE?
-;         SPC                   			;SPACE TO NEXT ZONE
-;         JMP     S4            			;YES JUMP BACK
-; S6:     
-; 		DONE                  			;ERROR IF CR NOT NEXT
-;         NLINE
-;         NXT
-
+		je		S7
+		call	ILM_PRS                   ;PRINT STRING
+S5:     
+		; TST     S6,','        ;IS THERE MORE?
+        ; SPC                   ;SPACE TO NEXT ZONE
+        ; JMP     S4            ;YES JUMP BACK
+S6:     
+		call	ILM_DONE                  ;ERROR IF CR NOT NEXT
+        call	ILM_NLINE
+        call	ILM_NXT
+S7:     
+		; CALL    EXPR
+        ; PRN                   ;PRINT IT
+        ; JMP     S5            ;IS THERE MORE?
+S8:     
+		; TST     S9,'IF'       ;IF STATEMENT
+        ; CALL    EXPR          ;GET EXPRESSION
+        ; CALL    RELOP         ;DETERMINE OPR AND PUT ON STK
+        ; CALL    EXPR          ;GET EXPRESSION
+        ; TST     S17,'THEN'    ;THEN BRANCH
+        ; CMPR                  ;PERFORM COMPARE -- NXT IF FALSE
+        ; JMP     STMT
+S9:     
+		; TST     S12,'INPUT'   ;INPUT STATEMENT
+S10:    
+		; TSTV    S17           ;GET VAR ADDRESS
+        ; INNUM                 ;MOVE NUMBER FROM TTY TO AESTK
+        ; STORE                 ;STORE IT
+        ; TST     S11,','       ;IS THERE MORE?
+        ; JMP     S10           ;YES
+S11:    
+		; DONE                  ;MUST BE CR
+        ; NXT                   ;SEQUENCE TO NEXT
+S12:    
+		; TST     S13,'RETURN'  ;RETURN STATEMENT
+        ; DONE                  ;MUST BE CR
+        ; RSTR                  ;RESTORE LINE NUMBER OF CALL
+        ; NXT                   ;SEQUENCE TO NEXT STATEMENT
+S13:    
+		; TST     S14,'END'
+        ; DONE
+        ; FIN
 S14:    
-		mov		dx,STR_LIST				;LIST COMMAND
+		mov		dx,STR_LIST
 		call	ILM_TST
-
-		cmp		al,00h					;no match
-		je		S15						;!!! REPLACE WITH S15
+		cmp		al,00h
+		je		S15
 
 		call	ILM_DONE
-		call	ILM_LST
-		call	ILM_NXT
-
+        call	ILM_LST
+        call	ILM_NXT
 S15:    
-		mov		dx,STR_RUN				;RUN COMMAND
+		mov		dx,STR_RUN
 		call	ILM_TST
-        
 		cmp		al,00h
 		je		S16
+        call	ILM_DONE
+		mov		[MODE],byte 01h		;set RUN mode
+        call	ILM_NXT
+S16:    
+		; TST     S17,'CLEAR'   ;CLEAR COMMAND
+        ; DONE
+        ; JMP     START
+S17:    
+		call	ILM_ERR                   ;SYNTAX ERROR
 
-		call	ILM_DONE
+EXPR:   
+		; TST     E0,'-'
+        ; CALL    TERM          ;TEST FOR UNARY -.
+        ; NEG                   ;GET VALUE
+        ; JMP     E1            ;NEGATE IT
+E0:     
+		; TST     E1A,'+'       ;LOOK FOR MORE
+E1A:    
+		; CALL    TERM          ;TEST FOR UNARY +
+E1:     
+		; TST     E2,'+'        ;LEADING TERM
+        ; CALL    TERM
+        ; ADD
+        ; JMP     E1
+E2:     
+		; TST     E3,'-'        ;ANY MORE?
+        ; CALL    TERM          ;DIFFERENCE TERM
+        ; SUB
+        ; JMP     E1
+E3:
+T2:  
+		; RTN                   ;ANY MORE?
+TERM:   
+		; CALL    FACT
+T0:     
+		; TST     T1,"*"
+        ; CALL    FACT          ;PRODUCT FACTOR.
+        ; MUL
+        ; JMP     T0
+T1:     
+		; TST     T2,'/'
+        ; CALL    FACT          ;QUOTIENT FACTOR.
+        ; DIV
+        ; JMP     T0
 
-		mov		ax,PGM+COLS
-		mov		[PGP],ax				;select first line
-		mov		[CURSOR],ax
+FACT:   
+		; TSTV    F0
+        ; IND                   ;YES, GET THE VALUE.
+        ; RTN
+F0:     
+		; TSTN    F1            ;NUMBER, GET ITS VALUE.
+        ; RTN
+F1:     
+		; TST     F2,'('        ;PARENTHESIZED EXPR.
+        ; CALL    EXPR
+        ; TST     F2,')'
+        ; RTN
+F2:     
+		call	ILM_ERR                   ;ERROR.
 
-		jmp		XEC
-		
+RELOP:  
+		; TST     RO,'='
+        ; LIT     0             ;=
+        ; RTN
+R0:     
+		; TST     R4,'<'
+        ; TST     R1,'='
+        ; LIT     2             ;<=
+        ; RTN
+R1:     
+		; TST     R3,'>'
+        ; LIT     3             ;<>
+        ; RTN
+R3:     
+		; LIT     1             ;<
+        ; RTN
+R4:     
+		; TST     S17,'>'
+        ; TST     R5,'='
+        ; LIT     5             ;>=
+        ; RTN
+R5:     
+		; TST     R6,'<'
+        ; LIT     3
+        ; RTN                   
+R6:     
+		; LIT     4
+        ; RTN
 
-S16:
-		;to do
-
-S17:    call	ILM_ERR	          		;SYNTAX ERROR
-
-END:	cli                             ;disable interrupts
+END:									;this point should never be reached
+		cli                             ;disable interrupts
         hlt                             ;halt system
 
-
+;------------------------------------------------------------------------------
 ERROR:									
 		call	ILM_NLINE				;new line
 		
-		mov		ax,[PGP]				;get line address
-		cmp		ax,PGM					;line 0 ?
-		je		.str					;dont print line number
+	; 	mov		ax,[PGP]				;get line address
+	; 	cmp		ax,PGM					;line 0 ?
+	; 	je		.str					;dont print line number
 
-		sub		ax,PGM					;calculate line number
-		mov		bx,COLS
-		div		bx
+	; 	sub		ax,PGM					;calculate line number
+	; 	mov		bx,COLS
+	; 	div		bx
 
-	.num:								;print line number
-		mov		dx,ax
-		call	PRINT_NUMBER
+	; .num:								;print line number
+	; 	mov		dx,ax
+	; 	call	PRINT_NUMBER
 
-		mov     ah,0Eh                  ;teletype print interupt
-        mov 	al,3Ah                 	;column
-        mov     bh,00h                  ;page
-        int     10h                     ;call interrupt
+	; 	mov     ah,0Eh                  ;teletype print interupt
+    ;     mov 	al,3Ah                 	;column
+    ;     mov     bh,00h                  ;page
+    ;     int     10h                     ;call interrupt
 		
 	.str:								;print error string
 		mov		dx,[ERROR_STR]				
@@ -143,6 +257,8 @@ ERROR:
 ;==============================================================================
 ; Vars section
 ;==============================================================================
+MODE			db 00h						;0==direct, 1==run
+
 LBUF 			times COLS db 00h			;the reading buffer
 
 PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)

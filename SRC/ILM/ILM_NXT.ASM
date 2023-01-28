@@ -6,7 +6,7 @@
 ;==============================================================================
 ILM_NXT:
         
-        cmp		[PGP],word PGM			;is direct ?
+        cmp		[MODE],byte 00h			;is direct ?
 		je		.collection				;return to collect 
 
 		mov		bx,[PGP]				;get the PGP
@@ -14,7 +14,7 @@ ILM_NXT:
 	.cycle:
 		add		bx,COLS
 
-		cmp		bx,PGM+256*80			;is this the last line ?
+		cmp		bx,PGM+(256*80)			;is this the last line ?
 		jge		.err					;err, we are outside of program
 
 		cmp		[bx],byte 00h			;is empty line ?

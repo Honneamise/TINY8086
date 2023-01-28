@@ -212,4 +212,4 @@ This is a slighlty modified version of the original statements executor :
   - RSTR ❌
   - ERR ✅
   - TSTL ❌
-- fix RUN command
+- fix ERROR function where i print the line number

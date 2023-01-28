@@ -4,6 +4,8 @@
 ; Clears program area, empties GOSUB stack, etc.
 ;==============================================================================
 ILM_INIT:
+		mov		[MODE],byte 00h			;mode 0 = direct
+
 		mov     al,00h            		;the value to initialize the buffer
         mov		di,LBUF       			;clear LBUF
         mov     cx,COLS		          	;size of bufffer
