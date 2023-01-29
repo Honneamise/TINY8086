@@ -5,8 +5,13 @@
 ; Expect:
 ; AL == line number
 ; SI == first element after line number
+;
+; Return :
+; AL == line number inserted
 ;==============================================================================
 ILM_INSERT:
+		mov		dl,al					;bkup the line number
+
 		mov		cx,COLS					;how many to copy
 		sub		cx,si
 
@@ -18,6 +23,7 @@ ILM_INSERT:
 		add		di,PGM
 
         rep     movsb           		;copy
-	
-	.done:
+
+		mov		al,dl					;restore line number inserted
+
 		ret

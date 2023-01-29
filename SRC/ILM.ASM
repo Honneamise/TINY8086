@@ -3,7 +3,7 @@
 ;==============================================================================
 [CPU 8086]
 [BITS 16]
-[ORG 00h]
+[ORG 0000h]
 
 ;==============================================================================
 ; Const section
@@ -39,11 +39,8 @@ CO:
 
 		call	ILM_TSTL                ;TEST FOR LINE NUMBER
 
-		push	ax						;save line number
-
 		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
 
-		pop		ax						;retrieve line from stack
 		cmp		al,00h					;is direct ?
 		jne		CO						;no, back to collection
 
@@ -70,22 +67,22 @@ S2:
         ; SAV                   ;SAVE RETURN LINE
         ; XPER                  ;AND JUMP
 S3:     
-		mov		dx,STR_PRINT
+		mov		dx,STR_PRINT			;"PRINT"
 		call	ILM_TST
 		cmp		al,00h
 		je		S8
 S4:     
-		mov		dx,STR_QUOTE
+		mov		dx,STR_QUOTE			;test for quote
 		call	ILM_TST
 		cmp		al,00h
 		je		S7
-		call	ILM_PRS                   ;PRINT STRING
+		call	ILM_PRS         		;PRINT STRING
 S5:     
 		; TST     S6,','        ;IS THERE MORE?
         ; SPC                   ;SPACE TO NEXT ZONE
         ; JMP     S4            ;YES JUMP BACK
 S6:     
-		call	ILM_DONE                  ;ERROR IF CR NOT NEXT
+		call	ILM_DONE             	;ERROR IF CR NOT NEXT
         call	ILM_NLINE
         call	ILM_NXT
 S7:     
@@ -117,11 +114,15 @@ S12:
         ; RSTR                  ;RESTORE LINE NUMBER OF CALL
         ; NXT                   ;SEQUENCE TO NEXT STATEMENT
 S13:    
-		; TST     S14,'END'
-        ; DONE
-        ; FIN
+		mov		dx,STR_END				;END PROGRAM
+		call	ILM_TST
+		cmp		al,00h
+		je		S14
+
+		call	ILM_DONE
+        call	ILM_FIN
 S14:    
-		mov		dx,STR_LIST
+		mov		dx,STR_LIST				;LIST COMMAND
 		call	ILM_TST
 		cmp		al,00h
 		je		S15
@@ -130,19 +131,19 @@ S14:
         call	ILM_LST
         call	ILM_NXT
 S15:    
-		mov		dx,STR_RUN
+		mov		dx,STR_RUN				;RUN COMMAND
 		call	ILM_TST
 		cmp		al,00h
 		je		S16
         call	ILM_DONE
-		mov		[MODE],byte 01h		;set RUN mode
+		mov		[MODE],byte 01h			;set RUN mode
         call	ILM_NXT
 S16:    
 		; TST     S17,'CLEAR'   ;CLEAR COMMAND
         ; DONE
         ; JMP     START
 S17:    
-		call	ILM_ERR                   ;SYNTAX ERROR
+		call	ILM_ERR             	;SYNTAX ERROR
 
 EXPR:   
 		; TST     E0,'-'
@@ -231,22 +232,22 @@ END:									;this point should never be reached
 ERROR:									
 		call	ILM_NLINE				;new line
 		
-	; 	mov		ax,[PGP]				;get line address
-	; 	cmp		ax,PGM					;line 0 ?
-	; 	je		.str					;dont print line number
+		cmp		[MODE],byte 00h			;direct mode ?
+		je		.str					;dont print line number
 
-	; 	sub		ax,PGM					;calculate line number
-	; 	mov		bx,COLS
-	; 	div		bx
+		mov		ax,[PGP]				;convert line address to line number
+		sub		ax,PGM					
+		mov		bl,COLS
+		div		bl
 
-	; .num:								;print line number
-	; 	mov		dx,ax
-	; 	call	PRINT_NUMBER
+	.num:								;print line number
+		mov		dx,ax
+		call	PRINT_NUMBER
 
-	; 	mov     ah,0Eh                  ;teletype print interupt
-    ;     mov 	al,3Ah                 	;column
-    ;     mov     bh,00h                  ;page
-    ;     int     10h                     ;call interrupt
+		mov     ah,0Eh                  ;teletype print interupt
+        mov 	al,3Ah                 	;column symbol
+        mov     bh,00h                  ;page
+        int     10h                     ;call interrupt
 		
 	.str:								;print error string
 		mov		dx,[ERROR_STR]				
@@ -269,11 +270,13 @@ STR_WELCOME		db "TINY BASIC 8086",00h	;welcome string
 NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 
 ;list of language keywords
+STR_GOTO		db "GOTO",00h	
+STR_END			db "END",00h	
 STR_PRINT		db "PRINT",00h				
-STR_QUOTE		db 22h,00h
 STR_LIST		db "LIST",00h				
 STR_RUN			db "RUN",00h
 STR_CLEAR		db "CLEAR",00h
+STR_QUOTE		db 22h,00h
 
 ;error flag and list of available errors
 ERROR_STR				dw 0000h

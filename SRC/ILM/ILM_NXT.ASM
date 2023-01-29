@@ -29,5 +29,8 @@ ILM_NXT:
 		jmp		CO						;jump to collection routine
 
     .err:
+		sub		bx,COLS					;get last valid line
+		mov		[PGP],bx				;copy it in PGP
+
 		mov		[ERROR_STR],word ERROR_PGP
 		jmp		ERROR

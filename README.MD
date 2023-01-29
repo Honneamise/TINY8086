@@ -211,5 +211,4 @@ This is a slighlty modified version of the original statements executor :
   - SAV ❌
   - RSTR ❌
   - ERR ✅
-  - TSTL ❌
-- fix ERROR function where i print the line number
+  - TSTL ✅
