@@ -14,6 +14,9 @@ COLS            EQU 80
 DIRECT			EQU 0
 RUN				EQU 1
 
+MAX_NUMBER		EQU 32767				;(max is signed)
+MAX_STACK		EQU 255
+
 ;==============================================================================
 ; MAIN PROGRAM
 ;==============================================================================
@@ -46,7 +49,13 @@ CO:
 
 XEC:    
 		call	ILM_XINIT             	;INITIALIZE
+;---------------------------
+; call	ILM_TSTN
 
+; mov	dx,[AESTACK_BASE]
+; call PRINT_NUMBER
+
+;---------------------------
 STMT:   
 		; TST     S1,'LET'      ;IS STATEMENT A LET
         ; TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
@@ -185,8 +194,11 @@ FACT:
         ; IND                   ;YES, GET THE VALUE.
         ; RTN
 F0:     
-		; TSTN    F1            ;NUMBER, GET ITS VALUE.
-        ; RTN
+		call	ILM_TSTN				 ;NUMBER, GET ITS VALUE.
+		cmp		al,00h
+		je		F1
+		ret
+		
 F1:     
 		; TST     F2,'('        ;PARENTHESIZED EXPR.
         ; CALL    EXPR
@@ -266,6 +278,14 @@ PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
 PGP				dw	0000h					;PGP (line pointer)
 CURSOR			dw	0000h					;Cursor (byte pointer)
 
+VARIABLES		times 25 dw 0000h			;Variables A,B,C...Z 
+
+AESTACK_BASE	times 256 dw 0000h			;Arithmetic Expression stack
+AESTACK_POINTER db 00h
+
+SBRSTACK_BASE	times 256 db 00h			;Subroutines stack
+SBRSTACK_POINTER db 00h
+
 STR_WELCOME		db "TINY BASIC 8086",00h	;welcome string
 NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 
@@ -281,10 +301,13 @@ STR_QUOTE		db 22h,00h
 ;error flag and list of available errors
 ERROR_STR				dw 0000h
 
-ERROR_SYNTAX	db "Syntax error",00h					
-ERROR_LINE		db "Invalid line number",00h
-ERROR_PGP 		db "PGP out of range",00h
-ERROR_QUOTES	db "Missing quotes",00h
+ERROR_SYNTAX			db "Syntax error",00h					
+ERROR_LINE				db "Invalid line number",00h
+ERROR_PGP 				db "PGP out of range",00h
+ERROR_QUOTES			db "Missing quotes",00h
+ERROR_NUMBER			db "Number invalid",00h
+ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
+ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
 
 ;debug remove on release
 DEBUG_1			db "Debug 1",00h
@@ -326,5 +349,5 @@ DEBUG_3			db "Debug 3",00h
 %INCLUDE "SRC/ILM/ILM_TSTL.ASM"
 %INCLUDE "SRC/ILM/ILM_TSTN.ASM"
 %INCLUDE "SRC/ILM/ILM_TSTV.ASM"
-%INCLUDE "SRC/ILM/ILM_XFER.ASM"
+%INCLUDE "SRC/ILM/ILM_XPER.ASM"
 %INCLUDE "SRC/ILM/ILM_XINIT.ASM"

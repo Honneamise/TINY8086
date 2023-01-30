@@ -160,7 +160,7 @@ This is a slighlty modified version of the original statements executor :
             JMP     E1
     E3:T2:  RTN                   ;ANY MORE?
     TERM:   CALL    FACT
-    TO:     TST     T1,"*"
+    T0:     TST     T1,"*"
             CALL    FACT          ;PRODUCT FACTOR.
             MUL
             JMP     T0
@@ -204,10 +204,12 @@ This is a slighlty modified version of the original statements executor :
 ```
 
 # TODO
+- can remove the local counter in LST function ?
+- can move the PGP somewhere outside the main program area ?
 - handle errors :
   - DONE ✅
   - PRS ✅
-  - XFER ❌
+  - XPER ❌
   - SAV ❌
   - RSTR ❌
   - ERR ✅

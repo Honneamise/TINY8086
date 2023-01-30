@@ -10,7 +10,7 @@
 ;==============================================================================
 ILM_TSTL:
 		xor		ax,ax					;clear AX
-		mov		ch,10					;set ch as multiplier
+		mov		ch,10					;set CH as multiplier
 
 		mov		bx,LBUF					;get the base address of buffer
 		mov		si,00h					;we use SI as index
