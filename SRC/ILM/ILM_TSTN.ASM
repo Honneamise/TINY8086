@@ -54,10 +54,10 @@ ILM_TSTN:
 		sub 	cl,30h					;convert CL ascii to a number 0..9
 
 		mul 	bx						;multiply the content of AX for 10
-		jo		.number_err					;if greatest error
+		jo		.number_err				;if greatest error
 
 		add		ax,cx					;add the the CX value
-		jo		.number_err					;if greatest error
+		jo		.number_err				;if greatest error
 		
 		inc 	si						;next char
 	
@@ -70,17 +70,19 @@ ILM_TSTN:
 						
 	.done:
 
-		xor		bx,bx					;clear bx			
+		xor		bx,bx					;clear bx
 
-		cmp		[AESTACK_POINTER],byte MAX_STACK
-		jge		.stack_err				;err if overflow
+		mov		bl,[AESTACK_POINTER] 	;get current stack pointer
+		cmp		bl,MAX_STACK			;greatest of max elements ?
+		jae		.stack_err				;if yes error
 
-		mov		bl,[AESTACK_POINTER]	;get top of stack position
-		add		bx,AESTACK_BASE			
+		shl		bl,1					;multiply pointer by 2
+
+		add		bx,AESTACK_BASE			;add the base of stack
 
 		mov		[bx],ax					;store the number
 
-		inc		byte [AESTACK_POINTER]		;increase stack pointer
+		inc		byte [AESTACK_POINTER]	;store the new pointer value
 
 		mov		[CURSOR],si				;update cursor
 		mov		al,01h					;ok done

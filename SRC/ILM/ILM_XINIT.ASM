@@ -4,5 +4,5 @@
 ; Empties AEXP stack.
 ;==============================================================================
 ILM_XINIT:
-		;TO DO !!!
+		mov		[AESTACK_POINTER],byte 00h
 		ret

@@ -20,11 +20,7 @@ ILM_INIT:
 
 		mov		[CURSOR],word PGM		;clear the CURSOR
 
-		mov     al,00h            		;the value to initialize the buffer
-        mov		di,AESTACK_BASE      	;clear AESTACK
-        mov     cx,256		        	;size of bufffer
-		rep		stosb      
-
-		mov		[AESTACK_POINTER], byte 00h ;clear AESTACK pointer
+		mov		[AESTACK_POINTER], byte 00h 	;clear AESTACK pointer
+		mov		[SBRSTACK_POINTER], byte 00h 	;clear AESTACK pointer
 
 		ret

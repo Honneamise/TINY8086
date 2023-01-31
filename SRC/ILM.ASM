@@ -14,14 +14,14 @@ COLS            EQU 80
 DIRECT			EQU 0
 RUN				EQU 1
 
-MAX_NUMBER		EQU 32767				;(max is signed)
-MAX_STACK		EQU 255
+MAX_NUMBER		EQU 32767				;signed short
+MAX_STACK		EQU 128					;max elements
 
 ;==============================================================================
 ; MAIN PROGRAM
 ;==============================================================================
 
-		mov		dx,STR_WELCOME				;print welcome string
+		mov		dx,STR_WELCOME			;print welcome string
 		call	PRINT_STR
 
 START:
@@ -49,13 +49,52 @@ CO:
 
 XEC:    
 		call	ILM_XINIT             	;INITIALIZE
-;---------------------------
-; call	ILM_TSTN
+;--------------------
 
-; mov	dx,[AESTACK_BASE]
-; call PRINT_NUMBER
+DEBUG:
+		mov		dx,STR_DEBUG			;DEBUG
+		call	ILM_TST
+		cmp		al,00h
+		je		STMT
 
-;---------------------------
+		;----------test code here
+
+		mov		[PGM+80],byte 31h
+		mov		[PGM+81],byte 32h
+		mov		[PGM+82],byte 33h
+		mov		[PGM+83],byte 00h
+
+		mov		[PGP],word PGM+80
+		mov		[CURSOR], word PGM+80
+
+		call	ILM_TSTN
+
+		mov		dx,[AESTACK_BASE]
+		call	PRINT_NUMBER
+		call 	ILM_NLINE
+
+		; mov		dx,-456
+		; call	ILM_LIT
+
+		; call	ILM_NEG
+
+		; mov		dx,789
+		; call	ILM_LIT
+
+		; call	ILM_NEG
+
+		; mov		dx,[AESTACK_BASE]
+		; call	PRINT_NUMBER
+		; call 	ILM_NLINE
+
+		; mov		dx,[AESTACK_BASE+2]
+		; call	PRINT_NUMBER
+		; call 	ILM_NLINE
+
+		;----------test code here
+		jmp		CO
+;--------------------
+
 STMT:   
 		; TST     S1,'LET'      ;IS STATEMENT A LET
         ; TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
@@ -280,16 +319,17 @@ CURSOR			dw	0000h					;Cursor (byte pointer)
 
 VARIABLES		times 25 dw 0000h			;Variables A,B,C...Z 
 
-AESTACK_BASE	times 256 dw 0000h			;Arithmetic Expression stack
+AESTACK_BASE	times MAX_STACK dw 0000h	;Arithmetic Expression stack
 AESTACK_POINTER db 00h
 
-SBRSTACK_BASE	times 256 db 00h			;Subroutines stack
+SBRSTACK_BASE	times MAX_STACK db 00h		;Subroutines stack
 SBRSTACK_POINTER db 00h
 
 STR_WELCOME		db "TINY BASIC 8086",00h	;welcome string
 NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 
 ;list of language keywords
+STR_DEBUG		db "DEBUG",00h	;debug remove on release
 STR_GOTO		db "GOTO",00h	
 STR_END			db "END",00h	
 STR_PRINT		db "PRINT",00h				
@@ -309,10 +349,8 @@ ERROR_NUMBER			db "Number invalid",00h
 ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
 ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
 
-;debug remove on release
-DEBUG_1			db "Debug 1",00h
-DEBUG_2			db "Debug 2",00h
-DEBUG_3			db "Debug 3",00h
+
+
 ;==============================================================================
 ; Include section
 ;==============================================================================
