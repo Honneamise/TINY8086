@@ -59,37 +59,26 @@ DEBUG:
 
 		;----------test code here
 
-		mov		[PGM+80],byte 31h
-		mov		[PGM+81],byte 32h
-		mov		[PGM+82],byte 33h
-		mov		[PGM+83],byte 00h
+		
+		mov		dx,-6
+		call	ILM_LIT
 
-		mov		[PGP],word PGM+80
-		mov		[CURSOR], word PGM+80
+		mov		dx,3
+		call	ILM_LIT
 
-		call	ILM_TSTN
+		call	ILM_DIV
 
-		mov		dx,[AESTACK_BASE]
+		xor		bx,bx
+		mov		bl,[AESTACK_POINTER]
+		dec		bl
+		shl		bl,1
+		add		bx,AESTACK_BASE
+		mov		dx,[bx]		
+
 		call	PRINT_NUMBER
 		call 	ILM_NLINE
 
-		; mov		dx,-456
-		; call	ILM_LIT
-
-		; call	ILM_NEG
-
-		; mov		dx,789
-		; call	ILM_LIT
-
-		; call	ILM_NEG
-
-		; mov		dx,[AESTACK_BASE]
-		; call	PRINT_NUMBER
-		; call 	ILM_NLINE
-
-		; mov		dx,[AESTACK_BASE+2]
-		; call	PRINT_NUMBER
-		; call 	ILM_NLINE
+		
 
 		;----------test code here
 		jmp		CO
@@ -162,30 +151,31 @@ S12:
         ; RSTR                  ;RESTORE LINE NUMBER OF CALL
         ; NXT                   ;SEQUENCE TO NEXT STATEMENT
 S13:    
-		mov		dx,STR_END				;END PROGRAM
+		mov		dx,STR_END				;test "END"
 		call	ILM_TST
 		cmp		al,00h
 		je		S14
 
-		call	ILM_DONE
-        call	ILM_FIN
+		call	ILM_DONE				
+        jmp		CO						;return to collection routine
 S14:    
-		mov		dx,STR_LIST				;LIST COMMAND
+		mov		dx,STR_LIST				;test "LIST"
 		call	ILM_TST
 		cmp		al,00h
 		je		S15
 
 		call	ILM_DONE
-        call	ILM_LST
-        call	ILM_NXT
+        call	ILM_LST					;print program
+        call	ILM_NXT					;next line
 S15:    
-		mov		dx,STR_RUN				;RUN COMMAND
+		mov		dx,STR_RUN				;test "RUN"
 		call	ILM_TST
 		cmp		al,00h
 		je		S16
+
         call	ILM_DONE
 		mov		[MODE],byte 01h			;set RUN mode
-        call	ILM_NXT
+        call	ILM_NXT					;next line
 S16:    
 		; TST     S17,'CLEAR'   ;CLEAR COMMAND
         ; DONE
@@ -194,46 +184,70 @@ S17:
 		call	ILM_ERR             	;SYNTAX ERROR
 
 EXPR:   
-		; TST     E0,'-'
-        ; CALL    TERM          ;TEST FOR UNARY -.
-        ; NEG                   ;GET VALUE
-        ; JMP     E1            ;NEGATE IT
+		mov		dx,STR_MINUS			;test "-"
+		call	ILM_TST
+		cmp		al,00h
+		je		E0
+
+		call	TERM					;TEST FOR UNARY
+		call	ILM_NEG					;NEGATE IT
+		jmp		E1
 E0:     
-		; TST     E1A,'+'       ;LOOK FOR MORE
+		mov		dx,STR_PLUS				;test "+"
+		call	ILM_TST
+		cmp		al,00h
+		je		E1A
 E1A:    
-		; CALL    TERM          ;TEST FOR UNARY +
+		call	TERM         
 E1:     
-		; TST     E2,'+'        ;LEADING TERM
-        ; CALL    TERM
-        ; ADD
-        ; JMP     E1
+		mov		dx,STR_PLUS				;test "+"
+		call	ILM_TST
+		cmp		al,00h
+		je		E2
+
+		call	TERM
+		call	ILM_ADD
+		jmp		E1
+		
 E2:     
-		; TST     E3,'-'        ;ANY MORE?
-        ; CALL    TERM          ;DIFFERENCE TERM
-        ; SUB
-        ; JMP     E1
+		mov		dx,STR_MINUS			;test "-"
+		call	ILM_TST
+		cmp		al,00h
+		je		E3
+
+		call	TERM
+		call	ILM_SUB
+		jmp		E1
 E3:
 T2:  
-		; RTN                   ;ANY MORE?
+		ret
 TERM:   
-		; CALL    FACT
+		call	FACT
 T0:     
-		; TST     T1,"*"
-        ; CALL    FACT          ;PRODUCT FACTOR.
-        ; MUL
-        ; JMP     T0
+		mov		dx,STR_MUL				;test "*"
+		call	ILM_TST
+		cmp		al,00h
+		je		T1
+
+		call	FACT
+		call 	ILM_MUL
+		jmp		T0
 T1:     
-		; TST     T2,'/'
-        ; CALL    FACT          ;QUOTIENT FACTOR.
-        ; DIV
-        ; JMP     T0
+		mov		dx,STR_DIV				;test "/"
+		call	ILM_TST
+		cmp		al,00h
+		je		T2
+
+		call    FACT          
+        call	ILM_DIV
+        jmp   	T0
 
 FACT:   
 		; TSTV    F0
         ; IND                   ;YES, GET THE VALUE.
         ; RTN
 F0:     
-		call	ILM_TSTN				 ;NUMBER, GET ITS VALUE.
+		call	ILM_TSTN				;NUMBER, GET ITS VALUE.
 		cmp		al,00h
 		je		F1
 		ret
@@ -338,6 +352,11 @@ STR_RUN			db "RUN",00h
 STR_CLEAR		db "CLEAR",00h
 STR_QUOTE		db 22h,00h
 
+STR_MINUS		db 2Dh,00h
+STR_PLUS		db 2Bh,00h
+STR_MUL			db 2Ah,00h
+STR_DIV			db 2Fh,00h
+
 ;error flag and list of available errors
 ERROR_STR				dw 0000h
 
@@ -345,7 +364,8 @@ ERROR_SYNTAX			db "Syntax error",00h
 ERROR_LINE				db "Invalid line number",00h
 ERROR_PGP 				db "PGP out of range",00h
 ERROR_QUOTES			db "Missing quotes",00h
-ERROR_NUMBER			db "Number invalid",00h
+ERROR_INVALID_NUMBER	db "Number invalid",00h
+ERROR_BIG_NUMBER		db "Number too big",00h
 ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
 ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
 
@@ -357,18 +377,15 @@ ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
 %INCLUDE "SRC/UTILS.ASM"					;required to use core functions
 
 %INCLUDE "SRC/ILM/ILM_ADD.ASM"				;ILM functions
-%INCLUDE "SRC/ILM/ILM_CALL.ASM"
 %INCLUDE "SRC/ILM/ILM_CMPR.ASM"
 %INCLUDE "SRC/ILM/ILM_DIV.ASM"
 %INCLUDE "SRC/ILM/ILM_DONE.ASM"
 %INCLUDE "SRC/ILM/ILM_ERR.ASM"
-%INCLUDE "SRC/ILM/ILM_FIN.ASM"
 %INCLUDE "SRC/ILM/ILM_GETLINE.ASM"
 %INCLUDE "SRC/ILM/ILM_IND.ASM"
 %INCLUDE "SRC/ILM/ILM_INIT.ASM"
 %INCLUDE "SRC/ILM/ILM_INNUM.ASM"
 %INCLUDE "SRC/ILM/ILM_INSERT.ASM"
-%INCLUDE "SRC/ILM/ILM_JUMP.ASM"
 %INCLUDE "SRC/ILM/ILM_LIT.ASM"
 %INCLUDE "SRC/ILM/ILM_LST.ASM"
 %INCLUDE "SRC/ILM/ILM_MUL.ASM"
@@ -378,7 +395,6 @@ ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
 %INCLUDE "SRC/ILM/ILM_PRN.ASM"
 %INCLUDE "SRC/ILM/ILM_PRS.ASM"
 %INCLUDE "SRC/ILM/ILM_RSTR.ASM"
-%INCLUDE "SRC/ILM/ILM_RTN.ASM"
 %INCLUDE "SRC/ILM/ILM_SAV.ASM"
 %INCLUDE "SRC/ILM/ILM_SPC.ASM"
 %INCLUDE "SRC/ILM/ILM_STORE.ASM"

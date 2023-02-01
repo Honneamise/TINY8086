@@ -89,7 +89,7 @@ ILM_TSTN:
 		ret
 
 	.number_err:
-		mov		[ERROR_STR],word ERROR_NUMBER
+		mov		[ERROR_STR],word ERROR_INVALID_NUMBER
 		jmp		ERROR
 
 	.stack_err:

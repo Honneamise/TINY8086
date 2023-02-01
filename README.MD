@@ -31,13 +31,15 @@ The memory it is structured as :
 
 ## SOURCE CODE
 
-- __boot.asm__ : the boot loader
+- __BOOT.ASM__ : the boot loader
 
-- __program.asm__ : the interpreter
+- __UTILS.ASM__ : utilities functions
 
-- __funcs.asm__ : utilities functions
+- __FLOPPY.ASM__ : to create a floppy image of the system
 
-- __system.asm__ : to create a floppy image of the system
+- __ILM.ASM__ : the interpreter
+
+- __ILM/*.ASM__ : folder containing all the functions required by the interpreter
 
 ## BUILD AND RUN
 
@@ -204,13 +206,5 @@ This is a slighlty modified version of the original statements executor :
 ```
 
 # TODO
-- can remove the local counter in LST function ?
-- can move the PGP somewhere outside the main program area ?
-- handle errors :
-  - DONE ✅
-  - PRS ✅
-  - XPER ❌
-  - SAV ❌
-  - RSTR ❌
-  - ERR ✅
-  - TSTL ✅
+- change the TST function to accept the label where to jump in AX
+in the function when i jump to not_found, instead jump to label
