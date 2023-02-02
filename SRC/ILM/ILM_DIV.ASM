@@ -4,7 +4,7 @@
 ;==============================================================================
 ILM_DIV:
         xor     bx,bx                   ;clear BX
-		
+
         mov     bl,[AESTACK_POINTER]    ;get stack pointer
 
 		cmp     bl,02h					;not enough elements

@@ -2,15 +2,16 @@
 ; TSTN lbl
 ; Test for number. 
 ; If present, place its value onto the AESTK and continue execution 
-; at next suggested location. 
-; Otherwise continue at lbl.
+; at next suggested location. Otherwise continue at lbl.
 ;
-; Return :
-; AL == 0 not found, 1 found (and pushed on AESTACK)
+; Expect :
+; AX == the label to jump if match fail
+;
+; NOTE: if match, [CURSOR] point to first element after the number
 ;==============================================================================
 ILM_TSTN:
 
-		xor		ax,ax					;clear AX
+		mov		dx,ax					;save in DX the label to jump
 		mov		bx,10					;set BX as multiplyer
 		mov		di,0					;set DI for positive sign
 
@@ -89,7 +90,7 @@ ILM_TSTN:
 		ret
 
 	.number_err:
-		mov		[ERROR_STR],word ERROR_INVALID_NUMBER
+		mov		[ERROR_STR],word ERROR_BIG_NUMBER
 		jmp		ERROR
 
 	.stack_err:
@@ -97,5 +98,4 @@ ILM_TSTN:
 		jmp		ERROR
 
 	.not_found:
-		mov		al,00h					;not found
-		ret
+		jmp		dx						;jump to label

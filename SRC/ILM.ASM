@@ -37,7 +37,7 @@ CO:
 		call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
 		call	ILM_NLINE				;WRITE CRLF
 
-		cmp		[LBUF],byte 00h			;LBUB empty ?
+		cmp		[LBUF],byte 00h			;LBUF empty ?
 		je		CO
 
 		call	ILM_TSTL                ;TEST FOR LINE NUMBER
@@ -52,11 +52,10 @@ XEC:
 ;--------------------
 
 DEBUG:
+		mov		ax,STMT
 		mov		dx,STR_DEBUG			;DEBUG
 		call	ILM_TST
-		cmp		al,00h
-		je		STMT
-
+		
 		;----------test code here
 
 		
@@ -104,15 +103,14 @@ S2:
         ; SAV                   ;SAVE RETURN LINE
         ; XPER                  ;AND JUMP
 S3:     
+		mov		ax,S8
 		mov		dx,STR_PRINT			;"PRINT"
 		call	ILM_TST
-		cmp		al,00h
-		je		S8
+
 S4:     
+		mov		ax,S7
 		mov		dx,STR_QUOTE			;test for quote
 		call	ILM_TST
-		cmp		al,00h
-		je		S7
 		call	ILM_PRS         		;PRINT STRING
 S5:     
 		; TST     S6,','        ;IS THERE MORE?
@@ -151,28 +149,25 @@ S12:
         ; RSTR                  ;RESTORE LINE NUMBER OF CALL
         ; NXT                   ;SEQUENCE TO NEXT STATEMENT
 S13:    
+		mov		ax,S14
 		mov		dx,STR_END				;test "END"
 		call	ILM_TST
-		cmp		al,00h
-		je		S14
-
+		
 		call	ILM_DONE				
         jmp		CO						;return to collection routine
 S14:    
+		mov		ax,S15
 		mov		dx,STR_LIST				;test "LIST"
 		call	ILM_TST
-		cmp		al,00h
-		je		S15
 
 		call	ILM_DONE
         call	ILM_LST					;print program
         call	ILM_NXT					;next line
 S15:    
+		mov		ax,S16
 		mov		dx,STR_RUN				;test "RUN"
 		call	ILM_TST
-		cmp		al,00h
-		je		S16
-
+		
         call	ILM_DONE
 		mov		[MODE],byte 01h			;set RUN mode
         call	ILM_NXT					;next line
@@ -184,37 +179,33 @@ S17:
 		call	ILM_ERR             	;SYNTAX ERROR
 
 EXPR:   
+		mov		ax,E0
 		mov		dx,STR_MINUS			;test "-"
 		call	ILM_TST
-		cmp		al,00h
-		je		E0
-
+		
 		call	TERM					;TEST FOR UNARY
 		call	ILM_NEG					;NEGATE IT
 		jmp		E1
 E0:     
+		mov		ax,E1A
 		mov		dx,STR_PLUS				;test "+"
 		call	ILM_TST
-		cmp		al,00h
-		je		E1A
 E1A:    
 		call	TERM         
 E1:     
+		mov		ax,E2
 		mov		dx,STR_PLUS				;test "+"
 		call	ILM_TST
-		cmp		al,00h
-		je		E2
-
+		
 		call	TERM
 		call	ILM_ADD
 		jmp		E1
 		
 E2:     
+		mov		ax,E3
 		mov		dx,STR_MINUS			;test "-"
 		call	ILM_TST
-		cmp		al,00h
-		je		E3
-
+		
 		call	TERM
 		call	ILM_SUB
 		jmp		E1
@@ -224,20 +215,18 @@ T2:
 TERM:   
 		call	FACT
 T0:     
+		mov		ax,T1
 		mov		dx,STR_MUL				;test "*"
 		call	ILM_TST
-		cmp		al,00h
-		je		T1
-
+		
 		call	FACT
 		call 	ILM_MUL
 		jmp		T0
 T1:     
+		mov		ax,T2
 		mov		dx,STR_DIV				;test "/"
 		call	ILM_TST
-		cmp		al,00h
-		je		T2
-
+		
 		call    FACT          
         call	ILM_DIV
         jmp   	T0
@@ -345,6 +334,7 @@ NOT_IMPLEMENTED	db "Not mplemented",00h		;REMOVE ON RELEASE
 ;list of language keywords
 STR_DEBUG		db "DEBUG",00h	;debug remove on release
 STR_GOTO		db "GOTO",00h	
+STR_GOSUB		db "GOSUB",00h	
 STR_END			db "END",00h	
 STR_PRINT		db "PRINT",00h				
 STR_LIST		db "LIST",00h				

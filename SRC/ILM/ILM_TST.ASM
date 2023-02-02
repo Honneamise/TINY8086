@@ -6,17 +6,15 @@
 ; If a match fails, execute the IL instruction at the labled lbl.
 ;
 ; Expect :
+; AX == the label to jump if match fail
 ; DX == the string to compare
 ;
-; Return : 
-; AL == 0 no match, 1 == match
-; [CURSOR] == if mathced first element after matched string
+; NOTE: if match, [CURSOR] point to first element after matched string
 ;==============================================================================	
 TST_CURBKUP		dw 0000h				;cursor bkup
 ;------------------------------------------------------------------------------
 ILM_TST:
-		xor 	al,al					;clear AL
-
+		
 		mov		si,[CURSOR]				;backup the cursor
 		mov		[TST_CURBKUP],si	
 		
@@ -49,10 +47,9 @@ ILM_TST:
 
 	.match: 							;if here strings are equals
 		mov		[CURSOR],si				;update the cursor position
-		mov		al,1					;set AL for match found
 		ret
 
 	.nomatch:
 		mov 	bx,[TST_CURBKUP]		;restore cursor position
 		mov		[CURSOR],bx		
-		ret								;AL already clear
+		jmp		ax						;jump to label
