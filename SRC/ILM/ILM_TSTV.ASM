@@ -20,7 +20,7 @@ ILM_TSTV:
 		je		.nomatch				;possible error
 
 		cmp		[si],byte 20h			;is a blank ?
-		jg		.check					;no, check for var
+		ja		.check					;no, check for var
 		
 		inc		si						;increase position
 
@@ -28,13 +28,14 @@ ILM_TSTV:
 
 	.check:
 		cmp		[si],byte 41h			;less than 'A' ?
-		jl		.nomatch
+		jb		.nomatch
 
 		cmp		[si],byte 5Ah			;greater than 'Z' ?
-		jg		.nomatch
+		ja		.nomatch
 
-		mov		dx,[si]					;convert ascii char to index
-		sub		dx,41h
+		xor		dh,dh
+		mov		dl,byte [si]					;convert ascii char to index
+		sub		dl,41h
 
 	.stack:
 		xor		bx,bx					;clear bx
@@ -50,7 +51,9 @@ ILM_TSTV:
 		mov		[bx],dx					;copy the value
 
 		inc		byte [AESTACK_POINTER]	;increase stack pointer
-		inc		byte [CURSOR]			;increase cursor
+		
+		inc		si						;advance SI to element after letter
+		mov		[CURSOR],si				;update CURSOR
 
 		mov		al,1					;exit success
 		ret

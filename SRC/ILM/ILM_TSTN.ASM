@@ -101,15 +101,11 @@ ILM_TSTN:
 	.stack_err:
 		mov		[ERROR_CODE],word ERROR_AESTACK_OVERFLOW
 
-	.err:
-mov	dx,STR_DEBUG5
-call PRINT_STR	
+	.err:	
 		call	ILM_ERR
 		mov		al,-1
 		ret
 
 	.not_found:
-mov	dx,STR_DEBUG6
-call PRINT_STR
 		xor		al,al
 		ret

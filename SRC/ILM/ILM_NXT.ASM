@@ -4,7 +4,7 @@
 ; Otherwise, select the next line and begin interpretation.
 ;
 ; Return:
-; AL == 0 must jump to CO, 1 must jump to STMT ( or XEC ???)
+; AL == 0 must jump to CO, 1 must jump to XEC
 ;==============================================================================
 ILM_NXT:
         

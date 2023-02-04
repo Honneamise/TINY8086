@@ -35,13 +35,12 @@ ILM_MUL:
 
     .stack_err:
 		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
-		call 	ILM_ERR
-		jmp		.fail
+		jmp		.err
 
 	.number_err:
 		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		
+	.err:
 		call 	ILM_ERR
-
-	.fail:
 		xor		al,al
 		ret

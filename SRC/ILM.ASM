@@ -29,9 +29,9 @@ START:
 		call	ILM_NLINE				;WRITE CRLF
 
 CO:     
-mov dx,sp
-call PRINT_WORD
-call ILM_NLINE
+; mov dx,sp
+; call PRINT_WORD
+; call ILM_NLINE
 
 		mov		ax,PGM
 		mov		[PGP],ax
@@ -62,15 +62,39 @@ DEBUG:
 		mov		dx,STR_DEBUG			;DEBUG
 		call	ILM_TST
 		cmp		al,00h
-		jmp		STMT
+		je		STMT
 		;----------test code here
 
-		
+		mov		dx,[VARIABLES];A
+		call	PRINT_NUMBER
+
 		;----------test code here
 		jmp		CO
 ;--------------------
 
 STMT:   
+		mov		dx,STR_LET
+		call	ILM_TST
+		cmp		al,00h
+		je		S1
+
+		call	ILM_TSTV
+		cmp		al,-1
+		je		CO
+		cmp		al,00h
+		je		S17
+
+		mov		dx,STR_EQUAL
+		call	ILM_TST
+		cmp		al,00h
+		je		S17
+
+		call	EXPR
+
+		call	ILM_DONE
+		cmp		al,00h
+		je		CO
+
 		; TST     S1,'LET'      ;IS STATEMENT A LET
         ; TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
         ; TST     S17,'='       ;ASSIGNEMENT
@@ -78,8 +102,18 @@ STMT:
         ; DONE                  ;REPORT ERROR IF NOT NEXT
         ; STORE                 ;STORE RESULT
         ; NXT                   ;AND SEQUENCE TO NEXT
-S1:     
 
+		call	ILM_STORE
+		cmp		al,00h
+		je		CO
+
+		call	ILM_NXT
+		cmp		al,00h
+		je		CO
+		cmp		al,01h
+		je		XEC
+
+S1:     
 		mov		dx,STR_GOTO
 		call	ILM_TST
 		cmp		al,00h
@@ -108,7 +142,7 @@ S3:
 		cmp		al,00h
 		je		S8
 S4:     
-		mov		dx,STR_QUOTE			;test for quote
+		mov		dx,STR_QUOTES			;test for quote
 		call	ILM_TST
 		cmp		al,00h
 		je		S7
@@ -116,10 +150,16 @@ S4:
 		call	ILM_PRS         		;PRINT STRING
 		cmp		al,00h
 		je		CO
+
 S5:     
-		; TST     S6,','        ;IS THERE MORE?
-        ; SPC                   ;SPACE TO NEXT ZONE
-        ; JMP     S4            ;YES JUMP BACK
+		mov		dx,STR_COMMA			;comma for more
+		call	ILM_TST
+		cmp		al,00h
+		je		S6
+
+		call	ILM_SPC
+
+		jmp		S4
 S6:     
 		call 	ILM_DONE
 		cmp		al,00h
@@ -131,9 +171,16 @@ S6:
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
-		je		STMT
+		je		XEC
 S7:     
-		; CALL    EXPR
+		call    EXPR
+
+		call	ILM_PRN
+		cmp		al,00h
+		je		CO
+
+		jmp		S5
+
         ; PRN                   ;PRINT IT
         ; JMP     S5            ;IS THERE MORE?
 S8:     
@@ -143,7 +190,7 @@ S8:
         ; CALL    EXPR          ;GET EXPRESSION
         ; TST     S17,'THEN'    ;THEN BRANCH
         ; CMPR                  ;PERFORM COMPARE -- NXT IF FALSE
-        ; JMP     STMT
+        ; JMP     XEC
 S9:     
 		; TST     S12,'INPUT'   ;INPUT STATEMENT
 S10:    
@@ -184,7 +231,7 @@ S14:
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
-		je		STMT
+		je		XEC
 S15:    
 		mov		dx,STR_RUN				;test "RUN"
 		call	ILM_TST
@@ -201,7 +248,7 @@ S15:
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
-		je		STMT
+		je		XEC
 S16:    
 		; TST     S17,'CLEAR'   ;CLEAR COMMAND
         ; DONE
@@ -295,11 +342,11 @@ T2:
 
 FACT:  
 		call	ILM_TSTV
-		cmp		al,00h
-		je		F0
 		cmp		al,-1
 		je		CO
-
+		cmp		al,00h
+		je		F0
+		
         call	ILM_IND                 ;YES, GET THE VALUE.
         cmp		al,00h
 		je		CO
@@ -307,10 +354,10 @@ FACT:
 		ret
 F0:     
 		call	ILM_TSTN				;NUMBER, GET ITS VALUE.
-		cmp		al,00h					;match fail go to F1
-		je		F1
 		cmp		al,-1					;error goto CO
 		je		CO
+		cmp		al,00h					;match fail go to F1
+		je		F1
 					
 		ret
 F1:    
@@ -365,70 +412,6 @@ END:									;this point should never be reached
         hlt                             ;halt system
 
 ;==============================================================================
-; Vars section
-;==============================================================================
-MODE			db 00h						;0==direct, 1==run
-
-LBUF 			times COLS db 00h			;the reading buffer
-
-PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
-PGP				dw	0000h					;PGP (line pointer)
-CURSOR			dw	0000h					;Cursor (byte pointer)
-
-VARIABLES		times 26 dw 0000h			;Variables A,B,C...Z 
-
-AESTACK_BASE	times MAX_STACK dw 0000h	;Arithmetic Expression stack
-AESTACK_POINTER db 00h
-
-SBRSTACK_BASE	times MAX_STACK db 00h		;Subroutines stack
-SBRSTACK_POINTER db 00h
-
-STR_WELCOME		db "TINY BASIC 8086",00h	;welcome string
-
-;list of language keywords
-STR_GOTO		db "GOTO",00h	
-STR_GOSUB		db "GOSUB",00h	
-STR_END			db "END",00h	
-STR_PRINT		db "PRINT",00h				
-STR_LIST		db "LIST",00h				
-STR_RUN			db "RUN",00h
-STR_CLEAR		db "CLEAR",00h
-
-STR_QUOTE		db '"',00h
-STR_MINUS		db '-',00h
-STR_PLUS		db '+',00h
-STR_MUL			db '*',00h
-STR_DIV			db '/',00h
-STR_LPAREN		db '(',00h
-STR_RPAREN		db ')',00h
-
-;error flag and list of available errors
-ERROR_CODE				dw 0000h
-
-ERROR_STR				db ":ERROR:",00h
-ERROR_SYNTAX			db "Syntax error",00h					
-ERROR_LINE_NUMBER		db "Invalid line number",00h
-ERROR_EMPTY_LINE		db "Empty line",00h
-ERROR_PGP 				db "PGP out of range",00h
-ERROR_QUOTES			db "Missing quotes",00h
-ERROR_INVALID_NUMBER	db "Number invalid",00h
-ERROR_BIG_NUMBER		db "Number too big",00h
-ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
-ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
-
-STR_DEBUG		db "DEBUG",00h	;debug remove on release
-STR_DEBUG1		db " DEBUG1",0Dh,0Ah,00h	
-STR_DEBUG2		db " DEBUG2",0Dh,0Ah,00h	
-STR_DEBUG3		db " DEBUG3",0Dh,0Ah,00h	
-STR_DEBUG4		db " DEBUG4",0Dh,0Ah,00h	
-STR_DEBUG5		db " DEBUG5",0Dh,0Ah,00h	
-STR_DEBUG6		db " DEBUG6",0Dh,0Ah,00h	
-STR_DEBUG7		db " DEBUG7",0Dh,0Ah,00h	
-STR_DEBUG8		db " DEBUG8",0Dh,0Ah,00h	
-STR_DEBUG9		db " DEBUG9",0Dh,0Ah,00h	
-
-NOT_IMPLEMENTED	db "Not implemented",00h	;REMOVE ON RELEASE
-;==============================================================================
 ; Include section
 ;==============================================================================
 %INCLUDE "SRC/UTILS.ASM"					;required to use core functions
@@ -462,3 +445,71 @@ NOT_IMPLEMENTED	db "Not implemented",00h	;REMOVE ON RELEASE
 %INCLUDE "SRC/ILM/ILM_TSTV.ASM"
 %INCLUDE "SRC/ILM/ILM_XPER.ASM"
 %INCLUDE "SRC/ILM/ILM_XINIT.ASM"
+
+;==============================================================================
+; Vars section
+;==============================================================================
+;REMOVE ON RELEASE
+STR_DEBUG				db "DEBUG",00h	
+NOT_IMPLEMENTED			db "Not implemented",00h	
+
+STR_DEBUG1				db "DEBUG1",0Ah,0Dh,00h	
+STR_DEBUG2				db "DEBUG2",0Ah,0Dh,00h	
+STR_DEBUG3				db "DEBUG3",0Ah,0Dh,00h	
+STR_DEBUG4				db "DEBUG4",0Ah,0Dh,00h	
+
+;welcome string
+STR_WELCOME		db "TINY BASIC 8086",00h	
+
+;list of language keywords
+STR_LET			db "LET",00h
+STR_GOTO		db "GOTO",00h	
+STR_GOSUB		db "GOSUB",00h	
+STR_END			db "END",00h	
+STR_PRINT		db "PRINT",00h				
+STR_LIST		db "LIST",00h				
+STR_RUN			db "RUN",00h
+STR_CLEAR		db "CLEAR",00h
+
+STR_COMMA		db ',',00h
+STR_QUOTES		db '"',00h
+STR_EQUAL		db '=',00h
+STR_MINUS		db '-',00h
+STR_PLUS		db '+',00h
+STR_MUL			db '*',00h
+STR_DIV			db '/',00h
+STR_LPAREN		db '(',00h
+STR_RPAREN		db ')',00h
+
+;error flag and list of available errors
+ERROR_CODE				dw 0000h
+
+ERROR_STR				db ":ERROR:",00h
+ERROR_SYNTAX			db "Syntax error",00h					
+ERROR_LINE_NUMBER		db "Invalid line number",00h
+ERROR_EMPTY_LINE		db "Empty line",00h
+ERROR_PGP 				db "PGP out of range",00h
+ERROR_QUOTES			db "Missing quotes",00h
+ERROR_INVALID_NUMBER	db "Number invalid",00h
+ERROR_BIG_NUMBER		db "Number too big",00h
+ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
+ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
+ERROR_DIVIDE_ZERO		db "Divide by zero",00h
+
+;ILM variables
+MODE			db 00h						;0==direct, 1==run
+
+VARIABLES		times 26 dw 0000h			;Variables A,B,C...Z 
+
+AESTACK_BASE	times MAX_STACK dw 0000h	;Arithmetic Expression stack
+AESTACK_POINTER db 00h
+
+SBRSTACK_BASE	times MAX_STACK db 00h		;Subroutines stack
+SBRSTACK_POINTER db 00h
+
+LBUF 			times COLS db 00h			;the reading buffer
+CURSOR			dw	0000h					;Cursor (byte pointer)
+PGP				dw	0000h					;PGP (line pointer)
+PGM				dw	0000h
+;PGM				times 256 * COLS db 00h		;the PGM area (256 lines * 80 byte)
+

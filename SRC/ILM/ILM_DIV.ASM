@@ -19,6 +19,9 @@ ILM_DIV:
 
 		mov		cx,[bx]					;get second element in CX
 
+		cmp		cx,0					;divide by 0 error
+		je		.div_zero_err
+
 		dec		bx						;decrease address by 2
 		dec		bx
 
@@ -37,6 +40,13 @@ ILM_DIV:
 
     .stack_err:
 		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		jmp		.err
+
+	.div_zero_err:
+		mov		[ERROR_CODE],word ERROR_DIVIDE_ZERO
+
+	.err:
 		call	ILM_ERR
 		xor		al,al
 		ret
+
