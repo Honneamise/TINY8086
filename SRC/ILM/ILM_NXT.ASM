@@ -1,8 +1,10 @@
 ;==============================================================================
 ; NXT	
-; If the present mode is direct (line number zero), 
-; then return to line collection. 
+; If the present mode is direct (line number zero), return to line collection. 
 ; Otherwise, select the next line and begin interpretation.
+;
+; Return:
+; AL == 0 must jump to CO, 1 must jump to STMT ( or XEC ???)
 ;==============================================================================
 ILM_NXT:
         
@@ -23,14 +25,16 @@ ILM_NXT:
 	.done:	
 		mov		[PGP],bx				;next line
 		mov		[CURSOR],bx				;set cursor to beginning of the line
-		jmp		XEC						;jump to executor
+		mov		al,01h					;set return to STMT
+		ret
 
-	.collection:
-		jmp		CO						;jump to collection routine
-
-    .err:
+	.err:
 		sub		bx,COLS					;get last valid line
 		mov		[PGP],bx				;copy it in PGP
 
-		mov		[ERROR_STR],word ERROR_PGP
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_PGP
+		call	ILM_ERR
+
+	.collection:
+		xor		al,al					;set for return to collection
+		ret

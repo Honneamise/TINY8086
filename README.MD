@@ -206,5 +206,7 @@ This is a slighlty modified version of the original statements executor :
 ```
 
 # TODO
-- change the TST function to accept the label where to jump in AX
-in the function when i jump to not_found, instead jump to label
+
+- check if after XPER i should pop top of stack
+
+  - to test check if after some "loop" stack is still occupied

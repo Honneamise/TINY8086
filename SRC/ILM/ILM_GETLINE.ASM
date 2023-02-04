@@ -4,9 +4,16 @@
 ;==============================================================================
 ILM_GETLINE:
 
+	.prompt:							
+		mov     ah,0Eh                  ;teletype print interupt
+		mov		al,3Eh					;just print the ">" prompt symbol
+        mov     bh,00h                  ;page
+        int     10h 
+
+	.init:
 		mov     al,00h            		;the value to initialize the buffer
         mov		di,LBUF       			;clear LBUF
-        mov     cx,COLS		          	;size of bufffer
+        mov     cx,COLS		          	;size of bufffer to copy
 		rep		stosb                   ;repeat
 
 		mov		si,00h					;reset SI (index)
@@ -21,7 +28,7 @@ ILM_GETLINE:
 		cmp		ah,0Eh 					;is backspace ?
 		je		.backspace
 
-		cmp		si,COLS-1               ;do we have any space left ?
+		cmp		si,COLS-2               ;do we have any space left ?
 		jge		.cycle                  ;if not skip insertion
 
 		mov		bx,LBUF
@@ -39,7 +46,7 @@ ILM_GETLINE:
 		cmp		si,0					;we are at beginning of LBUF
 		jle		.cycle					;skip backspace
 
-		dec		si						;dec di and store a blank in LBUF
+		dec		si						;dec DI and store a blank in LBUF
 		mov		bx,LBUF
 		mov		[bx+si],byte 00h
 		

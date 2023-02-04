@@ -5,7 +5,7 @@
 ; Transfer to lbl if not present.
 ;
 ; Return :
-; AL == line number
+; AL == line number, -1 on error
 ; SI == index of first element after the line number
 ;==============================================================================
 ILM_TSTL:
@@ -57,5 +57,7 @@ ILM_TSTL:
 		ret
 
 	.err:
-		mov		[ERROR_STR],word ERROR_LINE			;select error string
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_LINE_NUMBER 
+		call	ILM_ERR
+		mov		al,-1
+		ret

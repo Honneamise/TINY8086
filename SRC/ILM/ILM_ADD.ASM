@@ -1,6 +1,9 @@
 ;==============================================================================
 ; ADD	
 ; Replace top two elements of AESTK by their sum.
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_ADD:
         xor     bx,bx                   ;clear bx
@@ -24,12 +27,19 @@ ILM_ADD:
 
 		dec		byte [AESTACK_POINTER]	;decrease stack pointer
 
+		mov		al,1					;exit success
+
 		ret
 
     .stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_UNDERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		call	ILM_ERR
+		jmp		.fail
 
 	.number_err:
-		mov		[ERROR_STR],word ERROR_BIG_NUMBER
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		call	ILM_ERR
+
+	.fail:								;return 0 on fail
+		xor		al,al
+		ret

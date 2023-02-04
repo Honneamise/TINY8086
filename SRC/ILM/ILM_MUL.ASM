@@ -1,6 +1,9 @@
 ;==============================================================================
 ; MUL
 ; Replace top two elements of AESTK by their product.
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_MUL:
         xor     bx,bx                   ;clear bx
@@ -26,12 +29,19 @@ ILM_MUL:
 
 		dec		byte [AESTACK_POINTER]	;decrease stack pointer
 
+		mov		al,01h
+
 		ret
 
     .stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_UNDERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		call 	ILM_ERR
+		jmp		.fail
 
 	.number_err:
-		mov		[ERROR_STR],word ERROR_BIG_NUMBER
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		call 	ILM_ERR
+
+	.fail:
+		xor		al,al
+		ret

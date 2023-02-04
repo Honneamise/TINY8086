@@ -1,6 +1,9 @@
 ;==============================================================================
 ; DIV	
 ; Replace top two elements of AESTK by their quotient.
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_DIV:
         xor     bx,bx                   ;clear BX
@@ -28,8 +31,12 @@ ILM_DIV:
 		
 		dec		byte [AESTACK_POINTER]	;decrease stack pointer
 
+		mov		al,01h					;exit success
+
 		ret
 
     .stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_UNDERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		call	ILM_ERR
+		xor		al,al
+		ret

@@ -4,6 +4,9 @@
 ;
 ; Expect:
 ; DX == the number to push on the Aestack
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_LIT:
 		xor		bx,bx					;clear bx
@@ -20,9 +23,13 @@ ILM_LIT:
 
 		inc		byte [AESTACK_POINTER]	;store the new pointer value
 
+		mov		al,01h
+
 		ret
 
 	.stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_OVERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_OVERFLOW
+		call	ILM_ERR
+		xor		al,al
+		ret
         

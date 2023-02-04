@@ -17,8 +17,8 @@ PROG_OFF 	    EQU 0000h
 ROWS            EQU 25
 COLS            EQU 80
 
-FG_COLOR        EQU 0Eh
-BG_COLOR        EQU 10h
+FG_COLOR        EQU 02h
+BG_COLOR        EQU 00h
 
 ;==============================================================================
 ; Bootloader, read disk sectors to memory dest ES:BX

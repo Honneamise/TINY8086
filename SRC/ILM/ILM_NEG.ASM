@@ -1,6 +1,9 @@
 ;==============================================================================
 ; NEG
 ; Replace top of AESTK with its negative.
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_NEG:
 
@@ -19,9 +22,13 @@ ILM_NEG:
 
 		neg		word [bx]				;negate it
 
+		mov		al,01h
+
 		ret
 
     .stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_UNDERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		call	ILM_ERR
+		xor		al,al
+		ret
     

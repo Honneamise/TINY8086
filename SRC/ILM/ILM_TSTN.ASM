@@ -4,14 +4,17 @@
 ; If present, place its value onto the AESTK and continue execution 
 ; at next suggested location. Otherwise continue at lbl.
 ;
-; Expect :
-; AX == the label to jump if match fail
+; Return:
+; AL == -1 on error ( should return to CO )
+; AL == 0 if no match
+; AL == 1 on success 
 ;
 ; NOTE: if match, [CURSOR] point to first element after the number
 ;==============================================================================
 ILM_TSTN:
 
 		mov		dx,ax					;save in DX the label to jump
+		xor		ax,ax					;clear AX
 		mov		bx,10					;set BX as multiplyer
 		mov		di,0					;set DI for positive sign
 
@@ -22,7 +25,7 @@ ILM_TSTN:
 		je		.not_found
 
 		cmp 	[si],byte 20h			;is a BLANK ?
-		jg		.check_sign				;no go to check if is a sign
+		ja		.check_sign				;no go to check if is a sign
 		
 		inc		si						;next char
 		jmp		.skip_blanks			;repeat skip blanks loop
@@ -86,16 +89,27 @@ ILM_TSTN:
 		inc		byte [AESTACK_POINTER]	;store the new pointer value
 
 		mov		[CURSOR],si				;update cursor
-		mov		al,01h					;ok done
+
+		mov		al,01h					;match !!!
+
 		ret
 
 	.number_err:
-		mov		[ERROR_STR],word ERROR_BIG_NUMBER
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		jmp		.err
 
 	.stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_OVERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_OVERFLOW
+
+	.err:
+mov	dx,STR_DEBUG5
+call PRINT_STR	
+		call	ILM_ERR
+		mov		al,-1
+		ret
 
 	.not_found:
-		jmp		dx						;jump to label
+mov	dx,STR_DEBUG6
+call PRINT_STR
+		xor		al,al
+		ret

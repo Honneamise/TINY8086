@@ -1,6 +1,9 @@
 ;==============================================================================
 ; SUB
 ; Replace top two elements of AESTK by their difference.
+;
+; Return:
+; AL = 0 if fail, 1 on success (if fail, main must jump back to collection)
 ;==============================================================================
 ILM_SUB:
         xor     bx,bx                   ;clear bx
@@ -23,8 +26,11 @@ ILM_SUB:
 
 		dec		byte [AESTACK_POINTER]	;decrease stack pointer
 
+		mov		al,01h
 		ret
 
     .stack_err:
-		mov		[ERROR_STR],word ERROR_AESTACK_UNDERFLOW
-		jmp		ERROR
+		mov		[ERROR_CODE],word ERROR_AESTACK_UNDERFLOW
+		call	ILM_ERR
+		xor		al,al
+		ret

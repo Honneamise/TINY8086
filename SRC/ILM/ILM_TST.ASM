@@ -6,8 +6,10 @@
 ; If a match fails, execute the IL instruction at the labled lbl.
 ;
 ; Expect :
-; AX == the label to jump if match fail
 ; DX == the string to compare
+;
+; Return :
+; AL == 0 no match, 1 match success
 ;
 ; NOTE: if match, [CURSOR] point to first element after matched string
 ;==============================================================================	
@@ -47,9 +49,11 @@ ILM_TST:
 
 	.match: 							;if here strings are equals
 		mov		[CURSOR],si				;update the cursor position
+		mov		al,01h
 		ret
 
 	.nomatch:
 		mov 	bx,[TST_CURBKUP]		;restore cursor position
 		mov		[CURSOR],bx		
-		jmp		ax						;jump to label
+		xor		al,al
+		ret
