@@ -131,6 +131,25 @@ S1:
 
 		jmp		XEC
 S2:     
+		mov		dx,STR_GOSUB
+		call	ILM_TST
+		cmp		al,00h
+		je		S3
+
+		call 	EXPR
+
+		call 	ILM_DONE
+		cmp		al,00h
+		je		CO             	;ERROR IF CR NOT NEXT
+
+		call	ILM_SAV
+		cmp		al,00h
+		je		CO
+
+		call	ILM_XPER
+		cmp		al,0
+		je		CO
+
 		; TST     S3,'GOSUB'    ;ERROR IF NO MATCH
         ; CALL    EXPR          ;GET DESTINATION
         ; DONE                  ;ERROR IF CR NOT NEXT
@@ -203,6 +222,25 @@ S11:
 		; DONE                  ;MUST BE CR
         ; NXT                   ;SEQUENCE TO NEXT
 S12:    
+		mov		dx,STR_RETURN
+		call	ILM_TST
+		cmp		al,00h
+		je		S13
+
+		call 	ILM_DONE
+		cmp		al,00h
+		je		CO             	;ERROR IF CR NOT NEXT
+
+		call	ILM_RSTR
+		cmp		al,00h
+		je		CO
+
+		call	ILM_NXT
+		cmp		al,00h
+		je		CO
+		cmp		al,01h
+		je		XEC
+
 		; TST     S13,'RETURN'  ;RETURN STATEMENT
         ; DONE                  ;MUST BE CR
         ; RSTR                  ;RESTORE LINE NUMBER OF CALL
@@ -470,6 +508,7 @@ STR_PRINT		db "PRINT",00h
 STR_LIST		db "LIST",00h				
 STR_RUN			db "RUN",00h
 STR_CLEAR		db "CLEAR",00h
+STR_RETURN		db "RETURN",00h
 
 STR_COMMA		db ',',00h
 STR_QUOTES		db '"',00h
@@ -482,19 +521,22 @@ STR_LPAREN		db '(',00h
 STR_RPAREN		db ')',00h
 
 ;error flag and list of available errors
-ERROR_CODE				dw 0000h
+ERROR_CODE					dw 0000h
 
-ERROR_STR				db ":ERROR:",00h
-ERROR_SYNTAX			db "Syntax error",00h					
-ERROR_LINE_NUMBER		db "Invalid line number",00h
-ERROR_EMPTY_LINE		db "Empty line",00h
-ERROR_PGP 				db "PGP out of range",00h
-ERROR_QUOTES			db "Missing quotes",00h
-ERROR_INVALID_NUMBER	db "Number invalid",00h
-ERROR_BIG_NUMBER		db "Number too big",00h
-ERROR_AESTACK_OVERFLOW	db "Arithmetic stack overflow",00h
-ERROR_AESTACK_UNDERFLOW	db "Arithmetic stack underflow",00h
-ERROR_DIVIDE_ZERO		db "Divide by zero",00h
+ERROR_STR					db ":ERROR:",00h
+ERROR_SYNTAX				db "Syntax error",00h					
+ERROR_LINE_NUMBER			db "Invalid line number",00h
+ERROR_EMPTY_LINE			db "Empty line",00h
+ERROR_PGP 					db "PGP out of range",00h
+ERROR_QUOTES				db "Missing quotes",00h
+ERROR_INVALID_NUMBER		db "Number invalid",00h
+ERROR_NOT_NUMBER			db "Not a number",00h
+ERROR_BIG_NUMBER			db "Number too big",00h
+ERROR_AESTACK_OVERFLOW		db "Arithmetic stack overflow",00h
+ERROR_AESTACK_UNDERFLOW		db "Arithmetic stack underflow",00h
+ERROR_SBRSTACK_OVERFLOW		db "Subroutines stack overflow",00h
+ERROR_SBRSTACK_UNDERFLOW	db "Subroutines stack underflow",00h
+ERROR_DIVIDE_ZERO			db "Divide by zero",00h
 
 ;ILM variables
 MODE			db 00h						;0==direct, 1==run

@@ -22,14 +22,19 @@ ILM_GETLINE:
 		xor     ax,ax                   ;keyboard read function
         int     16h						;ah scancode, al ascii code
 
-		cmp		ah,1Ch					;is enter pressed ?
+		cmp		al,0Dh					;is enter pressed ?
 		je		.done					;ok finished
 
-		cmp		ah,0Eh 					;is backspace ?
+		cmp		al,08h 					;is backspace ?
 		je		.backspace
 
 		cmp		si,COLS-2               ;do we have any space left ?
 		jge		.cycle                  ;if not skip insertion
+
+		cmp		al,20h					;is printable ?
+		jb		.cycle
+		cmp		al,7Eh
+		ja		.cycle
 
 		mov		bx,LBUF
 		mov		[bx+si],al				;store character 
