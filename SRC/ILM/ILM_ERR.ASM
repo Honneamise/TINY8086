@@ -13,7 +13,11 @@ ILM_ERR:
 
 	.mode:
 		cmp		[MODE],byte 00h			;direct mode ?
-		je		.str					;skip line number and new line
+		je		.err_direct				;skip line number
+
+	.err_at_line:
+		mov		dx,ERROR_STR_AT_LINE	;
+		call	PRINT_STR
 
 	.line:
 		mov		ax,[PGP]				;convert line address to line number
@@ -25,11 +29,13 @@ ILM_ERR:
 		mov		dx,ax
 		call	PRINT_NUMBER
 		
-	.str:								
+		jmp		.err_code
 
-		mov		dx,ERROR_STR			;print error string
+	.err_direct:
+		mov		dx,ERROR_STR
 		call	PRINT_STR
 
+	.err_code:								
 		mov		dx,[ERROR_CODE]			;print code error
 		call	PRINT_STR
 		call	ILM_NLINE

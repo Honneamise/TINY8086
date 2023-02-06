@@ -11,6 +11,9 @@
 ROWS            EQU 25
 COLS            EQU 80
 
+FG_COLOR        EQU 0Fh
+BG_COLOR        EQU 10h
+
 DIRECT			EQU 0
 RUN				EQU 1
 
@@ -20,24 +23,26 @@ MAX_STACK		EQU 128					;max elements
 ;==============================================================================
 ; MAIN PROGRAM
 ;==============================================================================
+START:
+		call	ILM_CLEAR				;clear screen
 
 		mov		dx,STR_WELCOME			;print welcome string
 		call	PRINT_STR
 
-START:
 		call	ILM_INIT				;INITIALIZE
 		call	ILM_NLINE				;WRITE CRLF
 
 CO:     
-; mov dx,sp
-; call PRINT_WORD
-; call ILM_NLINE
+mov dx,sp
+call PRINT_WORD
+call ILM_NLINE
 
 		mov		ax,PGM
 		mov		[PGP],ax
 		mov		[CURSOR],ax
 		mov		[MODE],byte 00h
 
+		mov		al,3Eh					;set prompt '>'
 		call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
 		call	ILM_NLINE				;WRITE CRLF
 
@@ -73,7 +78,7 @@ DEBUG:
 ;--------------------
 
 STMT:   
-		mov		dx,STR_LET
+		mov		dx,STR_LET				;let
 		call	ILM_TST
 		cmp		al,00h
 		je		S1
@@ -95,14 +100,6 @@ STMT:
 		cmp		al,00h
 		je		CO
 
-		; TST     S1,'LET'      ;IS STATEMENT A LET
-        ; TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
-        ; TST     S17,'='       ;ASSIGNEMENT
-        ; CALL    EXPR          ;PLACE EXPR VALUE ON AESTK
-        ; DONE                  ;REPORT ERROR IF NOT NEXT
-        ; STORE                 ;STORE RESULT
-        ; NXT                   ;AND SEQUENCE TO NEXT
-
 		call	ILM_STORE
 		cmp		al,00h
 		je		CO
@@ -114,7 +111,7 @@ STMT:
 		je		XEC
 
 S1:     
-		mov		dx,STR_GOTO
+		mov		dx,STR_GOTO				;goto
 		call	ILM_TST
 		cmp		al,00h
 		je		S2
@@ -130,8 +127,9 @@ S1:
 		je		CO
 
 		jmp		XEC
+
 S2:     
-		mov		dx,STR_GOSUB
+		mov		dx,STR_GOSUB			;GOSUB
 		call	ILM_TST
 		cmp		al,00h
 		je		S3
@@ -140,7 +138,7 @@ S2:
 
 		call 	ILM_DONE
 		cmp		al,00h
-		je		CO             	;ERROR IF CR NOT NEXT
+		je		CO             			;ERROR IF CR NOT NEXT
 
 		call	ILM_SAV
 		cmp		al,00h
@@ -150,11 +148,6 @@ S2:
 		cmp		al,0
 		je		CO
 
-		; TST     S3,'GOSUB'    ;ERROR IF NO MATCH
-        ; CALL    EXPR          ;GET DESTINATION
-        ; DONE                  ;ERROR IF CR NOT NEXT
-        ; SAV                   ;SAVE RETURN LINE
-        ; XPER                  ;AND JUMP
 S3:     
 		mov		dx,STR_PRINT			;"PRINT"
 		call	ILM_TST
@@ -182,7 +175,7 @@ S5:
 S6:     
 		call 	ILM_DONE
 		cmp		al,00h
-		je		CO             	;ERROR IF CR NOT NEXT
+		je		CO             			;ERROR IF CR NOT NEXT
 
         call	ILM_NLINE
 
@@ -200,8 +193,6 @@ S7:
 
 		jmp		S5
 
-        ; PRN                   ;PRINT IT
-        ; JMP     S5            ;IS THERE MORE?
 S8:     
 		; TST     S9,'IF'       ;IF STATEMENT
         ; CALL    EXPR          ;GET EXPRESSION
@@ -210,19 +201,45 @@ S8:
         ; TST     S17,'THEN'    ;THEN BRANCH
         ; CMPR                  ;PERFORM COMPARE -- NXT IF FALSE
         ; JMP     XEC
-S9:     
-		; TST     S12,'INPUT'   ;INPUT STATEMENT
+S9:      
+		mov		dx,STR_INPUT	;INPUT STATEMENT
+		call	ILM_TST
+		cmp		al,00h
+		je		S12
 S10:    
-		; TSTV    S17           ;GET VAR ADDRESS
-        ; INNUM                 ;MOVE NUMBER FROM TTY TO AESTK
-        ; STORE                 ;STORE IT
-        ; TST     S11,','       ;IS THERE MORE?
-        ; JMP     S10           ;YES
+		call	ILM_TSTV		; TSTV    S17           ;GET VAR ADDRESS
+		cmp		al,-1
+		je		CO
+		cmp		al,00h
+		je		S17
+
+		call	ILM_INNUM		;MOVE NUMBER FROM TTY TO AESTK
+		cmp		al,00h
+		je		CO
+
+        call	ILM_STORE		; STORE IT
+		cmp		al,00h
+		je		CO
+
+        mov		dx,STR_COMMA	;INPUT STATEMENT
+		call	ILM_TST
+		cmp		al,00h
+		je		S11
+		
+        jmp		S10				; check for more
 S11:    
-		; DONE                  ;MUST BE CR
-        ; NXT                   ;SEQUENCE TO NEXT
+		call 	ILM_DONE
+		cmp		al,00h
+		je		CO             	;ERROR IF CR NOT NEXT
+
+        call	ILM_NXT			;next line
+		cmp		al,00h
+		je		CO
+		cmp		al,01h
+		je		XEC
+
 S12:    
-		mov		dx,STR_RETURN
+		mov		dx,STR_RETURN			;RETURN STATEMENT
 		call	ILM_TST
 		cmp		al,00h
 		je		S13
@@ -241,10 +258,6 @@ S12:
 		cmp		al,01h
 		je		XEC
 
-		; TST     S13,'RETURN'  ;RETURN STATEMENT
-        ; DONE                  ;MUST BE CR
-        ; RSTR                  ;RESTORE LINE NUMBER OF CALL
-        ; NXT                   ;SEQUENCE TO NEXT STATEMENT
 S13:    
 		mov		dx,STR_END				;test "END"
 		call	ILM_TST
@@ -288,9 +301,12 @@ S15:
 		cmp		al,01h
 		je		XEC
 S16:    
-		; TST     S17,'CLEAR'   ;CLEAR COMMAND
-        ; DONE
-        ; JMP     START
+		mov		dx,STR_RESET			;test "RESET"
+		call	ILM_TST
+		cmp		al,00h
+		je		S17
+
+        jmp		START
 S17:    
 		mov		[ERROR_CODE],word ERROR_SYNTAX
 		call	ILM_ERR             	
@@ -418,33 +434,33 @@ F2:
 		jmp		CO						;back to collection routine
 
 RELOP:  
-		; TST     R0,'='
-        ; LIT     0             ;=
+		; TST     R0,"=="
+        ; LIT     0             		;==
         ; RTN
 R0:     
-		; TST     R4,'<'
-        ; TST     R1,'='
-        ; LIT     2             ;<=
+		; TST     R1,"!="
+        ; LIT     1             		;!=
         ; RTN
 R1:     
-		; TST     R3,'>'
-        ; LIT     3             ;<>
+		; TST     R2,"<"				;<
+        ; LIT     2    
+		; RTN  
+R2:     
+		; TST     R3,">"				;>
+        ; LIT     3             
         ; RTN
 R3:     
-		; LIT     1             ;<
-        ; RTN
+		; TST     R4,"<="				;<=
+        ; LIT     4                  
+		; RTN          
 R4:     
-		; TST     S17,'>'
-        ; TST     R5,'='
-        ; LIT     5             ;>=
-        ; RTN
+		; TST     R5,">="				;>=
+        ; LIT     5             
+		; RTN
 R5:     
-		; TST     R6,'<'
-        ; LIT     3
-        ; RTN                   
-R6:     
-		; LIT     4
-        ; RTN
+        jmp		S17						;invalid operator
+
+
 END:									;this point should never be reached
 		cli                             ;disable interrupts
         hlt                             ;halt system
@@ -455,6 +471,7 @@ END:									;this point should never be reached
 %INCLUDE "SRC/UTILS.ASM"					;required to use core functions
 
 %INCLUDE "SRC/ILM/ILM_ADD.ASM"				;ILM functions
+%INCLUDE "SRC/ILM/ILM_CLEAR.ASM"
 %INCLUDE "SRC/ILM/ILM_CMPR.ASM"
 %INCLUDE "SRC/ILM/ILM_DIV.ASM"
 %INCLUDE "SRC/ILM/ILM_DONE.ASM"
@@ -507,8 +524,9 @@ STR_END			db "END",00h
 STR_PRINT		db "PRINT",00h				
 STR_LIST		db "LIST",00h				
 STR_RUN			db "RUN",00h
-STR_CLEAR		db "CLEAR",00h
+STR_RESET		db "RESET",00h
 STR_RETURN		db "RETURN",00h
+STR_INPUT		db "INPUT",00h
 
 STR_COMMA		db ',',00h
 STR_QUOTES		db '"',00h
@@ -523,20 +541,21 @@ STR_RPAREN		db ')',00h
 ;error flag and list of available errors
 ERROR_CODE					dw 0000h
 
-ERROR_STR					db ":ERROR:",00h
-ERROR_SYNTAX				db "Syntax error",00h					
-ERROR_LINE_NUMBER			db "Invalid line number",00h
-ERROR_EMPTY_LINE			db "Empty line",00h
-ERROR_PGP 					db "PGP out of range",00h
-ERROR_QUOTES				db "Missing quotes",00h
-ERROR_INVALID_NUMBER		db "Number invalid",00h
-ERROR_NOT_NUMBER			db "Not a number",00h
-ERROR_BIG_NUMBER			db "Number too big",00h
-ERROR_AESTACK_OVERFLOW		db "Arithmetic stack overflow",00h
-ERROR_AESTACK_UNDERFLOW		db "Arithmetic stack underflow",00h
-ERROR_SBRSTACK_OVERFLOW		db "Subroutines stack overflow",00h
-ERROR_SBRSTACK_UNDERFLOW	db "Subroutines stack underflow",00h
-ERROR_DIVIDE_ZERO			db "Divide by zero",00h
+ERROR_STR					db "ERROR",00h
+ERROR_STR_AT_LINE			db "ERROR at line ",00h
+ERROR_SYNTAX				db ":Syntax error",00h					
+ERROR_LINE_NUMBER			db ":Invalid line number",00h
+ERROR_EMPTY_LINE			db ":Empty line",00h
+ERROR_PGP 					db ":PGP out of range",00h
+ERROR_QUOTES				db ":Missing quotes",00h
+ERROR_INVALID_NUMBER		db ":Number invalid",00h
+ERROR_NOT_NUMBER			db ":Not a number",00h
+ERROR_BIG_NUMBER			db ":Number too big",00h
+ERROR_AESTACK_OVERFLOW		db ":Arithmetic stack overflow",00h
+ERROR_AESTACK_UNDERFLOW		db ":Arithmetic stack underflow",00h
+ERROR_SBRSTACK_OVERFLOW		db ":Subroutines stack overflow",00h
+ERROR_SBRSTACK_UNDERFLOW	db ":Subroutines stack underflow",00h
+ERROR_DIVIDE_ZERO			db ":Divide by zero",00h
 
 ;ILM variables
 MODE			db 00h						;0==direct, 1==run

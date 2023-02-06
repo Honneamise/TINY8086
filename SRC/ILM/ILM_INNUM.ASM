@@ -9,6 +9,7 @@
 ;==============================================================================
 ILM_INNUM:
 
+		mov		al,23h					;set prompt	'#'
 		call	ILM_GETLINE				;read a line in LBUF
 
 	.init:
@@ -78,6 +79,7 @@ ILM_INNUM:
 		ret								;AL already set to 0 from ILM_LIT
 
 	.done_ok:
+		call	ILM_NLINE
 		mov		al,01h					;exit success
 		ret
 	

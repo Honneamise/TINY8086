@@ -1,12 +1,14 @@
 ;==============================================================================
 ; GETLINE
 ; Input a line to LBUF.
+;
+; Expect :
+; AL = the ascii symbol for the prompt
 ;==============================================================================
 ILM_GETLINE:
 
 	.prompt:							
 		mov     ah,0Eh                  ;teletype print interupt
-		mov		al,3Eh					;just print the ">" prompt symbol
         mov     bh,00h                  ;page
         int     10h 
 
