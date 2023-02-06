@@ -12,8 +12,7 @@
 ; NOTE: if match, [CURSOR] point to first element after the number
 ;==============================================================================
 ILM_TSTN:
-
-		mov		dx,ax					;save in DX the label to jump
+		xor		ch,ch					;clear high part of CX
 		xor		ax,ax					;clear AX
 		mov		bx,10					;set BX as multiplyer
 		mov		di,0					;set DI for positive sign
@@ -31,19 +30,22 @@ ILM_TSTN:
 		jmp		.skip_blanks			;repeat skip blanks loop
         
 	.check_sign:
-		cmp 	[si],byte 2Dh			;is minus sign?
-		jne		.check_number			;nope
+		cmp		[si],byte 2Bh			;check '+'
+		je		.skip_sign
 
-		mov		di,1					;set DL for negative
-		inc		si						;skip the sign
+		cmp		[si],byte 2Dh			;check '-'
+		jne		.get_number
+	
+		mov		di,1					;set DI for sign change
+
+	.skip_sign:
+		inc		si
 
 	.check_number:						;if not number exit
 		cmp 	[si],byte 30h
 		jl		.not_found
 		cmp 	[si],byte 39h
 		jg		.not_found
-
-		xor		ch,ch					;clear high part of CX
 
 	.get_number:
 		
@@ -58,10 +60,10 @@ ILM_TSTN:
 		sub 	cl,30h					;convert CL ascii to a number 0..9
 
 		mul 	bx						;multiply the content of AX for 10
-		jo		.number_err				;if greatest error
+		jo		.number_err				;if overflow error
 
 		add		ax,cx					;add the the CX value
-		jo		.number_err				;if greatest error
+		jo		.number_err				;if overflow error
 		
 		inc 	si						;next char
 	
@@ -73,35 +75,20 @@ ILM_TSTN:
 		neg		ax						;yes, negate it
 						
 	.done:
+		mov		dx,ax
+		call	ILM_LIT
+		cmp		al,00h
+		jne		.done_ok
+		mov		al,-1					;err
+		ret								
 
-		xor		bx,bx					;clear bx
-
-		mov		bl,[AESTACK_POINTER] 	;get current stack pointer
-		cmp		bl,MAX_STACK			;greatest of max elements ?
-		jae		.stack_err				;if yes error
-
-		shl		bl,1					;multiply pointer by 2
-
-		add		bx,AESTACK_BASE			;add the base of stack
-
-		mov		[bx],ax					;store the number
-
-		inc		byte [AESTACK_POINTER]	;store the new pointer value
-
+	.done_ok:
 		mov		[CURSOR],si				;update cursor
-
-		mov		al,01h					;match !!!
-
+		mov		al,01h					;exit success
 		ret
 
 	.number_err:
 		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
-		jmp		.err
-
-	.stack_err:
-		mov		[ERROR_CODE],word ERROR_AESTACK_OVERFLOW
-
-	.err:	
 		call	ILM_ERR
 		mov		al,-1
 		ret

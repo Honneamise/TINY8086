@@ -14,8 +14,9 @@ ILM_INNUM:
 	.init:
 		mov		si,LBUF					;set SI at LBUF
 		xor		ax,ax					;AX will store the result
-		xor		dl,dl					;set DL for positive sign
-		mov		ch,10					;CH will be multiplier by 10
+		mov		bx,10					;BX will be multiplier by 10
+		xor		di,di					;set DL for positive sign
+		xor		ch,ch					;clear high part of CX
 		
 	.skip_blanks:
 		cmp		[si],byte 00h			;is EOL ?
@@ -35,7 +36,7 @@ ILM_INNUM:
 		cmp		[si],byte 2Dh			;check '-'
 		jne		.get_number
 	
-		mov		dl,1					;set DL for sign change
+		mov		di,1					;set DL for sign change
 
 	.skip_sign:
 		inc		si
@@ -55,17 +56,17 @@ ILM_INNUM:
 
 		sub 	cl,30h					;convert CL ascii to a number 0..9
 
-		mul 	ch						;multiply the content of AL for 10
-		jc		.big_number				;if carry error
+		mul 	bx						;multiply the content of AL for 10
+		jo		.big_number				;if overflow error
 
-		add		al,cl					;add the the CL value
-		jc		.big_number				;if carry error
+		add		ax,cx					;add the the CL value
+		jo		.big_number				;if overflow error
 		
 		inc 	si						;next char
 		jmp		.get_number 			;repeat
 
 	.fix_sign:
-		cmp		dl,00h					;was negative ?
+		cmp		di,00h					;was negative ?
 		je		.done					;nope
 		neg		ax						;yes, negate it
 	

@@ -34,25 +34,18 @@ ILM_TSTV:
 		ja		.nomatch
 
 		xor		dh,dh
-		mov		dl,byte [si]					;convert ascii char to index
+		mov		dl,byte [si]			;convert ascii char to index
 		sub		dl,41h
 
-	.stack:
-		xor		bx,bx					;clear bx
+	.done:
+		call	ILM_LIT					;dx already contains tha val
+		cmp		al,00h
+		jne		.done_ok
+		mov		al,-1					;err
+		ret								
 
-        mov		bl,[AESTACK_POINTER] 	;get current stack pointer
-		cmp		bl,MAX_STACK			;greatest of max elements ?
-		jae		.stack_err				;if yes error
-
-		shl		bl,1					;multiply pointer by 2
-
-		add		bx,AESTACK_BASE			;add the base of stack
-
-		mov		[bx],dx					;copy the value
-
-		inc		byte [AESTACK_POINTER]	;increase stack pointer
-		
-		inc		si						;advance SI to element after letter
+	.done_ok:
+		inc 	si						;advance SI to element after letter
 		mov		[CURSOR],si				;update CURSOR
 
 		mov		al,1					;exit success
@@ -60,9 +53,4 @@ ILM_TSTV:
 
 	.nomatch:							;match fail
 		xor		al,al
-		ret
-
-	.stack_err:
-		mov		[ERROR_CODE],word ERROR_AESTACK_OVERFLOW
-		mov		al,-1
 		ret

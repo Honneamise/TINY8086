@@ -68,6 +68,8 @@ This repository contains all the tools needed to build and run the system.
 
 ## NOTES
 
+TSTV can use LIT
+
 This is a slighlty modified version of the original statements executor :
 
 ```

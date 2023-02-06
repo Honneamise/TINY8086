@@ -17,8 +17,8 @@ PROG_OFF 	    EQU 0000h
 ROWS            EQU 25
 COLS            EQU 80
 
-FG_COLOR        EQU 02h
-BG_COLOR        EQU 00h
+FG_COLOR        EQU 0Fh
+BG_COLOR        EQU 10h
 
 ;==============================================================================
 ; Bootloader, read disk sectors to memory dest ES:BX
@@ -38,15 +38,17 @@ BOOT:
         mov     al,0000h                ;display page, we always use page 0
         int     10h
 
+    .clear_screen:
         mov     ah,06h                  ;clear screen service
         mov     al,00h                  ;lines to scroll (if 0 all)
-        mov     bh,BG_COLOR+FG_COLOR    ;background/foreground colors
+        mov     bh,BG_COLOR|FG_COLOR    ;background/foreground colors
         mov     ch,00h                  ;Row number of upper left corner
         mov     cl,00h                  ;Column number of upper left corner
         mov     dh,ROWS-1               ;Row number of lower right corner
         mov     dl,COLS-1               ;Column number of lower right corner
         int     10h                     ;call int to clear the screen
-        
+
+    .load:  
         mov     ax,PROG_SEG             ;set program segment
         mov     es,ax
         mov     bx,PROG_OFF          	;set program offset
@@ -59,19 +61,9 @@ BOOT:
         mov     dl,[DEVICE]             ;device to read from
         int     13h                     ;call interrupt service
 
-        jnc    	.boot_ok                ;CF clear ok, continue
+        jc    	ERR                     ;CF NOT clear, error
 
-                                        ;if here error,print a sad face '☻'
-                                        ;and halt the system
-
-        mov     ah,0Eh                  ;teletype print interupt
-        mov     al,02h                  ;char to print
-        mov     bh,00h                  ;page
-        int     10h                     ;call interrupt
-
-        hlt                             ;halt program (cli already disabled)
-
-    .boot_ok:
+    .load_ok:
 
 		mov     ax,PROG_SEG          	;setup data segment and extra segment
         mov     ds,ax
@@ -88,13 +80,30 @@ BOOT:
 
         jmp     PROG_SEG:PROG_OFF       ;jump to the program location
 
+ERR:
+        mov     ah,0Eh                  ;teletype print interupt
+        mov     bh,00h                  ;page
+        mov     si,ERROR_STR            ;string pointer
+
+    .cycle:
+        mov     al,[si]                 ;char to print
+        cmp     al,00h                  ;EOL ?
+        je      .end
+        int     10h                     ;call interrupt
+        inc     si
+        jmp     .cycle
+
+    .end:
+        hlt                             ;halt program (cli already disabled)
+
 ;==============================================================================
 ; Variables section
 ;==============================================================================
 DEVICE          db 00h
+ERROR_STR       db "LOADING ERROR",00h	
 
 ;==============================================================================
-; Loader end
+; Bootloader end
 ;==============================================================================
 TIMES 510-($-$$) DB 00h                 ;fill the remaining space with zeroes
 
