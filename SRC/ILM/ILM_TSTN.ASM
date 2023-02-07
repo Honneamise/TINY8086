@@ -88,7 +88,7 @@ ILM_TSTN:
 		ret
 
 	.number_err:
-		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		mov		[ERROR_CODE],word ERROR_NUMBER_OVERFLOW
 		call	ILM_ERR
 		mov		al,-1
 		ret

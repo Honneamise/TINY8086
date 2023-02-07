@@ -92,7 +92,7 @@ ILM_INNUM:
 		jmp		.err
 
 	.big_number:
-		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		mov		[ERROR_CODE],word ERROR_NUMBER_OVERFLOW
 
 	.err:
 		call	ILM_ERR

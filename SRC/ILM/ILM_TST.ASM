@@ -25,7 +25,7 @@ ILM_TST:
 		je		.nomatch				;possible error
 
 		cmp		[si],byte 20h			;is a blank ?
-		jg		.compare				;no, check the string
+		ja		.compare				;no, check the string
 		
 		inc		si						;increase position
 

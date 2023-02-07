@@ -38,6 +38,7 @@ ILM_ERR:
 	.err_code:								
 		mov		dx,[ERROR_CODE]			;print code error
 		call	PRINT_STR
+
 		call	ILM_NLINE
 
 		ret

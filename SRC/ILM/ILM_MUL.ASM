@@ -38,7 +38,7 @@ ILM_MUL:
 		jmp		.err
 
 	.number_err:
-		mov		[ERROR_CODE],word ERROR_BIG_NUMBER
+		mov		[ERROR_CODE],word ERROR_NUMBER_OVERFLOW
 		
 	.err:
 		call 	ILM_ERR

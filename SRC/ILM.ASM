@@ -17,8 +17,7 @@ BG_COLOR        EQU 10h
 DIRECT			EQU 0
 RUN				EQU 1
 
-MAX_NUMBER		EQU 32767				;signed short
-MAX_STACK		EQU 128					;max elements
+MAX_STACK		EQU 128					
 
 ;==============================================================================
 ; MAIN PROGRAM
@@ -60,22 +59,6 @@ call ILM_NLINE
 
 XEC:    
 		call	ILM_XINIT             	;INITIALIZE
-;--------------------
-
-DEBUG:
-
-		mov		dx,STR_DEBUG			;DEBUG
-		call	ILM_TST
-		cmp		al,00h
-		je		STMT
-		;----------test code here
-
-		mov		dx,[VARIABLES];A
-		call	PRINT_NUMBER
-
-		;----------test code here
-		jmp		CO
-;--------------------
 
 STMT:   
 		mov		dx,STR_LET				;let
@@ -89,7 +72,7 @@ STMT:
 		cmp		al,00h
 		je		S17
 
-		mov		dx,STR_EQUAL
+		mov		dx,STR_ASSIGN
 		call	ILM_TST
 		cmp		al,00h
 		je		S17
@@ -194,13 +177,31 @@ S7:
 		jmp		S5
 
 S8:     
-		; TST     S9,'IF'       ;IF STATEMENT
-        ; CALL    EXPR          ;GET EXPRESSION
-        ; CALL    RELOP         ;DETERMINE OPR AND PUT ON STK
-        ; CALL    EXPR          ;GET EXPRESSION
-        ; TST     S17,'THEN'    ;THEN BRANCH
-        ; CMPR                  ;PERFORM COMPARE -- NXT IF FALSE
-        ; JMP     XEC
+		mov		dx,STR_IF			;test "IF"
+		call	ILM_TST
+		cmp		al,00h
+		je		S9
+
+		call	EXPR
+		call	RELOP
+		call	EXPR
+
+        mov		dx,STR_THEN				;THEN
+		call	ILM_TST
+		cmp		al,00h
+		je		S17              ;PERFORM COMPARE -- NXT IF FALSE
+
+		call	ILM_CMPR
+		cmp		al,-1
+		je		CO
+		cmp		al,00h
+		jne		XEC				;match ok, execute "then" part
+
+		call	ILM_NXT			;no match, next line
+		cmp		al,00h
+		je		CO
+		cmp		al,01h
+		je		XEC
 S9:      
 		mov		dx,STR_INPUT	;INPUT STATEMENT
 		call	ILM_TST
@@ -434,31 +435,62 @@ F2:
 		jmp		CO						;back to collection routine
 
 RELOP:  
-		; TST     R0,"=="
-        ; LIT     0             		;==
-        ; RTN
-R0:     
-		; TST     R1,"!="
-        ; LIT     1             		;!=
-        ; RTN
+		mov		dx,STR_OP_E				;test "=="
+		call	ILM_TST
+		cmp		al,00h
+		je		R0
+
+		mov		dx,0
+		jmp		R5
+R0:  
+		mov		dx,STR_OP_NE			;test "!="
+		call	ILM_TST
+		cmp		al,00h
+		je		R1
+
+		mov		dx,1
+		jmp		R5
 R1:     
-		; TST     R2,"<"				;<
-        ; LIT     2    
-		; RTN  
-R2:     
-		; TST     R3,">"				;>
-        ; LIT     3             
-        ; RTN
-R3:     
-		; TST     R4,"<="				;<=
-        ; LIT     4                  
-		; RTN          
+		mov		dx,STR_OP_LE			;test "<="
+		call	ILM_TST
+		cmp		al,00h
+		je		R2
+
+		mov		dx,2
+		jmp		R5
+R2: 
+		mov		dx,STR_OP_GE			;test ">="
+		call	ILM_TST
+		cmp		al,00h
+		je		R3
+
+		mov		dx,3
+		jmp		R5
+R3:   
+		mov		dx,STR_OP_L				;test "<"
+		call	ILM_TST
+		cmp		al,00h
+		je		R4
+
+		mov		dx,4
+		jmp		R5        
 R4:     
-		; TST     R5,">="				;>=
-        ; LIT     5             
-		; RTN
-R5:     
-        jmp		S17						;invalid operator
+		mov		dx,STR_OP_G				;test ">"
+		call	ILM_TST
+		cmp		al,00h
+		je		R6
+
+		mov		dx,5
+R5:	
+		call	ILM_LIT					;push DX on Aestack
+		cmp		al,00h
+		je		CO
+
+		ret								;done success !
+R6:     
+        mov		[ERROR_CODE],word ERROR_OPERATOR
+		call	ILM_ERR
+		jmp		CO
 
 
 END:									;this point should never be reached
@@ -506,12 +538,7 @@ END:									;this point should never be reached
 ;==============================================================================
 ;REMOVE ON RELEASE
 STR_DEBUG				db "DEBUG",00h	
-NOT_IMPLEMENTED			db "Not implemented",00h	
-
-STR_DEBUG1				db "DEBUG1",0Ah,0Dh,00h	
-STR_DEBUG2				db "DEBUG2",0Ah,0Dh,00h	
-STR_DEBUG3				db "DEBUG3",0Ah,0Dh,00h	
-STR_DEBUG4				db "DEBUG4",0Ah,0Dh,00h	
+NOT_IMPLEMENTED			db "Not implemented",00h
 
 ;welcome string
 STR_WELCOME		db "TINY BASIC 8086",00h	
@@ -527,16 +554,25 @@ STR_RUN			db "RUN",00h
 STR_RESET		db "RESET",00h
 STR_RETURN		db "RETURN",00h
 STR_INPUT		db "INPUT",00h
+STR_IF			db "IF",00h
+STR_THEN		db "THEN",00h
 
 STR_COMMA		db ',',00h
 STR_QUOTES		db '"',00h
-STR_EQUAL		db '=',00h
+STR_ASSIGN		db '=',00h
 STR_MINUS		db '-',00h
 STR_PLUS		db '+',00h
 STR_MUL			db '*',00h
 STR_DIV			db '/',00h
 STR_LPAREN		db '(',00h
 STR_RPAREN		db ')',00h
+
+STR_OP_E		db "==",00h
+STR_OP_NE		db "!=",00h
+STR_OP_LE		db "<=",00h
+STR_OP_GE		db ">=",00h
+STR_OP_L		db "<",00h
+STR_OP_G		db ">",00h
 
 ;error flag and list of available errors
 ERROR_CODE					dw 0000h
@@ -550,12 +586,13 @@ ERROR_PGP 					db ":PGP out of range",00h
 ERROR_QUOTES				db ":Missing quotes",00h
 ERROR_INVALID_NUMBER		db ":Number invalid",00h
 ERROR_NOT_NUMBER			db ":Not a number",00h
-ERROR_BIG_NUMBER			db ":Number too big",00h
+ERROR_NUMBER_OVERFLOW		db ":Number out of range",00h
 ERROR_AESTACK_OVERFLOW		db ":Arithmetic stack overflow",00h
 ERROR_AESTACK_UNDERFLOW		db ":Arithmetic stack underflow",00h
 ERROR_SBRSTACK_OVERFLOW		db ":Subroutines stack overflow",00h
 ERROR_SBRSTACK_UNDERFLOW	db ":Subroutines stack underflow",00h
 ERROR_DIVIDE_ZERO			db ":Divide by zero",00h
+ERROR_OPERATOR				db ":Invalid operator",00h
 
 ;ILM variables
 MODE			db 00h						;0==direct, 1==run
