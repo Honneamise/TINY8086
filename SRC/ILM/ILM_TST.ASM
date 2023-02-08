@@ -13,13 +13,10 @@
 ;
 ; NOTE: if match, [CURSOR] point to first element after matched string
 ;==============================================================================	
-TST_CURBKUP		dw 0000h				;cursor bkup
-;------------------------------------------------------------------------------
 ILM_TST:
-		
-		mov		si,[CURSOR]				;backup the cursor
-		mov		[TST_CURBKUP],si	
-		
+		mov		ax,[CURSOR]				;use AX as cursor bkup
+		mov		si,ax					;we use SI as byte pointer of string
+
 	.skip_blanks:
 		cmp		[si],byte 00h			;is EOL ?
 		je		.nomatch				;possible error
@@ -53,7 +50,6 @@ ILM_TST:
 		ret
 
 	.nomatch:
-		mov 	bx,[TST_CURBKUP]		;restore cursor position
-		mov		[CURSOR],bx		
+		mov		[CURSOR],ax				;restore cursor position
 		xor		al,al
 		ret
