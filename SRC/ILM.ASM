@@ -8,6 +8,9 @@
 ;==============================================================================
 ; Const section
 ;==============================================================================
+STACK_SEG       EQU 1000h
+STACK_OFF       EQU 0FFFFh
+
 ROWS            EQU 25
 COLS            EQU 80
 
@@ -28,106 +31,104 @@ START:
 		mov		dx,STR_WELCOME			;print welcome string
 		call	PRINT_STR
 
-		call	ILM_INIT				;INITIALIZE
-		call	ILM_NLINE				;WRITE CRLF
+		call	ILM_INIT				;init function (clear all)
+		call	ILM_NLINE				;new line
 
 CO:     
-mov dx,sp
-call PRINT_WORD
-call ILM_NLINE
+		mov		sp,STACK_OFF			;clear SP (error could happened)
 
-		mov		ax,PGM
-		mov		[PGP],ax
-		mov		[CURSOR],ax
-		mov		[MODE],byte 00h
+		mov		ax,PGM					;copy PGM address
+		mov		[PGP],ax				;set PGP at beginning of program
+		mov		[CURSOR],ax				;set CURSOR at beginning of line
+		mov		[MODE],byte 00h			;set mode 0 (direct)
 
 		mov		al,3Eh					;set prompt '>'
-		call	ILM_GETLINE				;WRITE PROMPT AND GET LINE
-		call	ILM_NLINE				;WRITE CRLF
+		call	ILM_GETLINE				;get line in LBUF
+		call	ILM_NLINE				;new line
 
 		cmp		[LBUF],byte 00h			;LBUF empty ?
-		je		CO
+		je		CO						;skip
 
-		call	ILM_TSTL                ;TEST FOR LINE NUMBER
-		cmp		al,-1
-		je		CO
+		call	ILM_TSTL                ;test for line number
+		cmp		al,-1					;number valid ?
+		je		CO						;if not back to collection
 
-		call	ILM_INSERT        		;INSERT IT (MAY BE DELETE)
+		call	ILM_INSERT        		;insert line
 
 		cmp		al,00h					;is direct ?
 		jne		CO						;no, back to collection
 
 XEC:    
-		call	ILM_XINIT             	;INITIALIZE
+		call	ILM_XINIT             	;clear AESTACK
 
 STMT:   
-		mov		dx,STR_LET				;let
+		mov		dx,STR_LET				;"LET"
 		call	ILM_TST
 		cmp		al,00h
 		je		S1
 
-		call	ILM_TSTV
+		call	ILM_TSTV				;there is a variable ? ?
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
 		je		S17
 
-		mov		dx,STR_ASSIGN
+		mov		dx,STR_ASSIGN			;there is "=" assignement symbol ?
 		call	ILM_TST
 		cmp		al,00h
 		je		S17
 
-		call	EXPR
+		call	EXPR					;evaluate expression
 
-		call	ILM_DONE
+		call	ILM_DONE				;EOL ?
 		cmp		al,00h
 		je		CO
 
-		call	ILM_STORE
+		call	ILM_STORE				;store value into variable
 		cmp		al,00h
 		je		CO
 
-		call	ILM_NXT
+		call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 
 S1:     
-		mov		dx,STR_GOTO				;goto
+		mov		dx,STR_GOTO				;"GOTO"
 		call	ILM_TST
 		cmp		al,00h
 		je		S2
 
-		call	EXPR
+		call	EXPR					;evaluate expression
 
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
 		je		CO
 
-		call	ILM_XPER
+		call	ILM_XPER				;set PGP to new line, reset CURSOR
 		cmp		al,0
 		je		CO
 
 		jmp		XEC
 
 S2:     
-		mov		dx,STR_GOSUB			;GOSUB
+		mov		dx,STR_GOSUB			;"GOSUB"
 		call	ILM_TST
 		cmp		al,00h
 		je		S3
 
-		call 	EXPR
+		call 	EXPR					;evaluate expression
 
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
-		je		CO             			;ERROR IF CR NOT NEXT
+		je		CO             			
 
-		call	ILM_SAV
+		call	ILM_SAV					;save current line on SBRSTACK
 		cmp		al,00h
 		je		CO
 
-		call	ILM_XPER
+		call	ILM_XPER				;set PGP to new line, reset CURSOR
 		cmp		al,0
 		je		CO
 
@@ -137,130 +138,132 @@ S3:
 		cmp		al,00h
 		je		S8
 S4:     
-		mov		dx,STR_QUOTES			;test for quote
+		mov		dx,STR_QUOTES			;chack for quotes
 		call	ILM_TST
 		cmp		al,00h
 		je		S7
 
-		call	ILM_PRS         		;PRINT STRING
+		call	ILM_PRS         		;print the string
 		cmp		al,00h
 		je		CO
 
 S5:     
-		mov		dx,STR_COMMA			;comma for more
+		mov		dx,STR_COMMA			;check comma for more
 		call	ILM_TST
 		cmp		al,00h
 		je		S6
 
-		call	ILM_SPC
+		call	ILM_SPC					;add single space
 
 		jmp		S4
 S6:     
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
-		je		CO             			;ERROR IF CR NOT NEXT
+		je		CO             			
 
-        call	ILM_NLINE
+        call	ILM_NLINE				;new line
 
-        call	ILM_NXT
+        call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 S7:     
-		call    EXPR
+		call    EXPR					;evaluate expression
 
-		call	ILM_PRN
+		call	ILM_PRN					;print number
 		cmp		al,00h
 		je		CO
 
 		jmp		S5
 
 S8:     
-		mov		dx,STR_IF			;test "IF"
+		mov		dx,STR_IF				;"IF"
 		call	ILM_TST
 		cmp		al,00h
 		je		S9
 
-		call	EXPR
-		call	RELOP
-		call	EXPR
+		call	EXPR					;evaluate expression
 
-        mov		dx,STR_THEN				;THEN
+		call	RELOP					;set logical operator on AESTACK
+		
+		call	EXPR					;evaluate expression
+
+        mov		dx,STR_THEN				;check "THEN"
 		call	ILM_TST
 		cmp		al,00h
-		je		S17              ;PERFORM COMPARE -- NXT IF FALSE
+		je		S17              
 
-		call	ILM_CMPR
+		call	ILM_CMPR				;perform compare
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
-		jne		XEC				;match ok, execute "then" part
+		jne		XEC						;match ok, execute "THEN" part
 
-		call	ILM_NXT			;no match, next line
+		call	ILM_NXT					;no match, next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 S9:      
-		mov		dx,STR_INPUT	;INPUT STATEMENT
+		mov		dx,STR_INPUT			;"INPUT"
 		call	ILM_TST
 		cmp		al,00h
 		je		S12
 S10:    
-		call	ILM_TSTV		; TSTV    S17           ;GET VAR ADDRESS
+		call	ILM_TSTV				;check for Variable letter
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
 		je		S17
 
-		call	ILM_INNUM		;MOVE NUMBER FROM TTY TO AESTK
+		call	ILM_INNUM				;get number
 		cmp		al,00h
 		je		CO
 
-        call	ILM_STORE		; STORE IT
+        call	ILM_STORE				;store the number in the variable
 		cmp		al,00h
 		je		CO
 
-        mov		dx,STR_COMMA	;INPUT STATEMENT
+        mov		dx,STR_COMMA			;check for more elements
 		call	ILM_TST
 		cmp		al,00h
 		je		S11
 		
-        jmp		S10				; check for more
+        jmp		S10			
 S11:    
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
-		je		CO             	;ERROR IF CR NOT NEXT
+		je		CO             	
 
-        call	ILM_NXT			;next line
+        call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 
 S12:    
-		mov		dx,STR_RETURN			;RETURN STATEMENT
+		mov		dx,STR_RETURN			;"RETURN"
 		call	ILM_TST
 		cmp		al,00h
 		je		S13
 
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
-		je		CO             	;ERROR IF CR NOT NEXT
+		je		CO             	
 
-		call	ILM_RSTR
+		call	ILM_RSTR				;restore previous line
 		cmp		al,00h
 		je		CO
 
-		call	ILM_NXT
+		call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 
 S13:    
-		mov		dx,STR_END				;test "END"
+		mov		dx,STR_END				;"END"
 		call	ILM_TST
 		cmp		al,00h
 		je 		S14
@@ -268,35 +271,35 @@ S13:
 		call	ILM_DONE				;no need to test DONE result
         jmp		CO						;always jump to collection routine
 S14:    
-		mov		dx,STR_LIST				;test "LIST"
+		mov		dx,STR_LIST				;"LIST"
 		call	ILM_TST
 		cmp		al,00h
 		je		S15
 
-		call 	ILM_DONE
+		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
 		je		CO
 
         call	ILM_LST					;print program
 
-        call	ILM_NXT
+        call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
 		je		XEC
 S15:    
-		mov		dx,STR_RUN				;test "RUN"
+		mov		dx,STR_RUN				;"RUN"
 		call	ILM_TST
 		cmp		al,00h
 		je		S16
 
-        call 	ILM_DONE
+        call 	ILM_DONE				;EOL ? 
 		cmp		al,00h
 		je		CO
 
 		mov		[MODE],byte 01h			;set RUN mode
 
-        call	ILM_NXT
+        call	ILM_NXT					;next line
 		cmp		al,00h
 		je		CO
 		cmp		al,01h
@@ -307,43 +310,41 @@ S16:
 		cmp		al,00h
 		je		S17
 
-        jmp		START
+        jmp		START					;back to beginning
 S17:    
 		mov		[ERROR_CODE],word ERROR_SYNTAX
 		call	ILM_ERR             	
 		jmp		CO						;back to collection routine
 
 EXPR:   
-		mov		dx,STR_MINUS			;test "-"
+		mov		dx,STR_MINUS			;"-" (unary)
 		call	ILM_TST
 		cmp		al,00h
 		je		E0
 
-		call	TERM					;TEST FOR UNARY
+		call	TERM					;evaluate term
 
-		call	ILM_NEG					;NEGATE IT
+		call	ILM_NEG					;negate it
 		cmp		al,00h
 		je		CO
 
 		jmp		E1
 E0:     
-		mov		dx,STR_PLUS				;test "+"
+		mov		dx,STR_PLUS				;"+"  (unary)
 		call	ILM_TST
 		cmp		al,00h
 		je		E1A
 E1A:   
-
-		call	TERM   
-
+		call	TERM   					;evaluate term
 E1:     
-		mov		dx,STR_PLUS				;test "+"
+		mov		dx,STR_PLUS				;"+"
 		call	ILM_TST
 		cmp		al,00h
 		je		E2
 
-		call	TERM
+		call	TERM					;evaluate term
 
-		call	ILM_ADD
+		call	ILM_ADD					;addition
 		cmp		al,00h
 		je		CO
 
@@ -354,9 +355,9 @@ E2:
 		cmp		al,00h
 		je		E3
 
-		call	TERM
+		call	TERM					;evaluate term
 
-		call	ILM_SUB
+		call	ILM_SUB					;subtraction
 		cmp		al,00h
 		je 		CO
 
@@ -365,29 +366,29 @@ E3:
 		ret
 
 TERM:   
-		call	FACT
+		call	FACT					;evaluate factorial
 T0:     
-		mov		dx,STR_MUL				;test "*"
+		mov		dx,STR_MUL				;"*"
 		call	ILM_TST
 		cmp		al,00h
 		je		T1
 
-		call	FACT
+		call	FACT					;evaluate factorial
 
-		call 	ILM_MUL
+		call 	ILM_MUL					;multiply
 		cmp		al,00h
 		je		CO
 
 		jmp		T0
 T1:     
-		mov		dx,STR_DIV				;test "/"
+		mov		dx,STR_DIV				;"/"
 		call	ILM_TST
 		cmp		al,00h
 		je		T2
 
-		call    FACT
+		call    FACT					;evaluate factorial
 
-        call	ILM_DIV
+        call	ILM_DIV					;division
 		cmp		al,00h
 		je		CO
 
@@ -396,34 +397,34 @@ T2:
 		ret
 
 FACT:  
-		call	ILM_TSTV
+		call	ILM_TSTV				;is Variable ?
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
 		je		F0
 		
-        call	ILM_IND                 ;YES, GET THE VALUE.
+        call	ILM_IND                 ;swap top AESTACK with value of Variable index
         cmp		al,00h
 		je		CO
 
 		ret
 F0:     
-		call	ILM_TSTN				;NUMBER, GET ITS VALUE.
-		cmp		al,-1					;error goto CO
+		call	ILM_TSTN				;is Number ?
+		cmp		al,-1					
 		je		CO
-		cmp		al,00h					;match fail go to F1
+		cmp		al,00h					
 		je		F1
 					
 		ret
 F1:    
-		mov		dx,STR_LPAREN
+		mov		dx,STR_LPAREN			;"("
 		call	ILM_TST
 		cmp		al,00h
 		je		F2
 
-		call	EXPR
+		call	EXPR					;evaluate expression
 
-		mov		dx,STR_RPAREN
+		mov		dx,STR_RPAREN			;")"
 		call	ILM_TST
 		cmp		al,00h
 		je		F2
@@ -536,12 +537,8 @@ END:									;this point should never be reached
 ;==============================================================================
 ; Vars section
 ;==============================================================================
-;REMOVE ON RELEASE
-STR_DEBUG				db "DEBUG",00h	
-NOT_IMPLEMENTED			db "Not implemented",00h
-
 ;welcome string
-STR_WELCOME		db "TINY BASIC 8086",00h	
+STR_WELCOME		db "TINY BASIC 8086",0Ah,0Dh,"Vers. 2023 by Honny",00h	
 
 ;list of language keywords
 STR_LET			db "LET",00h
@@ -567,6 +564,7 @@ STR_DIV			db '/',00h
 STR_LPAREN		db '(',00h
 STR_RPAREN		db ')',00h
 
+;list of logic operators
 STR_OP_E		db "==",00h
 STR_OP_NE		db "!=",00h
 STR_OP_LE		db "<=",00h
