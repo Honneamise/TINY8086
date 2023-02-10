@@ -71,12 +71,12 @@ STMT:
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
-		je		S17
+		je		ERROR
 
 		mov		dx,STR_ASSIGN			;there is "=" assignement symbol ?
 		call	ILM_TST
 		cmp		al,00h
-		je		S17
+		je		ERROR
 
 		call	EXPR					;evaluate expression
 
@@ -192,7 +192,7 @@ S8:
         mov		dx,STR_THEN				;check "THEN"
 		call	ILM_TST
 		cmp		al,00h
-		je		S17              
+		je		ERROR              
 
 		call	ILM_CMPR				;perform compare
 		cmp		al,-1
@@ -215,7 +215,7 @@ S10:
 		cmp		al,-1
 		je		CO
 		cmp		al,00h
-		je		S17
+		je		ERROR
 
 		call	ILM_INNUM				;get number
 		cmp		al,00h
@@ -280,13 +280,15 @@ S14:
 		cmp		al,00h
 		je		CO
 
-        call	ILM_LST					;print program
+		cmp		byte [MODE],DIRECT		;im in DIRECT mode ?
+		je		S14A
 
-        call	ILM_NXT					;next line
-		cmp		al,00h
-		je		CO
-		cmp		al,01h
-		je		XEC
+		mov		[ERROR_CODE],word ERROR_MODE
+		call	ILM_ERR					;no, print error and go back to CO
+		jmp		CO
+S14A:		
+        call	ILM_LST					;print program
+		jmp		CO
 S15:    
 		mov		dx,STR_RUN				;"RUN"
 		call	ILM_TST
@@ -297,7 +299,14 @@ S15:
 		cmp		al,00h
 		je		CO
 
-		mov		[MODE],byte 01h			;set RUN mode
+		cmp		byte [MODE],DIRECT		;im in DIRECT mode ?
+		je		S15A
+
+		mov		[ERROR_CODE],word ERROR_MODE
+		call	ILM_ERR					;no, print error and go back to CO
+		jmp		CO
+S15A:
+		mov		byte [MODE],RUN			;set RUN mode
 
         call	ILM_NXT					;next line
 		cmp		al,00h
@@ -308,10 +317,22 @@ S16:
 		mov		dx,STR_RESET			;test "RESET"
 		call	ILM_TST
 		cmp		al,00h
-		je		S17
+		je		ERROR
 
+		call 	ILM_DONE				;EOL ?
+		cmp		al,00h
+		je		CO
+
+		cmp		byte [MODE],DIRECT		;im in DIRECT mode ?
+		je		S16A
+
+		mov		[ERROR_CODE],word ERROR_MODE
+		call	ILM_ERR					;no, print error and go back to CO
+		jmp		CO
+S16A:
         jmp		START					;back to beginning
-S17:    
+
+ERROR:    
 		mov		[ERROR_CODE],word ERROR_SYNTAX
 		call	ILM_ERR             	
 		jmp		CO						;back to collection routine
@@ -591,6 +612,7 @@ ERROR_SBRSTACK_OVERFLOW		db ":Subroutines stack overflow",00h
 ERROR_SBRSTACK_UNDERFLOW	db ":Subroutines stack underflow",00h
 ERROR_DIVIDE_ZERO			db ":Divide by zero",00h
 ERROR_OPERATOR				db ":Invalid operator",00h
+ERROR_MODE					db ":Unavailable for current mode",00h
 
 ;ILM variables
 MODE			db 00h						;0==direct, 1==run
