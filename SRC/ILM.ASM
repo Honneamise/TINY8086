@@ -559,7 +559,7 @@ END:									;this point should never be reached
 ; Vars section
 ;==============================================================================
 ;welcome string
-STR_WELCOME		db "TINY BASIC 8086",0Ah,0Dh,"Vers. 2023 by Honny",00h	
+STR_WELCOME		db "TINY BASIC 8086",0Ah,0Dh,"Vers.2023 by Honny",00h	
 
 ;list of language keywords
 STR_LET			db "LET",00h
