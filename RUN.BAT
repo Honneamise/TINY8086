@@ -1,1 +1,1 @@
-BOCHS\bochs.exe -q -noconsole
+start /b BOCHS\bochs.exe -q -noconsole -f BOCHS\bochs.conf

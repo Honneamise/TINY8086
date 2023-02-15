@@ -62,6 +62,18 @@ XEC:
 		call	ILM_XINIT             	;clear AESTACK
 
 STMT:   
+		mov		dx,STR_REM				;"REM" (comment)
+		call	ILM_TST
+		cmp		al,00h
+		je		S0
+
+		call	ILM_NXT					;next line
+		cmp		al,00h
+		je		CO
+		cmp		al,01h
+		je		XEC 
+		
+S0:
 		mov		dx,STR_LET				;"LET"
 		call	ILM_TST
 		cmp		al,00h
@@ -137,6 +149,7 @@ S3:
 		call	ILM_TST
 		cmp		al,00h
 		je		S8
+
 S4:     
 		mov		dx,STR_QUOTES			;chack for quotes
 		call	ILM_TST
@@ -156,6 +169,7 @@ S5:
 		call	ILM_SPC					;add single space
 
 		jmp		S4
+
 S6:     
 		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
@@ -168,6 +182,7 @@ S6:
 		je		CO
 		cmp		al,01h
 		je		XEC
+
 S7:     
 		call    EXPR					;evaluate expression
 
@@ -205,11 +220,13 @@ S8:
 		je		CO
 		cmp		al,01h
 		je		XEC
+
 S9:      
 		mov		dx,STR_INPUT			;"INPUT"
 		call	ILM_TST
 		cmp		al,00h
 		je		S12
+
 S10:    
 		call	ILM_TSTV				;check for Variable letter
 		cmp		al,-1
@@ -231,6 +248,7 @@ S10:
 		je		S11
 		
         jmp		S10			
+
 S11:    
 		call 	ILM_DONE				;EOL ?
 		cmp		al,00h
@@ -270,6 +288,7 @@ S13:
 
 		call	ILM_DONE				;no need to test DONE result
         jmp		CO						;always jump to collection routine
+
 S14:    
 		mov		dx,STR_LIST				;"LIST"
 		call	ILM_TST
@@ -286,9 +305,11 @@ S14:
 		mov		[ERROR_CODE],word ERROR_MODE
 		call	ILM_ERR					;no, print error and go back to CO
 		jmp		CO
+
 S14A:		
         call	ILM_LST					;print program
 		jmp		CO
+
 S15:    
 		mov		dx,STR_RUN				;"RUN"
 		call	ILM_TST
@@ -305,6 +326,7 @@ S15:
 		mov		[ERROR_CODE],word ERROR_MODE
 		call	ILM_ERR					;no, print error and go back to CO
 		jmp		CO
+
 S15A:
 		mov		byte [MODE],RUN			;set RUN mode
 
@@ -313,6 +335,7 @@ S15A:
 		je		CO
 		cmp		al,01h
 		je		XEC
+
 S16:    
 		mov		dx,STR_RESET			;test "RESET"
 		call	ILM_TST
@@ -329,6 +352,7 @@ S16:
 		mov		[ERROR_CODE],word ERROR_MODE
 		call	ILM_ERR					;no, print error and go back to CO
 		jmp		CO
+
 S16A:
         jmp		START					;back to beginning
 
@@ -350,13 +374,16 @@ EXPR:
 		je		CO
 
 		jmp		E1
+
 E0:     
 		mov		dx,STR_PLUS				;"+"  (unary)
 		call	ILM_TST
 		cmp		al,00h
 		je		E1A
+
 E1A:   
 		call	TERM   					;evaluate term
+
 E1:     
 		mov		dx,STR_PLUS				;"+"
 		call	ILM_TST
@@ -370,6 +397,7 @@ E1:
 		je		CO
 
 		jmp		E1
+
 E2:     
 		mov		dx,STR_MINUS			;test "-"
 		call	ILM_TST
@@ -383,11 +411,13 @@ E2:
 		je 		CO
 
 		jmp		E1
+
 E3:
 		ret
 
 TERM:   
 		call	FACT					;evaluate factorial
+
 T0:     
 		mov		dx,STR_MUL				;"*"
 		call	ILM_TST
@@ -401,6 +431,7 @@ T0:
 		je		CO
 
 		jmp		T0
+
 T1:     
 		mov		dx,STR_DIV				;"/"
 		call	ILM_TST
@@ -414,6 +445,7 @@ T1:
 		je		CO
 
         jmp   	T0
+
 T2:  
 		ret
 
@@ -429,6 +461,7 @@ FACT:
 		je		CO
 
 		ret
+
 F0:     
 		call	ILM_TSTN				;is Number ?
 		cmp		al,-1					
@@ -437,6 +470,7 @@ F0:
 		je		F1
 					
 		ret
+
 F1:    
 		mov		dx,STR_LPAREN			;"("
 		call	ILM_TST
@@ -451,10 +485,19 @@ F1:
 		je		F2
 
         ret
+
 F2:     
 		mov		[ERROR_CODE],word ERROR_SYNTAX
 		call	ILM_ERR                 
 		jmp		CO						;back to collection routine
+
+; RELOP/CODE :
+; == 0
+; != 1
+; <= 2
+; >= 3
+;  < 4
+;  > 5
 
 RELOP:  
 		mov		dx,STR_OP_E				;test "=="
@@ -464,6 +507,7 @@ RELOP:
 
 		mov		dx,0
 		jmp		R5
+
 R0:  
 		mov		dx,STR_OP_NE			;test "!="
 		call	ILM_TST
@@ -472,6 +516,7 @@ R0:
 
 		mov		dx,1
 		jmp		R5
+
 R1:     
 		mov		dx,STR_OP_LE			;test "<="
 		call	ILM_TST
@@ -480,6 +525,7 @@ R1:
 
 		mov		dx,2
 		jmp		R5
+
 R2: 
 		mov		dx,STR_OP_GE			;test ">="
 		call	ILM_TST
@@ -488,6 +534,7 @@ R2:
 
 		mov		dx,3
 		jmp		R5
+
 R3:   
 		mov		dx,STR_OP_L				;test "<"
 		call	ILM_TST
@@ -496,6 +543,7 @@ R3:
 
 		mov		dx,4
 		jmp		R5        
+
 R4:     
 		mov		dx,STR_OP_G				;test ">"
 		call	ILM_TST
@@ -503,17 +551,18 @@ R4:
 		je		R6
 
 		mov		dx,5
+
 R5:	
 		call	ILM_LIT					;push DX on Aestack
 		cmp		al,00h
 		je		CO
 
 		ret								;done success !
+
 R6:     
         mov		[ERROR_CODE],word ERROR_OPERATOR
 		call	ILM_ERR
 		jmp		CO
-
 
 END:									;this point should never be reached
 		cli                             ;disable interrupts
@@ -562,6 +611,7 @@ END:									;this point should never be reached
 STR_WELCOME		db "TINY BASIC 8086",0Ah,0Dh,"Vers.2023 by Honny",00h	
 
 ;list of language keywords
+STR_REM			db "REM",00h
 STR_LET			db "LET",00h
 STR_GOTO		db "GOTO",00h	
 STR_GOSUB		db "GOSUB",00h	

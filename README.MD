@@ -4,10 +4,186 @@ TINY 8086 is an interpreter written in assembly 8086 for the Tiny Basic language
 
 The goal is to produce a flat binary that can run without the need of a OS on any x86 machine 
 
-## System
-The system consists of a program (the interpreter itself) and a boot loader (whose only job is to load the program into memory).
+---
+## THE INTERPRETER
+---
+- The interpreter can execute single instructions or an entire program
 
-The memory it is structured as :
+- It is possible to store a program of a maximum of 255 lines
+
+- There are available 26 numeric variables identified by the letters A,B,C...Z
+---
+## BASE COMMANDS 
+---
+- **LIST** : print on screen the content of the stored program
+
+- **RUN** : execute the program currently stored in memory
+
+- **RESET** : entire reset of the interpreter (memory, variables,etc..)
+
+---
+## INSTRUCTIONS
+---
+**PRINT**
+
+- allow to print on screen : numbers,expressions,variables,strings and their combinations
+
+- to concatenate elements use the "," character
+
+```
+PRINT 123 → print: 123
+PRINT (4*5)+6 → print:  26
+PRINT A → print the numeric value stored in A
+PRINT "hello" → print: hello
+PRINT "2+3 is :",2+3 → print: 2+3 is 5
+```
+---
+**END**
+
+- Terminate the execution of the current running program
+
+```
+10 PRINT "hello" 
+20 END						
+→ Print : hello and terminate
+
+10 PRINT "line1"
+20 END
+30 PRINT "line2"		
+→ Stampa : line1 and terminate
+```
+---
+**LET** _variable_ **=** _expression_
+
+- Change the content of a variable (A,B,C...Z)
+- Variables can store integers numbers between -32767 and +32767
+```
+LET A = 69 
+--> store in A the value 69
+
+LET A = 5*2 
+--> store in A the value 10
+
+LET A = A+1 
+--> increase the value of A by 1
+
+LET A = B+C 
+--> store in A the sum B+C
+
+LET A = (B+C) 
+--> store in A the sum B+C
+```
+---
+**INPUT** _variable_
+
+- Read a number from the terminal and store in the designated variable
+- Multiple reads are possible using the "," character
+```
+INPUT A
+--> read a number and store it in A
+
+INPUT A,B,C
+--> read 3 numbers and store them in A,B,C
+```
+---
+**IF** _condition_ **THEN** _instruction_
+
+- If the condition is true then execute the instruction following THEN
+- Logical operators supported : ==,!=,<,>,<=,>=
+```
+IF 2!=1 THEN PRINT "hello"
+--> always print "hello"
+
+IF A<(3*4) THEN PRINT "hello""
+--> print "hello" only if the content of the variable A is less than 12
+```
+---
+**GOTO** _expression_
+
+- Continue the execution of the program at the line indicated by the expression
+```
+GOTO 25
+--> continue the execution at line 25
+
+10 PRINT "hello"
+20 GOTO 10
+30 END
+--> print "hello" repeatedly (does not terminate)
+```
+---
+**GOSUB** _expression_ and **RETURN**
+
+- Execute the instructions from the line indicated by the expression up to RETURN
+- It resumes the execution of the program at the line following the starting GOSUB
+```
+10 PRINT "line1"
+20 GOSUB 100
+30 END
+100 PRINT "line2"
+110 RETURN
+--> print "line1", "line2" and terminate
+```
+---
+**REM**
+
+- It is possible to insert line of comment using the "REM" prefix
+```
+10 REM Test program
+20 PRINT "hello"
+30 END
+ --> print "hello" and terminate
+```
+---
+## EXAMPLES
+---
+**Sample code for loops**
+```
+10 LET A=0
+20 IF A>=5 THEN GOTO 60
+30 PRINT "hello"
+40 LET A=A+1
+50 GOTO 20
+60 END
+--> print "hello" 5 times
+
+10 LET A=0
+20 PRINT "hello"
+30 LET A=A+1
+40 IF A<5 THEN GOTO 20
+50 END 
+--> print "hello" 5 times
+```
+---
+**Sample calculator program**
+```
+5 PRINT "CALCULATOR"
+10 PRINT "Operation:"
+20 PRINT "1 : sum"
+30 PRINT "2 : subtraction"
+40 PRINT "3 : multiplication"
+50 PRINT "4 : division"
+60 INPUT A
+70 IF A<1 THEN END
+80 IF A>4 THEN END
+90 PRINT "Insert the first number:"
+100 INPUT B
+110 PRINT "Insert the second number:"
+120 INPUT C
+130 PRINT "Result:"
+140 IF A==1 THEN PRINT B+C
+150 IF A==3 THEN PRINT B-C
+160 IF A==4 THEN PRINT B*C
+170 IF A==3 THEN PRINT B/C 
+180 GOTO 10
+```
+---
+# IMPLEMENTATION DETAILS
+
+## Interpreter
+
+- The system consists of a program (the interpreter itself) and a boot loader (whose only job is to load the program into memory).
+
+- The memory it is structured as :
 
 ```
              ________
@@ -28,7 +204,7 @@ The memory it is structured as :
             |        |
 2000:FFFF   |________|
 ```
-
+---
 ## SOURCE CODE
 
 - __BOOT.ASM__ : the boot loader
@@ -41,6 +217,7 @@ The memory it is structured as :
 
 - __ILM/*.ASM__ : folder containing all the functions required by the interpreter
 
+---
 ## BUILD AND RUN
 
 This repository contains all the tools needed to build and run the system.
@@ -49,13 +226,16 @@ This repository contains all the tools needed to build and run the system.
 
 - __RUN.BAT__ will invoke the Bochs emulator to run the system from _floppy.img_
 
+---
 ## FOLDERS
+
 - __SRC__ : source code
 - __BUILD__ : output directory
 - __DOC__ : Tiny Basic and Assembly 8086 documentation
 - __NASM__ : Nasm assembler
 - __BOCHS__ : Bochs emulator
 
+---
 ## REFERENCES
 
 - TINY BASIC : [http://www.ittybittycomputers.com/IttyBitty/TinyBasic/DDJ1/Design.html](http://www.ittybittycomputers.com/IttyBitty/TinyBasic/DDJ1/Design.html)
@@ -66,149 +246,7 @@ This repository contains all the tools needed to build and run the system.
 
 - BOCHS : [https://bochs.sourceforge.io/](https://bochs.sourceforge.io/)
 
+---
 ## NOTES
 
-TSTV can use LIT
-
-This is a slighlty modified version of the original statements executor :
-
-```
-    ;THE IL CONTROL SECTION
-
-    START:  INIT                  ;INITIALIZE
-            NLINE                 ;WRITE CRLF
-    CO:     GETLINE               ;WRITE PROMPT AND GET LINE
-            TSTL    XEC           ;TEST FOR LINE NUMBER
-            INSERT                ;INSERT IT (MAY BE DELETE)
-            JMP     CO
-    XEC:    XINIT                 ;INITIALIZE
-
-    ;STATEMENT EXECUTOR
-
-    STMT:   TST     S1,'LET'      ;IS STATEMENT A LET
-            TSTV    S17           ;YES, PLACE VAR ADDRESS ON AESTK
-            TST     S17,'='       ;ASSIGNEMENT
-            CALL    EXPR          ;PLACE EXPR VALUE ON AESTK
-            DONE                  ;REPORT ERROR IF NOT NEXT
-            STORE                 ;STORE RESULT
-            NXT                   ;AND SEQUENCE TO NEXT
-    S1:     TST     S2,'GOTO'     ;GOTO OT GOSUB?
-            CALL    EXPR          ;GET LABEL
-            DONE                  ;ERROR IF CR NOT NEXT
-            XPER                  ;SET UP AND JUMP
-    S2:     TST     S3,'GOSUB'    ;ERROR IF NO MATCH
-            CALL    EXPR          ;GET DESTINATION
-            DONE                  ;ERROR IF CR NOT NEXT
-            SAV                   ;SAVE RETURN LINE
-            XPER                  ;AND JUMP
-    S3:     TST     S8,'PRINT'    ;PRINT
-    S4:     TST     S7,'"'        ;TEST FOR QUOTE
-            PRS                   ;PRINT STRING
-    S5:     TST     S6,','        ;IS THERE MORE?
-            SPC                   ;SPACE TO NEXT ZONE
-            JMP     S4            ;YES JUMP BACK
-    S6:     DONE                  ;ERROR IF CR NOT NEXT
-            NLINE
-            NXT
-    S7:     CALL    EXPR
-            PRN                   ;PRINT IT
-            JMP     S5            ;IS THERE MORE?
-    S8:     TST     S9,'IF'       ;IF STATEMENT
-            CALL    EXPR          ;GET EXPRESSION
-            CALL    RELOP         ;DETERMINE OPR AND PUT ON STK
-            CALL    EXPR          ;GET EXPRESSION
-            TST     S17,'THEN'    ;THEN BRANCH
-            CMPR                  ;PERFORM COMPARE -- NXT IF FALSE
-            JMP     STMT
-    S9:     TST     S12,'INPUT'   ;INPUT STATEMENT
-    S10:    TSTV    S17           ;GET VAR ADDRESS
-            INNUM                 ;MOVE NUMBER FROM TTY TO AESTK
-            STORE                 ;STORE IT
-            TST     S11,','       ;IS THERE MORE?
-            JMP     S10           ;YES
-    S11:    DONE                  ;MUST BE CR
-            NXT                   ;SEQUENCE TO NEXT
-    S12:    TST     S13,'RETURN'  ;RETURN STATEMENT
-            DONE                  ;MUST BE CR
-            RSTR                  ;RESTORE LINE NUMBER OF CALL
-            NXT                   ;SEQUENCE TO NEXT STATEMENT
-    S13:    TST     S14,'END'
-            DONE
-            FIN
-    S14:    TST     S15,'LIST'    ;LIST COMMAND
-            DONE
-            LST
-            NXT
-    S15:    TST     S16,'RUN'     ;RUN COMMAND
-            DONE
-            NXT
-    S16:    TST     S17,'CLEAR'   ;CLEAR COMMAND
-            DONE
-            JMP     START
-
-    S17:    ERR                   ;SYNTAX ERROR
-
-    EXPR:   TST     E0,'-'
-            CALL    TERM          ;TEST FOR UNARY -.
-            NEG                   ;GET VALUE
-            JMP     E1            ;NEGATE IT
-    E0:     TST     E1A,'+'       ;LOOK FOR MORE
-    E1A:    CALL    TERM          ;TEST FOR UNARY +
-    E1:     TST     E2,'+'        ;LEADING TERM
-            CALL    TERM
-            ADD
-            JMP     E1
-    E2:     TST     E3,'-'        ;ANY MORE?
-            CALL    TERM          ;DIFFERENCE TERM
-            SUB
-            JMP     E1
-    E3:T2:  RTN                   ;ANY MORE?
-    TERM:   CALL    FACT
-    T0:     TST     T1,"*"
-            CALL    FACT          ;PRODUCT FACTOR.
-            MUL
-            JMP     T0
-    T1:     TST     T2,'/'
-            CALL    FACT          ;QUOTIENT FACTOR.
-            DIV
-            JMP     T0
-
-    FACT:   TSTV    F0
-            IND                   ;YES, GET THE VALUE.
-            RTN
-    F0:     TSTN    F1            ;NUMBER, GET ITS VALUE.
-            RTN
-    F1:     TST     F2,'('        ;PARENTHESIZED EXPR.
-            CALL    EXPR
-            TST     F2,')'
-            RTN
-    F2:     ERR                   ;ERROR.
-
-    RELOP:  TST     RO,'='
-            LIT     0             ;=
-            RTN
-    R0:     TST     R4,'<'
-            TST     R1,'='
-            LIT     2             ;<=
-            RTN
-    R1:     TST     R3,'>'
-            LIT     3             ;<>
-            RTN
-    R3:     LIT     1             ;<
-            RTN
-    R4:     TST     S17,'>'
-            TST     R5,'='
-            LIT     5             ;>=
-            RTN
-    R5:     TST     R6,'<'
-            LIT     3
-            RTN                   
-    R6:     LIT     4
-            RTN
-```
-
-# TODO
-
-- check if after XPER i should pop top of stack
-
-  - to test check if after some "loop" stack is still occupied
+- The current keymap is set to US
