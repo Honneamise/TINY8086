@@ -1,4 +1,4 @@
-# TINY 8086 (WORK IN PROGRESS)
+# TINY 8086
 
 TINY 8086 is an interpreter written in assembly 8086 for the Tiny Basic language
 
