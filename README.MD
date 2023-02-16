@@ -33,11 +33,20 @@ The goal is to produce a flat binary that can run without the need of a OS on an
 - to concatenate elements use the "," character
 
 ```
-PRINT 123 → print: 123
-PRINT (4*5)+6 → print:  26
-PRINT A → print the numeric value stored in A
-PRINT "hello" → print: hello
-PRINT "2+3 is :",2+3 → print: 2+3 is 5
+PRINT 123
+--> print "123"
+
+PRINT (4*5)+6
+--> print "26"
+
+PRINT A
+--> print the numeric value stored in A
+
+PRINT "hello"
+--> print hello
+
+PRINT "2+3 is :",2+3
+--> print "2+3 is 5"
 ```
 ---
 **END**
@@ -47,12 +56,12 @@ PRINT "2+3 is :",2+3 → print: 2+3 is 5
 ```
 10 PRINT "hello" 
 20 END						
-→ Print : hello and terminate
+--> print "hello" and terminate
 
 10 PRINT "line1"
 20 END
 30 PRINT "line2"		
-→ Stampa : line1 and terminate
+--> print "line1" and terminate
 ```
 ---
 **LET** _variable_ **=** _expression_
