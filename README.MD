@@ -4,6 +4,8 @@ TINY 8086 is an interpreter written in assembly 8086 for the Tiny Basic language
 
 The goal is to produce a flat binary that can run without the need of a OS on any x86 machine 
 
+![image](img.jpg)
+
 ---
 ## THE INTERPRETER
 ---
